@@ -1,0 +1,20 @@
+@import 'colors';
+@import 'variables';
+
+html, body {
+    font-family: Helvetica, Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    background: $color-body;
+    color: $color-body-text;
+}
+
+.main-container {
+    margin-left: $sidebar-width;
+}
