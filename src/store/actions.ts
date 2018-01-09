@@ -7,7 +7,8 @@ export enum TypeKeys {
     getFirmwareVersion = 'Get firmware version',
     getPresetName = 'Get preset name',
     getPresetNumber = 'Get preset number',
-    getPanels = 'Get panels',
+    getAllPanels = 'Get panels',
+    getPanel = 'Get single panel',
     setPanel = 'Set panel',
     setAxeFx = 'Set Axe-Fx',
     setMIDIController = 'Set MIDI controller',
@@ -53,9 +54,17 @@ export const setMIDIControllerAction = (payload): SetMidiControllerAction => ({
     payload
 });
 
-export const getPanelsAction = (): Action => ({
-    type: TypeKeys.getPanels
+export const getAllPanelsAction = (): Action => ({
+    type: TypeKeys.getAllPanels
 });
+
+export interface GetPanelAction extends Action {
+    payload: number;
+}
+export const getPanelAction = (payload): GetPanelAction => ({
+    type: TypeKeys.getPanel,
+    payload
+})
 
 export interface SetPanelAction extends Action {
     payload: PanelObject
@@ -71,4 +80,5 @@ export type ActionTypes =
     | PresetNumberAction
     | SetAxeFxAction
     | SetMidiControllerAction
-    | SetPanelAction;
+    | SetPanelAction
+    | GetPanelAction;
