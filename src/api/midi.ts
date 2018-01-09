@@ -12,8 +12,8 @@ export interface MIDIOutput {
 }
 
 export enum MIDIControllerType {
-    AxeFx,
-    Controller
+    AxeFx = 'Axe-Fx',
+    Controller = 'MIDI controller'
 }
 
 export enum MIDIListenerType {
