@@ -1,11 +1,13 @@
-import { AppComponent } from "../components/app";
+import { withRouter } from 'react-router';
 import { connect } from "react-redux";
-import { Dispatch } from 'redux';
-import { setAxeFxAction, firmwareVersionAction, presetNameAction, setMIDIControllerAction, getPanelsAction } from "../store/actions";
+
+import { setAxeFxAction, firmwareVersionAction, presetNameAction, setMIDIControllerAction, getAllPanelsAction, setPanelAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType } from "../api/midi";
 import { MODEL_IDS } from "../api/constants";
 import { AxeFx } from "../api/axefx";
 import { GenericMIDIController } from "../api/generic-midi-controller";
+import { PanelObject } from "../api/panel-object";
+import { AppComponent } from "../components/app";
 
 const mapStateToProps = state => ({
     axeFx: state.axeFx,
@@ -16,6 +18,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    dispatch,
     async init() {
         const axeFxDevice = new AxeFx({
             id: MODEL_IDS['Axe-Fx II'],
@@ -33,19 +36,37 @@ const mapDispatchToProps = dispatch => ({
         } as MIDIController);
         dispatch(setMIDIControllerAction(controller));
 
-        dispatch(getPanelsAction());
+        dispatch(getAllPanelsAction());
 
         const firmwareVersion = await axeFxDevice.getFirmwareVersion();
         dispatch(firmwareVersionAction(firmwareVersion));
         const presetName = await axeFxDevice.getPresetName();
         dispatch(presetNameAction(presetName));
 
-        
         controller.input.addListener(MIDIListenerType.CC, 'all', event => {
             if (event.data[1] === 20) {
                 axeFxDevice.getBlockParametersList(106);
             }
         })
     }
-})
-export default connect(mapStateToProps, mapDispatchToProps)(AppComponent);
+});
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+    ...stateProps,
+    ...dispatchProps,
+    addNewPanel() {
+        const { dispatch } = dispatchProps;
+        const { history } = ownProps;
+        const panelId = stateProps.panels.length + 1;
+        const panel: PanelObject = {
+            id: panelId,
+            label: `Panel ${panelId}`,
+            controller: stateProps.controller,
+            controls: []
+        };
+        dispatch(setPanelAction(panel));
+        history.push(`/panels/${panel.id}`);
+    }
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps, mergeProps)(AppComponent));
