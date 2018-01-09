@@ -1,0 +1,36 @@
+@import '../../styles/colors';
+@import '../../styles/variables';
+
+.sidebar {
+    position: fixed;
+    top: $header-height;
+    left: 0;
+    height: $sidebar-height;
+    width: $sidebar-width;
+    background: $color-sidebar;
+    box-sizing: border-box;
+    color: $color-sidebar-text;
+
+    .panels {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: .5rem;
+            background: $color-sidebar-item;
+
+            &:first-child {
+                background: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: $color-sidebar-item-text;
+            }
+        }
+    }
+}
