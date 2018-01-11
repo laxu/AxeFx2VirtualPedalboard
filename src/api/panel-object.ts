@@ -6,4 +6,5 @@ export interface PanelObject {
     label: string;
     controller: MIDIController;
     controls: ControlObject[];
+    cc?: number;
 }
