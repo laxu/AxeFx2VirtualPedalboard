@@ -6,7 +6,9 @@ export enum ControlType {
 }
 
 export interface ControlObject {
+    id: number;
     block: FxBlock;
     param: FxParam;
     controlType: ControlType;
+    cc: number;
 }
