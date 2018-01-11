@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 
-import { setAxeFxAction, firmwareVersionAction, presetNameAction, setMIDIControllerAction, getAllPanelsAction, setPanelAction } from "../store/actions";
+import { setAxeFxAction, firmwareVersionAction, presetNameAction, setMIDIControllerAction, setPanelAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType } from "../api/midi";
 import { MODEL_IDS } from "../api/constants";
 import { AxeFx } from "../api/axefx";
@@ -10,11 +10,11 @@ import { PanelObject } from "../api/panel-object";
 import { AppComponent } from "../components/app";
 
 const mapStateToProps = state => ({
-    axeFx: state.axeFx,
-    controller: state.controller,
-    firmwareVersion: state.firmwareVersion,
-    presetName: state.presetName,
-    panels: state.panels
+    axeFx: state.app.axeFx,
+    controller: state.app.controller,
+    firmwareVersion: state.app.firmwareVersion,
+    presetName: state.app.presetName,
+    panels: state.app.panels
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -35,8 +35,6 @@ const mapDispatchToProps = dispatch => ({
             output: WebMidiWrapper.webMidi.getOutputByName('Arturia BeatStep') 
         } as MIDIController);
         dispatch(setMIDIControllerAction(controller));
-
-        dispatch(getAllPanelsAction());
 
         const firmwareVersion = await axeFxDevice.getFirmwareVersion();
         dispatch(firmwareVersionAction(firmwareVersion));
