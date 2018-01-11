@@ -20,7 +20,7 @@ const initialState: State = {
     panels: []
 };
 
-export function reducers(state = initialState, action: Action & { payload: any }) {
+export default function reducers(state = initialState, action: Action & { payload: any }) {
     switch(action.type) {
         case TypeKeys.getFirmwareVersion:
             return {...state, firmwareVersion: action.payload};
@@ -29,13 +29,21 @@ export function reducers(state = initialState, action: Action & { payload: any }
         case TypeKeys.getPresetNumber:
             return {...state, presetNumber: action.payload};
         case TypeKeys.getPanel:
-            return {...state, currentPanel: state.panels.find(panel => panel.id === action.payload)}
+            return {...state, currentPanel: Object.assign({}, state.panels.find(panel => panel.id === Number(action.payload)))}
         case TypeKeys.setAxeFx:
             return {...state, axeFx: action.payload};
         case TypeKeys.setMIDIController:
             return {...state, controller: action.payload}
         case TypeKeys.setPanel:
-            return {...state, panels: [...state.panels, action.payload]}
+            const existingPanelIdx = state.panels.findIndex(panel => panel.id === action.payload.id);
+            if (existingPanelIdx !== -1) {
+                // Update existing panel
+                state.panels[existingPanelIdx] = action.payload;
+                return {...state, panels: [...state.panels]}
+            } else {
+                // Add new panel
+                return {...state, panels: [...state.panels, action.payload]}
+            }
         default:
             return state;
     }
