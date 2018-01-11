@@ -1,0 +1,18 @@
+@import '../../styles/colors';
+@import '../../styles/variables';
+
+.panel {
+    padding: 1rem;
+    border: 1px solid $color-border;
+    border-radius: $global-radius;
+
+    &__controls {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .toggle-edit {
+        float: right;
+    }
+}
