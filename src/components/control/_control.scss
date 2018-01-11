@@ -1,0 +1,24 @@
+@import '../../styles/colors';
+@import '../../styles/variables';
+
+.control {
+    border: 1px solid $color-border;
+    background: $color-control;
+    border-radius: $global-radius;
+    color: $color-control-text;
+    width: $control-width;
+    min-height: $control-min-height;
+    margin-right: .5rem;
+    margin-bottom: .5rem;
+}
+
+.switch {
+    border: 1px solid $color-border;
+    background: $color-control;
+    border-radius: $global-radius;
+    color: $color-control-text;
+    width: $switch-width;
+    min-height: $switch-min-height;
+    margin-right: .5rem;
+    margin-bottom: .5rem;
+}
