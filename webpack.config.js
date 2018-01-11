@@ -11,7 +11,8 @@ module.exports = {
     context: path.resolve(__dirname, 'src'),
     devtool: 'source-map',
     devServer: {
-        contentBase: './dist/'
+        contentBase: './dist/',
+        historyApiFallback: true
     },
 
     resolve: {
