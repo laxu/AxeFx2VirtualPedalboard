@@ -21,15 +21,20 @@ interface AppProps {
 export class AppComponent extends React.Component<AppProps> {
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
         this.props.init();
     }
+
     render() {
         const { addNewPanel, axeFx, controller, firmwareVersion, presetName, panels } = this.props;
         return <div id="app">
                 <Header firmwareVersion={firmwareVersion} presetName={presetName} axeFx={axeFx} controller={controller}></Header>
                 <Sidebar addNewPanel={addNewPanel} panels={panels}></Sidebar>
                 <div className="main-container">
-                    <Route path="panels/:panelId" component={PanelContainer} />
+                    <h3>Main content</h3>
+                    <Route path="/panels/:panelId" component={PanelContainer} />
                 </div>
             </div>;
     }
