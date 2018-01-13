@@ -15,14 +15,11 @@ export class GenericMIDIController implements MIDIController {
         this.name = genericDevice.name;
         this.input = genericDevice.input;
         this.output = genericDevice.output;
+        this.channel = genericDevice.channel || 'all';
 
         this.inputListener = this.input.addListener(MIDIListenerType.CC, this.channel, event => {
             console.log('controller event', event.data);
         });
-    }
-
-    setMIDIChannel(channel: number | 'all') {
-        this.channel = channel;
     }
 
     disconnect() {
