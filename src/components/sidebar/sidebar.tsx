@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-const classNames = require('classNames');
+import * as classNames from 'classnames';
   
 import { PanelObject } from '../../api/panel-object';
 import './_sidebar.scss';

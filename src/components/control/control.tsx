@@ -1,5 +1,5 @@
 import * as React from 'react';
-const classNames = require('classnames');
+import * as classNames from 'classnames';
 import { FxBlock, FxParam } from '../../api/fx-block';
 import { ControlType } from '../../api/control-object';
 import './_control.scss';
