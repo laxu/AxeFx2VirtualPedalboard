@@ -2,11 +2,13 @@ import { SYSEX_ENABLED } from './constants';
 const WebMidi = require('webmidi');
 
 export interface MIDIInput {
+    name: string;
     addListener: (type: string, channel: number | 'all', listener: any) => MIDIInput;
     removeListener: (type: string, channel: number | 'all', listener: any) => MIDIInput;
 }
 
 export interface MIDIOutput {
+    name: string;
     sendControlChange: (controlChange: number, value?: number, channel?: number | 'all', options?: any) => MIDIOutput;
     sendSysex: (header: number[], message: number[], options?: any) => MIDIOutput;
 }
