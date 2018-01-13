@@ -1,7 +1,7 @@
-import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC } from './constants';
+import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
-import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt } from '../util/util';
-import { IFxBlock, FxBlock } from './fx-block';
+import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, intValueToAxeFx, axeFxValueToInt } from '../util/util';
+import { IFxBlock, FxBlock, getBlockById } from './fx-block';
 
 export enum PARAM_MODE {
     Set = 0x01,
@@ -86,6 +86,16 @@ export class AxeFx implements MIDIController {
         ]);
     }
 
+    getBlockParamValue(blockId: number, paramId: number) {
+        this.sendMessage([
+            AXE_FUNCTIONS.blockParamValue,
+            ...intTo2Byte(blockId),
+            ...intTo2Byte(paramId),
+            ...parameterValueIntToBytes(0),
+            PARAM_MODE.Get
+        ]);
+    }
+
     getFirmwareVersion() {
         this.sendMessage([AXE_FUNCTIONS.getFirmwareVersion]);
         this.disconnect();
@@ -108,21 +118,19 @@ export class AxeFx implements MIDIController {
         this.disconnect();
     }
 
-    setBlockBypass(blockId: number, status: boolean) {
-        this.sendMessage([
-            AXE_FUNCTIONS.setBlockBypass, 
-            ...intTo2Byte(blockId),
-            ...intTo2Byte(255),
-            ...parameterValueIntToBytes(Number(status)),
-            PARAM_MODE.Set
-        ]);
-        this.disconnect();
+    setBlockBypass(blockId: number, isBypassed: boolean) {
+        this.setBlockParamValue(blockId, 255, Number(isBypassed));
     }
 
     setBlockParamValue(blockId: number, paramId: number, paramValue: number) {
-        const block: FxBlock = this.blocks.find(block => block.id === blockId);
-        if (!block) throw new Error(`Cannot find block "${blockId}"`);
-        block.setParamValue(paramId, paramValue);
+        const convertedParamValue = intValueToAxeFx(paramValue);
+        this.sendMessage([
+            AXE_FUNCTIONS.blockParamValue, 
+            ...intTo2Byte(blockId),
+            ...intTo2Byte(paramId),
+            ...parameterValueIntToBytes(convertedParamValue),
+            PARAM_MODE.Set
+        ]);
     }
 
     toggleTuner() {
@@ -161,11 +169,14 @@ export class AxeFx implements MIDIController {
                 value = data[0];
                 break;
             case AXE_FUNCTIONS.getBlockParametersList:
-                console.log('label', data);
                 const blockId = bytes2ToInt(data.slice(0, 2));
                 const paramId = bytes2ToInt(data.slice(2, 4));
-                const paramValues = parameterValueBytesToInt(data.slice(3, 6));
-                console.log('fuu', blockId, paramId, paramValues);
+                const paramValues = axeFxValueToInt(parameterValueBytesToInt(data.slice(4, 7)));
+                value = {blockId, paramId, paramValues};
+                break;
+            case AXE_FUNCTIONS.blockParamValue:
+                value = data;
+                console.log('param value', (parameterValueBytesToInt(data.slice(4,7)) / PARAM_VALUE_MULTIPLIER).toFixed(2));
                 break;
             default:
                 value = data;
