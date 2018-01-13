@@ -16,6 +16,7 @@ interface Props {
     firmwareVersion: string;
     presetName: string;
     panels: PanelObject[];
+    currentPanel: PanelObject;
 }
 
 export class AppComponent extends React.Component<Props> {
@@ -28,10 +29,10 @@ export class AppComponent extends React.Component<Props> {
     }
 
     render() {
-        const { addNewPanel, axeFx, controller, firmwareVersion, presetName, panels } = this.props;
+        const { addNewPanel, axeFx, controller, firmwareVersion, presetName, panels, currentPanel } = this.props;
         return <div id="app">
                 <Header firmwareVersion={firmwareVersion} presetName={presetName} axeFx={axeFx} controller={controller}></Header>
-                <Sidebar addNewPanel={addNewPanel} panels={panels}></Sidebar>
+                <Sidebar addNewPanel={addNewPanel} panels={panels} currentPanelId={currentPanel.id}></Sidebar>
                 <div className="main-container">
                     <h3>Main content</h3>
                     <Route path="/panels/:panelId" component={PanelContainer} />

@@ -14,7 +14,8 @@ const mapStateToProps = state => ({
     controller: state.app.controller,
     firmwareVersion: state.app.firmwareVersion,
     presetName: state.app.presetName,
-    panels: state.app.panels
+    panels: state.app.panels,
+    currentPanel: state.app.currentPanel
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -52,6 +53,7 @@ const mapDispatchToProps = dispatch => ({
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...stateProps,
     ...dispatchProps,
+    ...ownProps,
     addNewPanel() {
         const { dispatch } = dispatchProps;
         const { history } = ownProps;

@@ -1,16 +1,20 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+const classNames = require('classNames');
   
 import { PanelObject } from '../../api/panel-object';
 import './_sidebar.scss';
 
 interface Props {
-    panels: PanelObject[]
+    panels: PanelObject[];
+    currentPanelId: number;
     addNewPanel: () => void;
 }
 
 const Sidebar: React.SFC<Props> = (props) => {
-    const { addNewPanel, panels } = props;
+    const { addNewPanel, panels, currentPanelId } = props;
+
+    console.log('fuu', currentPanelId);
 
     return (
         <div className="sidebar">
@@ -21,7 +25,9 @@ const Sidebar: React.SFC<Props> = (props) => {
                     </button>
                 </li>
                 {panels && panels.length > 0 && panels.map((panel, i) => (
-                    <li key={`panel-${i}`}><Link to={`/panels/${panel.id}`}>{panel.label || `Panel ${panel.id}`}</Link></li>
+                    <li key={`panel-${i}`} className={classNames('panel', {'active': panel.id === currentPanelId})}>
+                        <Link to={`/panels/${panel.id}`}>{panel.label || `Panel ${panel.id}`}</Link>
+                    </li>
                 ))}
             </ul>
         </div>

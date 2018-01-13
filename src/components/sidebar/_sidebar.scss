@@ -13,7 +13,7 @@
 
     .panels {
         list-style-type: none;
-        margin: 0;
+        margin: 0 0 0 .5rem;
         padding: 0;
 
         li {
@@ -21,16 +21,38 @@
             width: 100%;
             box-sizing: border-box;
             padding: .5rem;
+            margin-bottom: .25rem;
             background: $color-sidebar-item;
+
+            &:first-child {
+                padding-left: 0;
+            }
+
+            &.panel {
+                border-radius: $global-radius 0 0 $global-radius;
+                border: 1px solid $color-border;
+                border-right: 0;
+                padding: 0;
+               
+                &.active {
+                    background: $color-sidebar-item-active;
+                }
+
+                a {
+                    display: block;
+                    width: 100%;
+                    padding: .5rem;
+                    text-decoration: none;
+                    color: $color-sidebar-item-text;
+                }
+            }
+            
 
             &:first-child {
                 background: none;
             }
 
-            a {
-                text-decoration: none;
-                color: $color-sidebar-item-text;
-            }
+            
         }
     }
 
