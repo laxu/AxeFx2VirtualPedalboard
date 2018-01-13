@@ -18,7 +18,7 @@ export class AxeFx implements MIDIController {
     type: MIDIControllerType = MIDIControllerType.AxeFx;
     input: MIDIInput;
     output: MIDIOutput;
-    channel: number | 'all' = 'all';
+    channel: number | 'all';
 
     private inputListener: any;
     private blocks: FxBlock[] = [];
@@ -31,6 +31,7 @@ export class AxeFx implements MIDIController {
         this.name = axeFxDevice.name;
         this.input = axeFxDevice.input;
         this.output = axeFxDevice.output;
+        this.channel = axeFxDevice.channel || 'all';
 
         console.log('device', axeFxDevice);
 
@@ -107,10 +108,6 @@ export class AxeFx implements MIDIController {
     getMIDIChannel() {
         this.sendMessage([AXE_FUNCTIONS.getMIDIChannel]);
         this.disconnect();
-    }
-
-    setMIDIChannel(channel: number | 'all') {
-        this.channel = channel;
     }
 
     setTargetBlock(blockId: number) {
