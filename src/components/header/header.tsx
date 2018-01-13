@@ -24,7 +24,8 @@ export default class HeaderComponent extends React.Component<Props> {
                         <div className="info-container">
                             <div className="device-name">
                                 <label>Device name:</label>
-                                <span>{controller && controller.name}</span>
+                                <span>{axeFx && axeFx.name}</span>
+                                
                             </div>
                             <div className="firmware-version">
                                 <label>Firmware version:</label>
@@ -41,7 +42,7 @@ export default class HeaderComponent extends React.Component<Props> {
                         <div className="info-container">
                             <div className="device-name">
                                 <label>Device name:</label>
-                                <span>{axeFx && axeFx.name}</span>
+                                <span>{controller && controller.name}</span>
                             </div>
                         </div>
                     </div>
