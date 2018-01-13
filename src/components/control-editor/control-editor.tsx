@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ControlType } from '../../api/control-object';
+import { ControlType, ControlObject } from '../../api/control-object';
 
 interface Props {
     controlId: number;
@@ -7,6 +7,7 @@ interface Props {
     paramId: number;
     controlType: ControlType;
     cc: number;
+    saveChanges: (ControlObject) => void;
 }
 
 interface State {
@@ -23,13 +24,14 @@ export default class ControlEditorComponent extends React.Component<Props, State
         this.state = {
             blockId: this.props.blockId,
             paramId: this.props.paramId,
+            controlType: this.props.controlType,
             cc: this.props.cc
         };
     }
 
     onSubmit() {
         const { blockId, paramId, cc, controlType } = this.state;
-        const { controlId } = this.props;
+        const { controlId, saveChanges } = this.props;
         if (!blockId || !paramId) return false;
         saveChanges({
             controlId,
