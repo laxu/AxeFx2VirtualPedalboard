@@ -1,3 +1,5 @@
+import { PARAM_VALUE_MULTIPLIER, MIDI_VALUE_MULTIPLIER } from "../api/constants";
+
 export const textDecoder = new TextDecoder('utf-8');
 
 export function getObjKeyByValue(val: any, obj: any): string {
@@ -36,6 +38,22 @@ export function clampValue(val: number, range: [number, number], step: number): 
         value = value - value % step;
     }
     return value;
+}
+
+export function midiValueToAxeFx(value: number): number {
+    return (value / MIDI_VALUE_MULTIPLIER) * PARAM_VALUE_MULTIPLIER;
+}
+
+export function axeFxValueToMIDI(value: number): number {
+    return (value / PARAM_VALUE_MULTIPLIER) * MIDI_VALUE_MULTIPLIER;
+}
+
+export function axeFxValueToInt(value: number): number {
+    return value / PARAM_VALUE_MULTIPLIER;
+}
+
+export function intValueToAxeFx(value: number): number {
+    return value * PARAM_VALUE_MULTIPLIER;
 }
 
 export function isElectron(): boolean {
