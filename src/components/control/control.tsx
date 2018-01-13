@@ -4,7 +4,7 @@ import { FxBlock, FxParam } from '../../api/fx-block';
 import { ControlType } from '../../api/control-object';
 import './_control.scss';
 
-interface ControlProps {
+interface Props {
     block: FxBlock;
     param: FxParam;
     editMode: boolean;
@@ -12,7 +12,7 @@ interface ControlProps {
     cc: number;
 }
 
-export default class ControlComponent extends React.Component<ControlProps> {
+export default class ControlComponent extends React.Component<Props> {
     showEditDialog() {
         if (!this.props.editMode) return;
         // TODO show modal

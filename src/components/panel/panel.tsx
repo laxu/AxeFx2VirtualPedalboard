@@ -6,7 +6,7 @@ import ControlComponent from '../control/control'
 
 import './_panel.scss';
 
-interface PanelProps {
+interface Props {
     match: any,
     panel: PanelObject;
     init: (panelId: number) => void;
@@ -14,7 +14,7 @@ interface PanelProps {
     addPanelControl: (controlType: ControlType) => void;
 }
 
-interface PanelState {
+interface State {
     editMode: boolean;
     hasChanges: boolean;
     form: {
@@ -23,7 +23,7 @@ interface PanelState {
     }
 }
 
-export default class PanelComponent extends React.Component<PanelProps, PanelState> {
+export default class PanelComponent extends React.Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {

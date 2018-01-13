@@ -3,14 +3,14 @@ import { GenericMIDIController } from '../../api/generic-midi-controller';
 import { AxeFx } from '../../api/axefx';
 import './_header.scss';
 
-interface HeaderProps {
+interface Props {
     axeFx: AxeFx,
     controller: GenericMIDIController,
     firmwareVersion: string;
     presetName: string;
 }
 
-export default class HeaderComponent extends React.Component<HeaderProps> {
+export default class HeaderComponent extends React.Component<Props> {
     openSettings() {}
     render() {
         const { axeFx, controller, firmwareVersion, presetName } = this.props;

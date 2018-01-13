@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom'
 import { PanelObject } from '../../api/panel-object';
 import './_sidebar.scss';
 
-interface SidebarProps {
+interface Props {
     panels: PanelObject[]
     addNewPanel: () => void;
 }
 
-const Sidebar: React.SFC<SidebarProps> = (props) => {
+const Sidebar: React.SFC<Props> = (props) => {
     const { addNewPanel, panels } = props;
 
     return (

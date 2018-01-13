@@ -8,7 +8,7 @@ import { PanelObject } from '../api/panel-object';
 import Sidebar from './sidebar/sidebar';
 import PanelContainer from '../containers/panel-container';
 
-interface AppProps {
+interface Props {
     init: () => void;
     addNewPanel: () => void;
     axeFx: AxeFx;
@@ -18,7 +18,7 @@ interface AppProps {
     panels: PanelObject[];
 }
 
-export class AppComponent extends React.Component<AppProps> {
+export class AppComponent extends React.Component<Props> {
     constructor(props) {
         super(props);
     }
