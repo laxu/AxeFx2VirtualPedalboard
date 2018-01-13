@@ -26,7 +26,7 @@ h1, h2, h3, h4, h5, h6 {
 #app {
     display: grid;
     grid-template-columns: $sidebar-width auto;
-    grid-template-rows: $header-height auto;
+    grid-template-rows: auto auto;
     margin: 0;
 }
 

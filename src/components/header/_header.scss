@@ -6,17 +6,48 @@
     grid-column-start: 1;
     grid-column-end: 3;
     display: flex;
-    top: 0;
-    left: 0;
-    height: $header-height;
     background: $color-sidebar;
     color: $color-sidebar-text;
     padding: .5rem;
     box-sizing: border-box;
     overflow: hidden;
 
+    .logo {
+        margin-bottom: 1rem;
+        margin-right: 2rem;
+    }
+
     .info {
-        display: flex;
-        flex-direction: row;
+        flex-grow: 2;
+        font-size: $font-size-small;
+       
+        h4 {
+            width: 100px;
+            margin-bottom: 0;
+        }
+
+        label {
+            width: 130px;
+            font-weight: bold;
+        }
+
+        .info-container {
+            > div {
+                display: flex;
+            }
+        }
+
+        .axe-fx-info {
+            display: flex;
+            margin-bottom: .5rem;
+        }
+
+        .controller-info {
+            display: flex;
+        }
+    }
+
+    .actions {
+        text-align: right;
     }
 }
