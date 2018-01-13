@@ -1,0 +1,17 @@
+.btn {
+    border: $button-border;
+    border-radius: $button-radius;
+    background: $color-button;
+    color: $color-button-text;
+    padding: $button-padding;
+
+    &--primary {
+        background: $color-button-primary;
+    }
+
+    .fa {
+        margin-right: .35rem;
+        margin-left: -0.1rem;
+        vertical-align: middle;
+    }
+}
