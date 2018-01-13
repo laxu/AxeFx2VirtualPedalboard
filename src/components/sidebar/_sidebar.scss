@@ -2,11 +2,10 @@
 @import '../../styles/variables';
 
 .sidebar {
-    position: fixed;
-    top: $header-height;
-    left: 0;
-    height: $sidebar-height;
+    grid-row-start: 2;
+    grid-column-start: 1;
     width: $sidebar-width;
+    height: $sidebar-height;
     background: $color-sidebar;
     box-sizing: border-box;
     color: $color-sidebar-text;

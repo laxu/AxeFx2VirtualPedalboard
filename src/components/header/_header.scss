@@ -2,12 +2,13 @@
 @import '../../styles/variables';
 
 .header {
+    grid-row-start: 1;
+    grid-column-start: 1;
+    grid-column-end: 3;
     display: flex;
-    position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 50px;
+    height: $header-height;
     background: $color-sidebar;
     color: $color-sidebar-text;
     padding: .5rem;
