@@ -15,7 +15,11 @@ const Sidebar: React.SFC<Props> = (props) => {
     return (
         <div className="sidebar">
             <ul className="panels">
-                <li><button className="btn" onClick={() => addNewPanel()}>Add new panel</button></li>
+                <li>
+                    <button className="btn btn--primary add-panel" onClick={() => addNewPanel()}>
+                        <i className="fa fa-plus" aria-hidden="true"></i>Add panel
+                    </button>
+                </li>
                 {panels && panels.length > 0 && panels.map((panel, i) => (
                     <li key={`panel-${i}`}><Link to={`/panels/${panel.id}`}>{panel.label || `Panel ${panel.id}`}</Link></li>
                 ))}
