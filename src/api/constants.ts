@@ -13,6 +13,9 @@ export const MODEL_IDS = {
     'AX8': 0x08
 };
 
+export const MIDI_VALUE_MULTIPLIER = 12.8;
+export const PARAM_VALUE_MULTIPLIER = 6553.4;
+
 export const TUNER_CC = 15;
 export const METRONOME_CC = 122;
 
@@ -23,8 +26,8 @@ export const AXE_FUNCTIONS = {
     getPresetEditedStatus: 0x2A,
     getMIDIChannel: 0x17,
     getBlockParametersList: 0x01,
+    blockParamValue: 0x02,
     setTargetBlock: 0x37,
-    setBlockBypass: 0x02,
     multiResponse: 0x64,
     batchRequestStart: 0x32,
     batchRequestComplete: 0x33
