@@ -32,13 +32,17 @@ export class FxBlock implements IFxBlock {
         this.parameters = fxBlockSettings.parameters || [];
     }
 
-    getParamValue(paramId: number) {
-        const param = this.parameters.find(param => param.id === paramId);
+    getParam(paramId: number): FxParam {
+       return this.parameters.find(param => param.id === paramId) || null;
+    }
+
+    getParamValue(paramId: number): number {
+        const param = this.getParam(paramId);
         if (!param) return null;
         return param.value;
     }
 
-    setParamValue(paramId: number, paramValue: number) {
+    setParamValue(paramId: number, paramValue: number): void {
         const param = this.parameters.find(param => param.id === paramId);
         if (!param) throw new Error('Cannot set value of non-existent param!');
         param.value = paramValue;
@@ -69,7 +73,7 @@ export class FxParam implements IFxParam {
 }
 
 // Build blocks
-const blocks = [];
+export const blocks = [];
 
 for (const blockType of FX_BLOCK_TYPES) {
     let counter = 0;
@@ -86,4 +90,7 @@ for (const blockType of FX_BLOCK_TYPES) {
     }
 }
 
-export default blocks;
+export function getBlockById(blockId: number): FxBlock {
+    if (!blockId) throw new Error('getBlockById: Block ID is undefined!');
+    return blocks.find(block => block.id === blockId) || null;
+}
