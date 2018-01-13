@@ -19,6 +19,7 @@
     "@types/react-redux": "^5.0.14",
     "@types/text-encoding": "0.0.32",
     "classnames": "^2.2.5",
+    "font-awesome": "^4.7.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
@@ -32,12 +33,14 @@
     "awesome-typescript-loader": "^3.4.1",
     "css-loader": "^0.28.8",
     "electron": "1.7.10",
+    "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.19.1",
     "typescript": "^2.6.2",
+    "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.10.0"
   }

@@ -27,12 +27,21 @@ module.exports = {
         rules: [
             { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
             { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' },
             {
                 test: /\.scss$/,
                 use: [
                     { loader: 'style-loader' },
                     { loader: 'css-loader' },
                     { loader: "sass-loader" }
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
                 ]
             }
         ]

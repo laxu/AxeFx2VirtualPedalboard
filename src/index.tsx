@@ -12,6 +12,7 @@ import AppContainer from './containers/app-container';
 import { WebMidiWrapper } from './api/midi';
 import { isElectron } from './util/util';
 import './styles/main.scss';
+import 'font-awesome/css/font-awesome.min.css';
 
 const config = {
     key: 'axeFxMidi',
