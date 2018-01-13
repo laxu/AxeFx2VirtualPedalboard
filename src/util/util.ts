@@ -59,3 +59,7 @@ export function intValueToAxeFx(value: number): number {
 export function isElectron(): boolean {
     return navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
 }
+
+export function range (start, end) {
+    return Array.from(Array(end - start + 1), (_, i) => start + i);
+}
