@@ -5,6 +5,15 @@
     color: $color-button-text;
     padding: $button-padding;
 
+    &:hover {
+        cursor: pointer;
+    }
+
+    &[disabled] {
+        cursor: not-allowed;
+        background: $color-button-disabled;
+    }
+
     &--primary {
         background: $color-button-primary;
     }
