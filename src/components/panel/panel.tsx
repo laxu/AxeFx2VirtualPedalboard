@@ -43,7 +43,8 @@ export default class PanelComponent extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        //this.props.init();
+        const { match } = this.props;
+        this.props.init(match.params.panelId);
     }
 
     componentWillReceiveProps(nextProps) {
