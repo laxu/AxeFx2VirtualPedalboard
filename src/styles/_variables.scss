@@ -6,7 +6,7 @@ $global-radius: 4px;
 $header-height: 50px;
 
 $sidebar-width: 200px;
-$sidebar-height: 100vh;
+$sidebar-height: calc(100vh - 100px);
 
 $control-width: 100px;
 $control-min-height: 100px;
