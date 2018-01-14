@@ -1,11 +1,12 @@
 import { clampValue, getObjKeyByValue } from "../util/util";
-import { FX_BLOCK_IDS, FX_BLOCK_TYPES, FX_PARAMS, PARAM_TYPE } from "./fx-block-data";
+import { FX_BLOCK_IDS, FX_BLOCK_TYPES, FX_PARAMS, PARAM_TYPE, FX_BLOCK_LABELS } from "./fx-block-data";
 
 export interface IFxBlock {
     id: number;
     engaged?: boolean;
     isX?: boolean;
     parameters: IFxParam[];
+    label: string;
 }
 
 export interface IFxParam {
@@ -30,6 +31,7 @@ export class FxBlock implements IFxBlock {
         this.engaged = fxBlockSettings.engaged || true;
         this.isX = fxBlockSettings.engaged || true;
         this.parameters = fxBlockSettings.parameters || [];
+        this.label = fxBlockSettings.label || 'Unknown block';
     }
 
     getParam(paramId: number): FxParam {
