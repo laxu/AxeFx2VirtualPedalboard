@@ -1,0 +1,59 @@
+.form {
+    label, input, select, textarea {
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .label-radio {
+        vertical-align: middle;
+        margin-right: 1rem;
+
+        &:last-child {
+            margin-right: 0;
+        }
+        
+        input {
+            display: inline-block;
+            margin-right: .5rem;
+        }
+    }
+
+    input {
+        padding: $form-input-padding;
+        border-radius: $global-radius;
+        border: 1px solid $color-border;
+
+        &[type=submit] {
+            display: inline-block;
+            margin-left: .5rem;
+            padding: $button-padding;
+        }
+    }
+
+    select {
+        padding: $form-input-padding;
+        border-radius: $global-radius;
+    }
+
+    .form-group {
+        &--inline {
+            display: flex;
+        }
+    }
+
+    &--inline {
+        .form-group {
+            display: flex;
+
+            label {
+                vertical-align: middle;
+                min-width: 100px;
+                padding-top: .5rem;
+            }
+
+            input, select, textarea {
+                vertical-align: middle;
+            }
+        }
+    }
+}
