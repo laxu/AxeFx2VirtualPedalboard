@@ -1,17 +1,21 @@
-import AppSettingsComponent from "../components/app-settings/app-settings";
-import { connect } from "react-redux";
-import { setAxeFxAction, setMIDIControllerAction } from "../store/actions";
-import { WebMidiWrapper, MIDIInput, MIDIOutput, MIDIControllerType } from "../api/midi";
-import { AxeFx } from "../api/axefx";
-import { GenericMIDIController } from "../api/generic-midi-controller";
+import { connect } from 'react-redux';
+import { setAxeFxAction, setMIDIControllerAction } from '../store/actions';
+import { WebMidiWrapper, MIDIInput, MIDIOutput, MIDIControllerType } from '../api/midi';
+import { AxeFx } from '../api/axefx';
+import { GenericMIDIController } from '../api/generic-midi-controller';
+import AppSettingsComponent from '../components/app-settings/app-settings';
 
 const mapStateToProps = state => ({
     axeFx: state.app.axeFx,
     controller: state.app.controller
 });
 
-const mapDispatchToProps = dispatch => ({
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
     saveChanges(formValues) {
+        const { dispatch } = dispatchProps;
         const axeFxInput: MIDIInput = WebMidiWrapper.webMidi.getInputByName(formValues.axeFxInput.input);
         const axeFxOutput: MIDIOutput = WebMidiWrapper.webMidi.getOutputByName(formValues.axeFxOutput.output);
         const axeFx = new AxeFx({
@@ -39,4 +43,4 @@ const mapDispatchToProps = dispatch => ({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppSettingsComponent);
+export default connect(mapStateToProps, null, mergeProps)(AppSettingsComponent);
