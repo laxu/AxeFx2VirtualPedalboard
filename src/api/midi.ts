@@ -49,6 +49,6 @@ export class WebMidiWrapper {
     }
 }
 
-export function isAxeFx(device: MIDIController) {
-    return device.name.includes('AXE-FX') || device.name.includes('AX8');
+export function isAxeFx(device: MIDIInput | MIDIOutput) {
+    return device.name.indexOf('AXE-FX') !== -1 || device.name.indexOf('AX8') !== -1;
 }
