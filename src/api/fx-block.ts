@@ -75,18 +75,19 @@ export class FxParam implements IFxParam {
 }
 
 // Build blocks
-export const blocks = [];
+const blocks = [];
 
 for (const blockType of FX_BLOCK_TYPES) {
-    let counter = 0;
+    let counter = 1;
     let blockName = blockType + counter;
     while(FX_BLOCK_IDS[blockName]) {
         const id = FX_BLOCK_IDS[blockName];
+        const label = FX_BLOCK_LABELS[blockName];
         let parameters = [];
         if (FX_PARAMS[blockType]) {
             parameters = FX_PARAMS[blockType].map(param => new FxParam({ blockGroup: blockType, ...param }));
         }
-        blocks.push(new FxBlock({ id, parameters }));
+        blocks.push(new FxBlock({ id, label, parameters }));
         counter++;
         blockName = blockType + counter;
     }
@@ -95,4 +96,8 @@ for (const blockType of FX_BLOCK_TYPES) {
 export function getBlockById(blockId: number): FxBlock {
     if (!blockId) throw new Error('getBlockById: Block ID is undefined!');
     return blocks.find(block => block.id === blockId) || null;
+}
+
+export function getAllBlocks() {
+    return blocks;
 }
