@@ -1,6 +1,10 @@
 .form {
     label, input, select, textarea {
         display: block;
+        margin-bottom: .5rem;
+    }
+
+    input, select, textarea {
         margin-bottom: 1rem;
     }
 
