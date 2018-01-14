@@ -4,9 +4,11 @@
     background: $color-button;
     color: $color-button-text;
     padding: $button-padding;
+    transition: background-color 0.3s;
 
     &:hover {
         cursor: pointer;
+        background: $color-button-highlight;
     }
 
     &[disabled] {
@@ -16,6 +18,10 @@
 
     &--primary {
         background: $color-button-primary;
+
+        &:hover {
+            background: $color-button-primary-highlight;
+        }
     }
 
     .fa {

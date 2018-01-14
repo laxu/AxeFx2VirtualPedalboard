@@ -28,6 +28,7 @@
             }
 
             &.panel {
+                position: relative;
                 border-radius: $global-radius 0 0 $global-radius;
                 border: 1px solid $color-border;
                 border-right: 0;
@@ -35,6 +36,8 @@
                
                 &.active {
                     background: $color-sidebar-item-active;
+                    border-right: 1px solid $color-sidebar-item-active;
+                    width: calc(100% + 1px);
                 }
 
                 a {

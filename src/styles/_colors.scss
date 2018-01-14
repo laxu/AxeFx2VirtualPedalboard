@@ -1,19 +1,23 @@
-$color-body: #ccc;
-$color-body-text: #222;
+$color-body: #555;
+$color-body-text: #ddd;
 
-$color-border: #666;
+$color-border: #383838;
 
-$color-sidebar: #888;
+$color-modal: rgba(#222, 0.75);
+
+$color-sidebar: #424242;
 $color-sidebar-text: #eee;
-$color-sidebar-item: #666;
+$color-sidebar-item: darken($color-body, 8%);
 $color-sidebar-item-text: #eee;
-$color-sidebar-item-active: #444;
+$color-sidebar-item-active: $color-body;
 
 $color-control: #555;
 $color-control-text: #ddd;
 
-$color-button: #79b4a8;
-$color-button-primary: #16be9a;
+$color-button: #2a6b5e;
+$color-button-highlight: lighten($color-button, 5%);
+$color-button-primary: #0a6451;
+$color-button-primary-highlight: lighten($color-button-primary, 5%);
 $color-button-text: #eee;
-$color-button-border: darken($color-button, 25%);
+$color-button-border: darken($color-button, 15%);
 $color-button-disabled: lighten($color-button, 20%);
