@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AxeFx } from '../../api/axefx';
 import { MIDIController, WebMidiWrapper, isAxeFx, MIDIInput, MIDIOutput } from '../../api/midi';
-import { range } from '../../util/util';
+import { handleSubmit, numRange } from '../../util/util';
 import './_app-settings.scss';
 
 interface Props {
@@ -23,7 +23,7 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
         this.state = {
             inputs: WebMidiWrapper.webMidi.inputs,
             outputs: WebMidiWrapper.webMidi.outputs,
-            midiChannels: range(1, 12)
+            midiChannels: numRange(1, 12)
         };
     }
 

@@ -60,6 +60,6 @@ export function isElectron(): boolean {
     return navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
 }
 
-export function range (start, end) {
+export function numRange (start: number, end: number) {
     return Array.from(Array(end - start + 1), (_, i) => start + i);
 }
