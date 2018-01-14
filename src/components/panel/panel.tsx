@@ -1,10 +1,12 @@
 import * as React from 'react';
+import Modal from 'react-modal/lib/components/Modal';
 import { FxBlock, FxParam } from '../../api/fx-block';
-import { ControlType } from '../../api/control-object';
+import { ControlType, ControlObject } from '../../api/control-object';
 import { PanelObject } from '../../api/panel-object';
 import ControlComponent from '../control/control'
 
 import './_panel.scss';
+import ControlEditorContainer from '../../containers/control-editor-container';
 
 interface Props {
     match: any,
@@ -16,6 +18,7 @@ interface Props {
 
 interface State {
     editMode: boolean;
+    editedControl: ControlObject;
     hasChanges: boolean;
     form: {
         label: string,
@@ -28,12 +31,15 @@ export default class PanelComponent extends React.Component<Props, State> {
         super(props);
         this.state = {
             editMode: false,
+            editedControl: null,
             hasChanges: false,
             form: {
                 label: null,
                 cc: null
             }
         };
+
+        this.closeModal = this.closeModal.bind(this);
     }
 
     componentDidMount() {
@@ -44,11 +50,23 @@ export default class PanelComponent extends React.Component<Props, State> {
         const { match } = nextProps;
        if (match.params.panelId !== this.props.match.params.panelId) {
            this.props.init(match.params.panelId);
+           this.setState({ editMode: false });
        }
     }
 
     toggleEdit() {
         this.setState({ editMode: !this.state.editMode });
+    }
+
+    editControl(control: ControlObject) {
+        this.setState({ editedControl: control });
+    }
+
+    closeModal(hasChanges: boolean) {
+        this.setState({ 
+            hasChanges: hasChanges || this.state.hasChanges, 
+            editedControl: null 
+        });
     }
 
     saveChanges() {
@@ -76,32 +94,35 @@ export default class PanelComponent extends React.Component<Props, State> {
 
     render() {
         const { panel } = this.props;
-        const { editMode, hasChanges } = this.state;
+        const { editMode, editedControl, hasChanges } = this.state;
 
         if (!panel) return null;
 
         return (
             <div className="panel">
                 <div className="panel__header">
+                    <button className="btn toggle-edit" onClick={() => this.toggleEdit()}>{editMode ? 'Cancel' : 'Edit'}</button>
+                    {editMode && <button className="btn btn--primary save-changes" onClick={() => this.saveChanges()} disabled={!hasChanges}>Save</button>}
                     <div className="panel__label">
                         {!editMode && <span>{panel.label}</span>}
-                        {editMode && <input type="text" 
-                                            className="panel__label--input"
-                                            defaultValue={panel.label} 
-                                            onChange={event => this.setFormValue('label', event.target.value)} />}
                     </div>
-                    <div className="panel__actions">
-                        <button className="btn toggle-edit" onClick={() => this.toggleEdit()}>{editMode ? 'Cancel' : 'Edit'}</button>
+                    <div className="panel__edit">
                         {editMode && (
                         <div>
+                            <div className="panel__edit-label">
+                                <label>Panel name</label>
+                                <input type="text" 
+                                    className="panel__label--input"
+                                    defaultValue={panel.label} 
+                                    onChange={event => this.setFormValue('label', event.target.value)} />
+                            </div>
                             <div className="panel__edit-cc">
-                                <label>Activate panel using CC:</label>
+                                <label>Activate panel using CC</label>
                                 <input type="number" 
-                                       defaultValue={panel.cc ? panel.cc.toString() : ''} 
-                                       onChange={event => this.setFormValue('cc', event.target.value, 'number')} />
+                                    defaultValue={panel.cc >= 0 ? panel.cc.toString() : ''} 
+                                    onChange={event => this.setFormValue('cc', event.target.value, 'number')} />
                             </div>
                             <div className="panel__edit-actions">
-                                <button className="btn" onClick={() => this.saveChanges()} disabled={!hasChanges}>Save</button>
                                 <button className="btn" onClick={() => this.addControl(ControlType.Control)}>Add control</button>
                                 <button className="btn" onClick={() => this.addControl(ControlType.Switch)}>Add switch</button>
                             </div>
@@ -110,16 +131,20 @@ export default class PanelComponent extends React.Component<Props, State> {
                 </div>
                 <div className="panel__controls">
                     {panel.controls.length > 0 && panel.controls.map((control, i) => (
-                        <ControlComponent key={`control-${i}`}
-                            controlType={control.controlType}
-                            block={control.block}
-                            param={control.param}
-                            cc={control.cc}
-                            editMode={editMode}
-                        ></ControlComponent>
+                        <div className="control-container" onClick={() => this.editControl(control)} key={`control-${i}`}>
+                            <ControlComponent
+                                controlType={control.controlType}
+                                block={control.block}
+                                param={control.param}
+                                cc={control.cc}
+                            ></ControlComponent>
+                        </div>
                     ))}
                     {panel.controls.length === 0 && <p>No controls, how about <a onClick={() => this.addControl(ControlType.Control)}>adding</a> some?</p>}
                 </div>
+                <Modal isOpen={!!editedControl} contentLabel="Control editor">
+                    <ControlEditorContainer {...editedControl} closeModal={this.closeModal}></ControlEditorContainer>
+                </Modal>
             </div>
         );
     }
