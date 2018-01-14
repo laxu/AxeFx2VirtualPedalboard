@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AxeFx } from '../../api/axefx';
 import { MIDIController, WebMidiWrapper, isAxeFx, MIDIInput, MIDIOutput } from '../../api/midi';
 import { range } from '../../util/util';
+import './_app-settings.scss';
 
 interface Props {
     axeFx: AxeFx;
@@ -11,10 +12,8 @@ interface Props {
 }
 
 interface State {
-    axeFxInputs: MIDIInput[];
-    axeFxOutputs: MIDIOutput[];
-    controllerInputs: MIDIInput[];
-    controllerOutputs: MIDIOutput[];
+    inputs: MIDIInput[];
+    outputs: MIDIOutput[];
     midiChannels: number[]
 }
 
@@ -22,10 +21,8 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
     constructor(props) {
         super(props);
         this.state = {
-            axeFxInputs: WebMidiWrapper.webMidi.inputs.filter(inputDevice => isAxeFx(inputDevice)),
-            axeFxOutputs: WebMidiWrapper.webMidi.outputs.filter(outputDevice => isAxeFx(outputDevice)),
-            controllerInputs: WebMidiWrapper.webMidi.inputs.filter(inputDevice => !isAxeFx(inputDevice)),
-            controllerOutputs: WebMidiWrapper.webMidi.outputs.filter(outputDevice => !isAxeFx(outputDevice)),
+            inputs: WebMidiWrapper.webMidi.inputs,
+            outputs: WebMidiWrapper.webMidi.outputs,
             midiChannels: range(1, 12)
         };
     }
@@ -38,34 +35,39 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
         return true;
     }
 
+    onCancel(event) {
+        event.preventDefault();
+        this.props.onCancel();
+    }
+
     render() {
-        const { axeFx, controller, onCancel } = this.props;
-        const { axeFxInputs, axeFxOutputs, controllerInputs, controllerOutputs, midiChannels } = this.state;
+        const { axeFx, controller } = this.props;
+        const { inputs, outputs, midiChannels } = this.state;
 
         return (
-            <form className="app-settings" onSubmit={this.onSubmit}>
+            <form className="form form--inline app-settings" onSubmit={this.onSubmit}>
                 <h1>App settings</h1>
                 <div className="settings__axefx">
                     <h4>Axe-Fx</h4>
-                    <div>
+                    <div className="form-group">
                         <label>MIDI input</label>
                         <select name="axeFxInput" defaultValue={axeFx && axeFx.input.name}>
                             <option disabled value="">Select Axe-Fx 2 / AX8 MIDI input</option>
-                            {axeFxInputs.map((input, i) => (
+                            {inputs.map((input, i) => (
                                 <option key={`midi-input-${i}`} value={input.name}>{input.name}</option>
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>MIDI output</label>
                         <select name="axeFxOutput" defaultValue={axeFx && axeFx.output.name}>
                             <option disabled value="">Select Axe-Fx 2 / AX8 MIDI output</option>
-                            {axeFxOutputs.map((output, i) => (
+                            {outputs.map((output, i) => (
                                 <option key={`midi-output-${i}`} value={output.name}>{output.name}</option>
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>MIDI channel</label>
                         <select name="axeFxChannel" defaultValue={axeFx && axeFx.channel as string}>
                             <option disabled value="">Select Axe-Fx 2 / AX8 MIDI channel</option>
@@ -78,25 +80,25 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
                 </div>
                 <div className="settings__controller">
                     <h4>MIDI controller</h4>
-                    <div>
+                    <div className="form-group">
                         <label>MIDI input</label>
                         <select name="controllerInput" defaultValue={controller && controller.input.name}>
                             <option disabled value="">Select MIDI controller input</option>
-                            {controllerInputs.map((input, i) => (
+                            {inputs.map((input, i) => (
                                 <option key={`midi-input-${i}`} value="input.name">{input.name}</option>
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>MIDI output</label>
                         <select name="controllerOutput" defaultValue={controller && controller.output.name}>
                             <option disabled value="">Select MIDI controller output</option>
-                            {controllerOutputs.map((output, i) => (
+                            {outputs.map((output, i) => (
                                 <option key={`midi-output-${i}`} value="output.name">{output.name}</option>
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>MIDI channel</label>
                         <select name="controllerChannel" defaultValue={controller && controller.channel as string}>
                             <option disabled value="">Select MIDI controller channel</option>
@@ -108,8 +110,8 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
                     </div>
                 </div>
                 <div className="actions">
-                    <input type="submit" value="Save" className="btn" />
-                    <button className="btn" onClick={() => onCancel()}>Cancel</button>
+                    <button className="btn" onClick={(event) => this.onCancel(event)}>Cancel</button>
+                    <input type="submit" value="Save" className="btn btn--primary" />
                 </div>
             </form>
         );
