@@ -3,6 +3,10 @@
 
 .panel {
     padding: 1rem;
+    border: 1px solid $color-border;
+    border-radius: $global-radius;
+    min-height: 50%;
+    background: $color-body;
 
     &__controls {
         display: flex;
@@ -11,10 +15,6 @@
     }
 
     &__edit {
-        label {
-            display: block;
-        }
-
         &-actions {
             margin-top: 1rem;
 
