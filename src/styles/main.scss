@@ -35,3 +35,8 @@ h1, h2, h3, h4, h5, h6 {
     grid-column-start: 2;
     padding: 0;
 }
+
+/* Remove scroll on the body when react-modal is open */
+.ReactModal__Body--open {
+    overflow: hidden;
+}

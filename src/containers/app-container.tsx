@@ -1,5 +1,6 @@
 import { withRouter } from 'react-router';
 import { connect } from "react-redux";
+import Modal from 'react-modal/lib/components/Modal';
 
 import { setAxeFxAction, firmwareVersionAction, presetNameAction, setMIDIControllerAction, setPanelAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType } from "../api/midi";
@@ -21,6 +22,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     dispatch,
     async init() {
+        Modal.setAppElement(document.getElementById('app-container'));
         const axeFxDevice = new AxeFx({
             id: MODEL_IDS['Axe-Fx II'],
             name: 'My Axe-Fx II',

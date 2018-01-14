@@ -17,7 +17,7 @@ module.exports = {
 
     resolve: {
         modules: [
-            'node_modules',
+            path.resolve('./node_modules'),
             path.resolve(__dirname)
         ],
         extensions: ['.ts', '.tsx', '.js', '.json']
