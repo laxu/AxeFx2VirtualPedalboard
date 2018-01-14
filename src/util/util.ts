@@ -63,3 +63,16 @@ export function isElectron(): boolean {
 export function numRange (start: number, end: number) {
     return Array.from(Array(end - start + 1), (_, i) => start + i);
 }
+
+export function handleSubmit(callback) {
+    return (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const formObj = {};
+        for (const [key, value] of formData.entries()) {
+            formObj[key] = value;
+        }
+        callback(formObj);
+        return false;
+    }
+}
