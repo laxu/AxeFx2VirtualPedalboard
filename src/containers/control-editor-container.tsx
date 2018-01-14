@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-
 import { ControlType, ControlObject } from '../api/control-object';
 import ControlEditorComponent from '../components/control-editor/control-editor';
+import { getBlockById } from '../api/fx-block';
 
 const mapStateToProps = state => ({
     panel: state.app.currentPanel
@@ -26,8 +25,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             cc
         };
         panel.controls[controlIdx] = updatedControl;
-
-    }
+    },
 });
 
-export default withRouter(connect(mapStateToProps, null, mergeProps)(ControlEditorComponent));
+export default connect(mapStateToProps, null, mergeProps)(ControlEditorComponent);
