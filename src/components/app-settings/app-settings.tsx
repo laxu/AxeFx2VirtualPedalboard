@@ -7,7 +7,7 @@ import './_app-settings.scss';
 interface Props {
     axeFx: AxeFx;
     controller: MIDIController;
-    saveChanges: (formValues: any) => void;
+    saveChanges: (formData: any) => void;
     onCancel: () => void;
 }
 
@@ -25,13 +25,15 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
             outputs: WebMidiWrapper.webMidi.outputs,
             midiChannels: numRange(1, 12)
         };
+
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onSubmit(event) {
-        const { saveChanges } = this.props;
-        const formValues: any = new FormData(event.target);
-        if (!formValues.axeFxInput || !formValues.axeFxOutput || !formValues.controllerOutput) return false;
-        saveChanges(formValues);
+    onSubmit(formData) {
+        const { saveChanges, onCancel } = this.props;
+        if (!formData.axeFxInput || !formData.axeFxOutput || !formData.controllerOutput) return false;
+        saveChanges(formData);
+        onCancel();
         return true;
     }
 
@@ -45,7 +47,7 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
         const { inputs, outputs, midiChannels } = this.state;
 
         return (
-            <form className="form form--inline app-settings" onSubmit={this.onSubmit}>
+            <form className="form form--inline app-settings" name="appSettingsForm" onSubmit={handleSubmit(this.onSubmit)}>
                 <h1>App settings</h1>
                 <div className="settings__axefx">
                     <h4>Axe-Fx</h4>
@@ -85,7 +87,7 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
                         <select name="controllerInput" defaultValue={controller && controller.input.name}>
                             <option disabled value="">Select MIDI controller input</option>
                             {inputs.map((input, i) => (
-                                <option key={`midi-input-${i}`} value="input.name">{input.name}</option>
+                                <option key={`midi-input-${i}`} value={input.name}>{input.name}</option>
                             ))}
                         </select>
                     </div>
@@ -94,7 +96,7 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
                         <select name="controllerOutput" defaultValue={controller && controller.output.name}>
                             <option disabled value="">Select MIDI controller output</option>
                             {outputs.map((output, i) => (
-                                <option key={`midi-output-${i}`} value="output.name">{output.name}</option>
+                                <option key={`midi-output-${i}`} value={output.name}>{output.name}</option>
                             ))}
                         </select>
                     </div>

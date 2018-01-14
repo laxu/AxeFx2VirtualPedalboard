@@ -14,28 +14,28 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...stateProps,
     ...dispatchProps,
     ...ownProps,
-    saveChanges(formValues) {
+    saveChanges(formData) {
         const { dispatch } = dispatchProps;
-        const axeFxInput: MIDIInput = WebMidiWrapper.webMidi.getInputByName(formValues.axeFxInput.input);
-        const axeFxOutput: MIDIOutput = WebMidiWrapper.webMidi.getOutputByName(formValues.axeFxOutput.output);
+        const axeFxInput: MIDIInput = WebMidiWrapper.webMidi.getInputByName(formData.axeFxInput);
+        const axeFxOutput: MIDIOutput = WebMidiWrapper.webMidi.getOutputByName(formData.axeFxOutput);
         const axeFx = new AxeFx({
             id: 1,
             name: 'AxeFx',
             type: MIDIControllerType.AxeFx,
             input: axeFxInput,
             output: axeFxOutput,
-            channel: formValues.axeFxChannel === 'all' ? 'all': Number(formValues.axeFxChannel)
+            channel: formData.axeFxChannel === 'all' ? 'all': Number(formData.axeFxChannel)
         });
 
-        const controllerInput: MIDIInput = WebMidiWrapper.webMidi.getInputByName(formValues.controllerInput.input);
-        const controllerOutput: MIDIOutput = WebMidiWrapper.webMidi.getOutputByName(formValues.controllerOutput.output);
+        const controllerInput: MIDIInput = WebMidiWrapper.webMidi.getInputByName(formData.controllerInput);
+        const controllerOutput: MIDIOutput = WebMidiWrapper.webMidi.getOutputByName(formData.controllerOutput);
         const controller = new GenericMIDIController({
             id: 'genericMidiController',
             name: 'MIDI controller',
             type: MIDIControllerType.Controller,
             input: controllerInput,
             output: controllerOutput,
-            channel: formValues.controllerChannel === 'all' ? 'all': Number(formValues.controllerChannel)
+            channel: formData.controllerChannel === 'all' ? 'all': Number(formData.controllerChannel)
         });
 
         dispatch(setAxeFxAction(axeFx));
