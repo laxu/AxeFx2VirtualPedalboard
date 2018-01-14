@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { GenericMIDIController } from '../../api/generic-midi-controller';
 import { AxeFx } from '../../api/axefx';
+import Modal from 'react-modal/lib/components/Modal';
 import './_header.scss';
+import AppSettingsContainer from '../../containers/app-settings-container';
 
 interface Props {
     axeFx: AxeFx,
@@ -10,10 +12,25 @@ interface Props {
     presetName: string;
 }
 
-export default class HeaderComponent extends React.Component<Props> {
-    openSettings() {}
+interface State {
+    showSettings: boolean;
+}
+
+export default class HeaderComponent extends React.Component<Props, State> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showSettings: false
+        }
+    }
+
+    toggleSettingsModal(showSettings: boolean) {
+        this.setState({ showSettings });
+    }
+
     render() {
         const { axeFx, controller, firmwareVersion, presetName } = this.props;
+        const { showSettings } = this.state;
         
         return (
             <div className="header">
@@ -48,9 +65,11 @@ export default class HeaderComponent extends React.Component<Props> {
                     </div>
                 </div>
                 <div className="actions">
-                    <button className="btn settings" onClick={this.openSettings}>Settings</button>
+                    <button className="btn settings" onClick={() => this.toggleSettingsModal(true)}>Settings</button>
                 </div>
-                
+                <Modal isOpen={showSettings}>
+                    <AppSettingsContainer onCancel={() => this.toggleSettingsModal(false)}></AppSettingsContainer>
+                </Modal>
                 
             </div>
         );
