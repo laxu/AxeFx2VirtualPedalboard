@@ -14,8 +14,6 @@ interface Props {
 const Sidebar: React.SFC<Props> = (props) => {
     const { addNewPanel, panels, currentPanelId } = props;
 
-    console.log('fuu', currentPanelId);
-
     return (
         <div className="sidebar">
             <ul className="panels">
