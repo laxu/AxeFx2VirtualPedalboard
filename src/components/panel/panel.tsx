@@ -14,6 +14,7 @@ interface Props {
     init: (panelId: number) => void;
     savePanelChanges: (form) => void;
     addPanelControl: (controlType: ControlType) => void;
+    removePanelControl: (control: ControlObject) => void;
 }
 
 interface State {
@@ -93,6 +94,14 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.setState({ hasChanges: true });
     }
 
+    removeControl(event, control: ControlObject) {
+        const { removePanelControl } = this.props;
+        event.preventDefault();
+        event.stopPropagation();
+        removePanelControl(control);
+        this.setState({ hasChanges: true });
+    }
+
     render() {
         const { panel } = this.props;
         const { editMode, editedControl, hasChanges } = this.state;
@@ -133,6 +142,7 @@ export default class PanelComponent extends React.Component<Props, State> {
                 <div className="panel__controls">
                     {panel.controls.length > 0 && panel.controls.map((control, i) => (
                         <div className="control-container" onClick={() => this.editControl(control)} key={`control-${i}`}>
+                            {editMode && <button className="btn remove-control" onClick={event => this.removeControl(event, control)}>X</button>}
                             <ControlComponent
                                 controlType={control.controlType}
                                 block={control.block}

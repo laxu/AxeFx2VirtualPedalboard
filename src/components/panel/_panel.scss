@@ -38,6 +38,13 @@
     }
 
     .control-container {
+        position: relative;
         cursor: pointer;
+    }
+
+    .remove-control {
+        position: absolute;
+        top: -10px;
+        right: 0;
     }
 }
