@@ -33,8 +33,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         addPanelControl(controlType: ControlType) {
             const control: ControlObject = {
                 id: generateId(),
-                block: null,
-                param: null,
+                blockId: null,
+                paramId: null,
+                paramValue: null,
                 controlType,
                 cc: null
             };

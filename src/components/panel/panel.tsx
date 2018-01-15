@@ -154,12 +154,7 @@ export default class PanelComponent extends React.Component<Props, State> {
                     {panel.controls.length > 0 && panel.controls.map((control, i) => (
                         <div className="control-container" onClick={() => this.editControl(control)} key={`control-${i}`}>
                             {editMode && <button className="btn remove-control" onClick={event => this.removeControl(event, control)}>X</button>}
-                            <ControlComponent
-                                controlType={control.controlType}
-                                block={control.block}
-                                param={control.param}
-                                cc={control.cc}
-                            ></ControlComponent>
+                            <ControlComponent {...control}></ControlComponent>
                         </div>
                     ))}
                     {panel.controls.length === 0 && <p>No controls, how about <a onClick={() => this.addControl(ControlType.Control)}>adding</a> some?</p>}

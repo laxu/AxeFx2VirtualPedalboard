@@ -5,8 +5,8 @@ import { FxBlock, getAllBlocks, getBlockById, FxParam } from '../../api/fx-block
 
 interface Props {
     id: string;
-    block: FxBlock;
-    param: FxParam;
+    blockId: number;
+    paramId: number;
     controlType: ControlType;
     cc: number;
     saveChanges: (ControlObject) => void;
@@ -27,11 +27,11 @@ export default class ControlEditorComponent extends React.Component<Props, State
     constructor(props) {
         super(props);
         
-        const { block, param, controlType, cc } = this.props;
+        const { blockId, paramId, controlType, cc } = this.props;
         this.state = {
             blocks: getAllBlocks(),
-            blockId: block && block.id,
-            paramId: param && param.id,
+            blockId: blockId,
+            paramId: paramId,
             controlType: controlType || ControlType.Control,
             cc: cc,
             hasChanges: false
