@@ -1,56 +1,35 @@
 import { Action } from "redux";
 import { AxeFx } from "../api/axefx";
-import { MIDIController } from "../api/midi";
+import { MIDIController, MIDIDeviceData } from "../api/midi";
 import { PanelObject } from "../api/panel-object";
+import { GenericMIDIController } from "../api/generic-midi-controller";
 
 export enum TypeKeys {
-    getFirmwareVersion = 'Get firmware version',
-    getPresetName = 'Get preset name',
-    getPresetNumber = 'Get preset number',
     getPanel = 'Get single panel',
     setPanel = 'Set panel',
-    setAxeFx = 'Set Axe-Fx',
-    setMIDIController = 'Set MIDI controller',
+    setMIDIDeviceData = 'Set MIDI device data',
+    updateAxeFx = 'Update Axe-Fx',
+    resetAxeFx = 'Reset Axe-Fx'
 };
 
-export interface FirmwareVersionAction extends Action {
-    payload: string
+export interface SetMIDIDeviceData extends Action {
+    payload: MIDIDeviceData
 }
-export const firmwareVersionAction = (payload): FirmwareVersionAction => ({
-    type: TypeKeys.getFirmwareVersion,
-    payload
-}); 
-
-export interface PresetNameAction extends Action {
-    payload: string
-}
-export const presetNameAction = (payload): PresetNameAction => ({
-    type: TypeKeys.getPresetName,
+export const setMIDIDeviceData = (payload): SetMIDIDeviceData => ({
+    type: TypeKeys.setMIDIDeviceData,
     payload
 });
 
-export interface PresetNumberAction extends Action {
-    payload: number
+export interface AxeFxUpdateAction extends Action {
+    payload: [string, any]
 }
-export const presetNumberAction = (payload): PresetNameAction => ({
-    type: TypeKeys.getPresetNumber,
-    payload
+export const axeFxUpdateAction = (payload): AxeFxUpdateAction => ({
+    type: TypeKeys.updateAxeFx,
+    payload: payload
 });
 
-export interface SetAxeFxAction extends Action {
-    payload: AxeFx
-}
-export const setAxeFxAction = (payload): SetAxeFxAction => ({
-    type: TypeKeys.setAxeFx,
-    payload
-});
-
-export interface SetMidiControllerAction extends Action {
-    payload: MIDIController
-}
-export const setMIDIControllerAction = (payload): SetMidiControllerAction => ({
-    type: TypeKeys.setMIDIController,
-    payload
+export const axeFxResetAction = (): Action => ({
+    type: TypeKeys.resetAxeFx,
 });
 
 export interface GetPanelAction extends Action {
@@ -70,10 +49,7 @@ export const setPanelAction = (payload): SetPanelAction => ({
 });
 
 export type ActionTypes = 
-    | FirmwareVersionAction 
-    | PresetNameAction
-    | PresetNumberAction
-    | SetAxeFxAction
-    | SetMidiControllerAction
+    | AxeFxUpdateAction
+    | SetMIDIDeviceData
     | SetPanelAction
     | GetPanelAction;
