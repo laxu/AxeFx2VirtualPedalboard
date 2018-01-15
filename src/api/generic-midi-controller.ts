@@ -1,6 +1,7 @@
 import { MIDIController, MIDIControllerType, MIDIInput, MIDIOutput, MIDIListenerType } from "./midi";
 
 export class GenericMIDIController implements MIDIController {
+    id: string;
     type?: MIDIControllerType = MIDIControllerType.Controller;
     name: string;
     input: MIDIInput;
@@ -14,6 +15,7 @@ export class GenericMIDIController implements MIDIController {
     }
 
     updateSettings(genericDevice: MIDIController) {
+        this.id = <string>genericDevice.id || this.id;
         this.input = genericDevice.input;
         this.output = genericDevice.output;
         this.channel = genericDevice.channel || 'all';

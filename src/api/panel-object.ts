@@ -4,7 +4,7 @@ import { MIDIController } from "./midi";
 export interface PanelObject {
     id: string;
     label: string;
-    controller: MIDIController;
+    controllerId: string;
     controls: ControlObject[];
     cc?: number;
 }

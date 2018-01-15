@@ -11,14 +11,15 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...stateProps,
     ...dispatchProps,
     ...ownProps,
-    saveChanges(formValues) {
+    saveChanges(formData) {
         const { panel } = stateProps;
-        const { controlId, controlType, blockId, paramId, cc } = formValues;
-        const controlIdx = panel.controls.findIndex(ctrl => ctrl.id === formValues.controlId);
+        const { id, controlType, blockId, paramId, cc } = formData;
+        const controlIdx = panel.controls.findIndex(ctrl => ctrl.id === id);
+        if (controlIdx === -1) throw new Error(`Could not find control for ID "${id}"`);
         const block = getBlockById(blockId);
         const param = block.getParam(paramId);
         const updatedControl: ControlObject = {
-            id: controlId,
+            id: id,
             block,
             param,
             controlType,

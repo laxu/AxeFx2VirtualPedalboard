@@ -1,6 +1,7 @@
 import { SYSEX_ENABLED } from './constants';
 import { AxeFx } from './axefx';
 import { GenericMIDIController } from './generic-midi-controller';
+import { generateId } from '../util/util';
 const WebMidi = require('webmidi');
 
 let axeFxInstance, controllerInstance;
@@ -28,6 +29,7 @@ export enum MIDIListenerType {
 }
 
 export interface MIDIController {
+    id?: number | string;
     type?: MIDIControllerType;
     input: MIDIInput;
     output: MIDIOutput;
@@ -89,6 +91,7 @@ export function updateDevices(devices: MIDIDeviceData[], dispatch: any): void {
                 });
             } else {
                 controllerInstance = new GenericMIDIController({
+                    id: generateId(),
                     input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
                     output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
                     channel: device.channel

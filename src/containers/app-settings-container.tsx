@@ -5,6 +5,7 @@ import { AxeFx } from '../api/axefx';
 import { GenericMIDIController } from '../api/generic-midi-controller';
 import AppSettingsComponent from '../components/app-settings/app-settings';
 import { MODEL_IDS } from '../api/constants';
+import { generateId } from '../util/util';
 
 const mapStateToProps = state => ({
     devices: state.app.devices
@@ -25,7 +26,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
                 channel: formData.axeFxChannel === 'all' ? 'all': Number(formData.axeFxChannel)
             },
             {
-                id: 'genericMIDIController',
+                id: generateId(),
                 type: MIDIControllerType.Controller,
                 inputName: formData.controllerInput,
                 outputName: formData.controllerOutput,
