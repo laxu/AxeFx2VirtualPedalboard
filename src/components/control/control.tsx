@@ -14,6 +14,7 @@ interface Props {
 export default class ControlComponent extends React.Component<Props> {
     render() {
         const { cc, block, param, controlType = ControlType.Control } = this.props;
+        const isEmpty = !block && !param;
         if (controlType === ControlType.Control) {
             return (
                 <div className="control">
@@ -21,6 +22,7 @@ export default class ControlComponent extends React.Component<Props> {
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__value">{param && param.value}</div>
                     <div className="param__cc">{cc}</div>
+                    {isEmpty && <div className="control__empty">Control not configured</div>}
                 </div>
             );
         } else {
@@ -29,6 +31,7 @@ export default class ControlComponent extends React.Component<Props> {
                     <div className="block__label">{block && block.label}</div>
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc}</div>
+                    {isEmpty && <div className="control__empty">Switch not configured</div>}
                 </div>
             );
         }
