@@ -94,8 +94,14 @@ for (const blockType of FX_BLOCK_TYPES) {
 }
 
 export function getBlockById(blockId: number): FxBlock {
-    if (!blockId) throw new Error('getBlockById: Block ID is undefined!');
+    if (!blockId) return null;
     return blocks.find(block => block.id === blockId) || null;
+}
+
+export function getBlockAndParam(blockId: number, paramId: number): { block: FxBlock, param: FxParam } {
+    const block = getBlockById(blockId);
+    const param = block ? block.getParam(paramId) : null;
+    return { block, param };
 }
 
 export function getAllBlocks() {
