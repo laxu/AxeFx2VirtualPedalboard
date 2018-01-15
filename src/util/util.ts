@@ -64,6 +64,10 @@ export function numRange (start: number, end: number) {
     return Array.from(Array(end - start + 1), (_, i) => start + i);
 }
 
+export function generateId() {
+    return window.crypto.getRandomValues(new Uint8Array(3)).join('');
+}
+
 export function handleSubmit(callback) {
     return (event) => {
         event.preventDefault();
