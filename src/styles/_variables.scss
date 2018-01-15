@@ -8,10 +8,14 @@ $header-height: 50px;
 $sidebar-width: 200px;
 $sidebar-height: calc(100vh - 100px);
 
+$control-font-size: $font-size-small;
+
 $control-width: 100px;
 $control-min-height: 100px;
+$control-padding: 1rem;
 $switch-width: 100px;
 $switch-min-height: 30px;
+$switch-padding: 1rem;
 
 $button-border: 1px solid $color-button-border;
 $button-radius: $global-radius;
