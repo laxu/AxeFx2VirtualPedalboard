@@ -40,18 +40,3 @@ WebMidiWrapper.init(() => {
         document.getElementById('app-container')
     );
 });
-
-
-
-// if (module.hot) {
-//     module.hot.accept('./app', () => {
-//         console.log('doing a app hot accept')
-//         const NextApp = require('./app').default
-//         ReactDOM.render(
-//             <AppContainer>
-//                 <NextApp />
-//             </AppContainer>,
-//             document.getElementById('root')
-//         );
-//     });
-// }
