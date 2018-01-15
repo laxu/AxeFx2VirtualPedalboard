@@ -33,6 +33,7 @@
                 border: 1px solid $color-border;
                 border-right: 0;
                 padding: 0;
+                background: $color-sidebar-item;
                
                 &.active {
                     background: $color-sidebar-item-active;
