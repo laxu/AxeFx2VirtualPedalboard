@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { AxeFx } from '../../api/axefx';
-import { MIDIController, WebMidiWrapper, isAxeFx, MIDIInput, MIDIOutput } from '../../api/midi';
+import { MIDIController, WebMidiWrapper, isAxeFx, MIDIInput, MIDIOutput, MIDIControllerType, MIDIDeviceData } from '../../api/midi';
 import { handleSubmit, numRange } from '../../util/util';
 import './_app-settings.scss';
 
 interface Props {
-    axeFx: AxeFx;
-    controller: MIDIController;
+    devices: MIDIDeviceData[],
     saveChanges: (formData: any) => void;
     onCancel: () => void;
 }
@@ -43,8 +41,11 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
     }
 
     render() {
-        const { axeFx, controller } = this.props;
+        const { devices } = this.props;
         const { inputs, outputs, midiChannels } = this.state;
+
+        const axeFx = devices.find(device => device.type === MIDIControllerType.AxeFx);
+        const controller = devices.find(device => device.type === MIDIControllerType.Controller);
 
         return (
             <form className="form form--inline app-settings" name="appSettingsForm" onSubmit={handleSubmit(this.onSubmit)}>
@@ -53,19 +54,19 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
                     <h4>Axe-Fx</h4>
                     <div className="form-group">
                         <label>MIDI input</label>
-                        <select name="axeFxInput" defaultValue={axeFx && axeFx.input.name}>
+                        <select name="axeFxInput" defaultValue={axeFx && axeFx.inputName}>
                             <option disabled value="">Select Axe-Fx 2 / AX8 MIDI input</option>
                             {inputs.map((input, i) => (
-                                <option key={`midi-input-${i}`} value={input.name}>{input.name}</option>
+                                <option key={`midi-input-${i}`} value={input.name}>{i + 1}: {input.name}</option>
                             ))}
                         </select>
                     </div>
                     <div className="form-group">
                         <label>MIDI output</label>
-                        <select name="axeFxOutput" defaultValue={axeFx && axeFx.output.name}>
+                        <select name="axeFxOutput" defaultValue={axeFx && axeFx.outputName}>
                             <option disabled value="">Select Axe-Fx 2 / AX8 MIDI output</option>
                             {outputs.map((output, i) => (
-                                <option key={`midi-output-${i}`} value={output.name}>{output.name}</option>
+                                <option key={`midi-output-${i}`} value={output.name}>{i + 1}: {output.name}</option>
                             ))}
                         </select>
                     </div>
@@ -84,19 +85,19 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
                     <h4>MIDI controller</h4>
                     <div className="form-group">
                         <label>MIDI input</label>
-                        <select name="controllerInput" defaultValue={controller && controller.input.name}>
+                        <select name="controllerInput" defaultValue={controller && controller.inputName}>
                             <option disabled value="">Select MIDI controller input</option>
                             {inputs.map((input, i) => (
-                                <option key={`midi-input-${i}`} value={input.name}>{input.name}</option>
+                                <option key={`midi-input-${i}`} value={input.name}>{i + 1}: {input.name}</option>
                             ))}
                         </select>
                     </div>
                     <div className="form-group">
                         <label>MIDI output</label>
-                        <select name="controllerOutput" defaultValue={controller && controller.output.name}>
+                        <select name="controllerOutput" defaultValue={controller && controller.outputName}>
                             <option disabled value="">Select MIDI controller output</option>
                             {outputs.map((output, i) => (
-                                <option key={`midi-output-${i}`} value={output.name}>{output.name}</option>
+                                <option key={`midi-output-${i}`} value={output.name}>{i + 1}: {output.name}</option>
                             ))}
                         </select>
                     </div>

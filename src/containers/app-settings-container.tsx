@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
-import { setAxeFxAction, setMIDIControllerAction } from '../store/actions';
-import { WebMidiWrapper, MIDIInput, MIDIOutput, MIDIControllerType } from '../api/midi';
+import { setMIDIDeviceData } from '../store/actions';
+import { WebMidiWrapper, MIDIInput, MIDIOutput, MIDIControllerType, MIDIDeviceData, updateDevices } from '../api/midi';
 import { AxeFx } from '../api/axefx';
 import { GenericMIDIController } from '../api/generic-midi-controller';
 import AppSettingsComponent from '../components/app-settings/app-settings';
+import { MODEL_IDS } from '../api/constants';
 
 const mapStateToProps = state => ({
-    axeFx: state.app.axeFx,
-    controller: state.app.controller
+    devices: state.app.devices
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
@@ -16,30 +16,25 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...ownProps,
     saveChanges(formData) {
         const { dispatch } = dispatchProps;
-        const axeFxInput: MIDIInput = WebMidiWrapper.webMidi.getInputByName(formData.axeFxInput);
-        const axeFxOutput: MIDIOutput = WebMidiWrapper.webMidi.getOutputByName(formData.axeFxOutput);
-        const axeFx = new AxeFx({
-            id: 1,
-            name: 'AxeFx',
-            type: MIDIControllerType.AxeFx,
-            input: axeFxInput,
-            output: axeFxOutput,
-            channel: formData.axeFxChannel === 'all' ? 'all': Number(formData.axeFxChannel)
-        });
+        const devices: MIDIDeviceData[] = [
+            {
+                id: 'axeFx',
+                type: MIDIControllerType.AxeFx,
+                inputName: formData.axeFxInput,
+                outputName: formData.axeFxOutput,
+                channel: formData.axeFxChannel === 'all' ? 'all': Number(formData.axeFxChannel)
+            },
+            {
+                id: 'genericMIDIController',
+                type: MIDIControllerType.Controller,
+                inputName: formData.controllerInput,
+                outputName: formData.controllerOutput,
+                channel: formData.axeFxChannel === 'all' ? 'all': Number(formData.axeFxChannel)
+            },
+        ]
 
-        const controllerInput: MIDIInput = WebMidiWrapper.webMidi.getInputByName(formData.controllerInput);
-        const controllerOutput: MIDIOutput = WebMidiWrapper.webMidi.getOutputByName(formData.controllerOutput);
-        const controller = new GenericMIDIController({
-            id: 'genericMidiController',
-            name: 'MIDI controller',
-            type: MIDIControllerType.Controller,
-            input: controllerInput,
-            output: controllerOutput,
-            channel: formData.controllerChannel === 'all' ? 'all': Number(formData.controllerChannel)
-        });
-
-        dispatch(setAxeFxAction(axeFx));
-        dispatch(setMIDIControllerAction(controller));
+        devices.map(device => dispatch(setMIDIDeviceData(device)));
+        updateDevices(devices, dispatch);
     }
 });
 
