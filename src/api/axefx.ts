@@ -1,7 +1,8 @@
-import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER } from './constants';
+import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
 import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, intValueToAxeFx, axeFxValueToInt } from '../util/util';
 import { IFxBlock, FxBlock, getBlockById } from './fx-block';
+import { axeFxResetAction, axeFxUpdateAction } from '../store/actions';
 
 export enum PARAM_MODE {
     Set = 0x01,
@@ -12,35 +13,39 @@ export interface AxeFxResponse {
     data: Uint8Array
 }
 
+export interface AxeFxState {
+    connected: boolean;
+    name: string;
+    firmwareVersion: string;
+    currentPresetName: string;
+    currentPresetNumber: number;
+    presetEdited: boolean;
+}
+
 export class AxeFx implements MIDIController {
     id: number;
     name: string;
-    type: MIDIControllerType = MIDIControllerType.AxeFx;
+    type?: MIDIControllerType = MIDIControllerType.AxeFx;
     input: MIDIInput;
     output: MIDIOutput;
     channel: number | 'all';
 
-    private inputListener: any;
+    public connected: boolean = false;
+    public firmwareVersion: string;
+    public presetEdited: boolean = false;
+    public currentPresetName: string;
+    public currentPresetNumber: string;
+
+    private dispatch: any;
+    private inputListener: (event: AxeFxResponse) => void;
     private blocks: FxBlock[] = [];
     private resolvers: any = {};
     private tunerEnabled: boolean = false;
     private metronomeEnabled: boolean = false;
 
-    constructor(axeFxDevice: MIDIController) {
-        this.id = <number>axeFxDevice.id;
-        this.name = axeFxDevice.name;
-        this.input = axeFxDevice.input;
-        this.output = axeFxDevice.output;
-        this.channel = axeFxDevice.channel || 'all';
-
-        console.log('device', axeFxDevice);
-
-        this.inputListener = (event: AxeFxResponse) => this.processEvent(
-            event.data[5], 
-            event.data.slice(6, event.data.length - 2)
-        );
-
-        this.input.addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
+    constructor(axeFxDevice: MIDIController, dispatch) {
+        this.dispatch = dispatch;
+        this.updateSettings(axeFxDevice);
     }
 
     private getChecksum(message: number[]): number {
@@ -51,6 +56,54 @@ export class AxeFx implements MIDIController {
             ...message
         ].reduce((checksum: number, val: number) => checksum ^ val);
         return part & 0x7F;
+    }
+
+    async updateSettings(axeFxDevice: MIDIController) {
+        this.input = axeFxDevice.input;
+        this.output = axeFxDevice.output;
+        this.channel = axeFxDevice.channel || 'all';
+
+        this.inputListener = (event: AxeFxResponse) => this.processEvent(
+            event.data[5], 
+            event.data.slice(6, event.data.length - 2),
+            event.data
+        );
+
+        this.input && this.input.removeListener().addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
+        
+        this.findModel().then(() => {
+            this.getPresetName();
+            this.dispatch(axeFxUpdateAction({
+                firmwareVersion: this.firmwareVersion,
+                connected: this.connected,
+                name: this.name
+            }));
+        });
+    }
+
+    findModel() {
+        let fwVersion;
+        return new Promise(async (resolve, reject) => {
+            for (const name in MODEL_IDS) {
+                if (MODEL_IDS.hasOwnProperty(name)) {
+                    this.id = MODEL_IDS[name];
+                    this.name = name;
+                    try {
+                        fwVersion = await this.getFirmwareVersion();
+                        if (fwVersion) {
+                            this.id = MODEL_IDS[name]
+                            this.name = name;
+                            resolve();
+                            break;
+                        }
+                    } catch(e) {
+                        if (!fwVersion && name === 'AX8') {
+                            reject('Could not connect to Axe-Fx hardware');
+                        }
+                    }
+                }
+            }
+        });
     }
 
     sendMessage(message: number[]): MIDIOutput {
@@ -67,9 +120,6 @@ export class AxeFx implements MIDIController {
     getPresetName() {
         this.sendMessage([AXE_FUNCTIONS.getPresetName]);
         this.disconnect();
-        return new Promise(resolve => {
-            this.resolvers.getPresetName = resolve;
-        });
     }
 
     getPresetNumber() {
@@ -97,11 +147,11 @@ export class AxeFx implements MIDIController {
         ]);
     }
 
-    getFirmwareVersion() {
+    async getFirmwareVersion() {
         this.sendMessage([AXE_FUNCTIONS.getFirmwareVersion]);
-        this.disconnect();
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             this.resolvers.getFirmwareVersion = resolve;
+            setTimeout(() => reject('Could not get firmware'), 300);
         });
     }
 
@@ -144,26 +194,34 @@ export class AxeFx implements MIDIController {
         this.sendMessage([0x42]);
     }
 
-    processEvent(func: number, data: Uint8Array) {
+    processEvent(func: number, data: Uint8Array, rawData: Uint8Array): void {
         let value;
         switch (func) {
             case AXE_FUNCTIONS.getFirmwareVersion:
                 value = data[0] + '.' + data[1];
+                this.firmwareVersion = value;
+                this.connected = true;
                 this.resolvers.getFirmwareVersion(value);
+                this.dispatch(axeFxResetAction());
                 break;
             case AXE_FUNCTIONS.getPresetName:
                 value = textDecoder.decode(data).trim();
-                this.resolvers.getPresetName(value);
+                this.currentPresetName = value;
+                this.dispatch(axeFxUpdateAction({ currentPresetName: value }))
                 break;
             case AXE_FUNCTIONS.getPresetNumber:
                 value = bytes2ToInt(data);
-                this.resolvers.getPresetNumber(value);
+                this.currentPresetNumber = value;
+                this.dispatch(axeFxUpdateAction({ currentPresetNumber: value }))
                 break;
             case AXE_FUNCTIONS.getPresetEditedStatus:
                 value = !!data[0];
+                this.presetEdited = value;
+                this.dispatch(axeFxUpdateAction({ presetEdited: value }))
                 break;
             case AXE_FUNCTIONS.getMIDIChannel:
                 value = data[0];
+                this.channel = value;
                 break;
             case AXE_FUNCTIONS.getBlockParametersList:
                 const blockId = bytes2ToInt(data.slice(0, 2));
@@ -178,7 +236,9 @@ export class AxeFx implements MIDIController {
             default:
                 value = data;
         }
-        console.log('event data', getObjKeyByValue(func, AXE_FUNCTIONS), value);
-        return value;
+        const funcName = getObjKeyByValue(func, AXE_FUNCTIONS);
+        if (funcName && data.length) {
+            console.log('event data', funcName, value);
+        }
     } 
 }
