@@ -7,7 +7,7 @@ import './_sidebar.scss';
 
 interface Props {
     panels: PanelObject[];
-    currentPanelId: number;
+    currentPanelId: string;
     addNewPanel: () => void;
 }
 

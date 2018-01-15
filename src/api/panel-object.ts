@@ -2,7 +2,7 @@ import { ControlObject } from "./control-object";
 import { MIDIController } from "./midi";
 
 export interface PanelObject {
-    id: number;
+    id: string;
     label: string;
     controller: MIDIController;
     controls: ControlObject[];
