@@ -35,8 +35,8 @@ export default class PanelComponent extends React.Component<Props, State> {
             editedControl: null,
             hasChanges: false,
             form: {
-                label: null,
-                cc: null
+                label: this.props.panel && this.props.panel.label,
+                cc: this.props.panel && this.props.panel.cc
             }
         };
 
@@ -112,24 +112,26 @@ export default class PanelComponent extends React.Component<Props, State> {
             <div className="panel">
                 <div className="panel__header">
                     <button className="btn toggle-edit" onClick={() => this.toggleEdit()}>{editMode ? 'Cancel' : 'Edit'}</button>
-                    {editMode && <button className="btn btn--primary save-changes" onClick={() => this.saveChanges()} disabled={!hasChanges}>Save</button>}
+                    {hasChanges && <button className="btn btn--primary save-changes" onClick={() => this.saveChanges()}>Save</button>}
                     <div className="panel__label">
                         {!editMode && <span>{panel.label}</span>}
                     </div>
                     <div className="panel__edit">
                         {editMode && (
-                        <div>
-                            <div className="panel__edit-label">
+                        <div className="form">
+                            <div className="form-group">
                                 <label>Panel name</label>
                                 <input type="text" 
                                     className="panel__label--input"
                                     defaultValue={panel.label} 
                                     onChange={event => this.setFormValue('label', event.target.value)} />
                             </div>
-                            <div className="panel__edit-cc">
+                            <div className="form-group">
                                 <label>Activate panel using CC</label>
                                 <input type="number" 
-                                    defaultValue={panel.cc >= 0 ? panel.cc.toString() : ''} 
+                                    defaultValue={panel.cc && panel.cc !== null ? panel.cc.toString() : ''} 
+                                    min="0"
+                                    max="127"
                                     onChange={event => this.setFormValue('cc', event.target.value, 'number')} />
                             </div>
                             <div className="panel__edit-actions">
