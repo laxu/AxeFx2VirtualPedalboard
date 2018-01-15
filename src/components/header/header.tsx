@@ -7,9 +7,7 @@ import AppSettingsContainer from '../../containers/app-settings-container';
 
 interface Props {
     axeFx: AxeFx,
-    controller: GenericMIDIController,
-    firmwareVersion: string;
-    presetName: string;
+    controller: GenericMIDIController
 }
 
 interface State {
@@ -29,7 +27,7 @@ export default class HeaderComponent extends React.Component<Props, State> {
     }
 
     render() {
-        const { axeFx, controller, firmwareVersion, presetName } = this.props;
+        const { axeFx, controller } = this.props;
         const { showSettings } = this.state;
         
         return (
@@ -46,11 +44,11 @@ export default class HeaderComponent extends React.Component<Props, State> {
                             </div>
                             <div className="firmware-version">
                                 <label>Firmware version:</label>
-                                <span>{firmwareVersion}</span>
+                                <span>{axeFx && axeFx.firmwareVersion}</span>
                             </div>
                             <div className="presetName">
                                 <label>Preset:</label>
-                                <span>{presetName}</span>
+                                <span>{axeFx && axeFx.currentPresetName}</span>
                             </div>
                         </div>
                     </div>

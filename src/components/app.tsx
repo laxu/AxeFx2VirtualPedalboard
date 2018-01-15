@@ -31,7 +31,7 @@ export class AppComponent extends React.Component<Props> {
     render() {
         const { addNewPanel, axeFx, controller, firmwareVersion, presetName, panels, currentPanel } = this.props;
         return <div id="app">
-                <Header firmwareVersion={firmwareVersion} presetName={presetName} axeFx={axeFx} controller={controller}></Header>
+                <Header axeFx={axeFx} controller={controller}></Header>
                 <Sidebar addNewPanel={addNewPanel} panels={panels} currentPanelId={currentPanel && currentPanel.id}></Sidebar>
                 <div className="main-container">
                     <Route path="/panels/:panelId" component={PanelContainer} />
