@@ -9,44 +9,43 @@ import { GenericMIDIController } from "../api/generic-midi-controller";
 import { PanelObject } from "../api/panel-object";
 import { ControlType, ControlObject } from '../api/control-object';
 import PanelComponent from '../components/panel/panel';
+import { generateId } from '../util/util';
 
 const mapStateToProps = state => ({
     panel: state.app.currentPanel
 });
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-    ...stateProps,
-    ...dispatchProps,
-    ...ownProps,
-    init(panelId) {
-        const { dispatch } = dispatchProps;
-        dispatch(getPanelAction(panelId));
-    },
-    savePanelChanges(formValues) {
-        const { panel } = stateProps;
-        const { dispatch } = dispatchProps;
-        const updatedPanel = Object.assign({}, panel, formValues);
-        console.log('fuu', updatedPanel);
-        dispatch(setPanelAction(updatedPanel));
-        dispatch(getPanelAction(updatedPanel.id));
-    },
-    addPanelControl(controlType: ControlType) {
-        const { panel } = stateProps;
-        const control: ControlObject = {
-            id: panel.controls.length + 1,
-            block: null,
-            param: null,
-            controlType,
-            cc: null
-        };
-        panel.controls.push(control);
-        console.log('fuu', panel.controls);
-    },
-    removePanelControl(control: ControlObject) {
-        const { panel } = stateProps;
-        const controlIdx = panel.controls.find(ctrl => ctrl.id === control.id);
-        panel.controls.splice(controlIdx, 1);
-    }
-});
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+    const { dispatch } = dispatchProps;
+    const { panel } = stateProps;
+    return {
+        ...stateProps,
+        ...dispatchProps,
+        ...ownProps,
+        init(panelId) {
+            dispatch(getPanelAction(panelId));
+        },
+        savePanelChanges(formValues) {
+            const updatedPanel = Object.assign({}, panel, formValues);
+            dispatch(setPanelAction(updatedPanel));
+            dispatch(getPanelAction(updatedPanel.id));
+        },
+        addPanelControl(controlType: ControlType) {
+            const control: ControlObject = {
+                id: generateId(),
+                block: null,
+                param: null,
+                controlType,
+                cc: null
+            };
+            panel.controls.push(control);
+        },
+        removePanelControl(control: ControlObject) {
+            const controlIdx = panel.controls.findIndex(ctrl => ctrl.id === control.id);
+            if (controlIdx === -1) throw new Error('Trying to remove control that does not exist!');
+            panel.controls.splice(controlIdx, 1);
+        }
+    };
+};
 
 export default withRouter(connect(mapStateToProps, null, mergeProps)(PanelComponent));

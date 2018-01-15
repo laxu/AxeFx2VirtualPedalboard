@@ -52,7 +52,16 @@ export default class PanelComponent extends React.Component<Props, State> {
         const { match } = nextProps;
        if (match.params.panelId !== this.props.match.params.panelId) {
            this.props.init(match.params.panelId);
-           this.setState({ editMode: false });
+       }
+       if (this.props.panel !== nextProps.panel) {
+           this.setState({
+                editMode: false, 
+                hasChanges: false,
+                form: {
+                    label: nextProps.panel && nextProps.panel.label,
+                    cc: nextProps.panel && nextProps.panel.cc
+                }
+           })
        }
     }
 
@@ -104,7 +113,7 @@ export default class PanelComponent extends React.Component<Props, State> {
 
     render() {
         const { panel } = this.props;
-        const { editMode, editedControl, hasChanges } = this.state;
+        const { editMode, editedControl, hasChanges, form } = this.state;
 
         if (!panel) return null;
 
@@ -123,13 +132,13 @@ export default class PanelComponent extends React.Component<Props, State> {
                                 <label>Panel name</label>
                                 <input type="text" 
                                     className="panel__label--input"
-                                    defaultValue={panel.label} 
+                                    value={form.label} 
                                     onChange={event => this.setFormValue('label', event.target.value)} />
                             </div>
                             <div className="form-group">
                                 <label>Activate panel using CC</label>
                                 <input type="number" 
-                                    defaultValue={panel.cc && panel.cc !== null ? panel.cc.toString() : ''} 
+                                    value={form.cc} 
                                     min="0"
                                     max="127"
                                     onChange={event => this.setFormValue('cc', event.target.value, 'number')} />
