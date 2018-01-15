@@ -1,24 +1,30 @@
 @import '../../styles/colors';
 @import '../../styles/variables';
 
+.control, .switch {
+    font-size: $control-font-size;
+}
+
 .control {
-    border: 1px solid $color-border;
-    background: $color-control;
-    border-radius: $global-radius;
-    color: $color-control-text;
     width: $control-width;
     min-height: $control-min-height;
+    padding: $control-padding;
     margin-right: .5rem;
     margin-bottom: .5rem;
+    background: $color-control;
+    border: 1px solid $color-border;
+    border-radius: $global-radius;
+    color: $color-control-text;
 }
 
 .switch {
-    border: 1px solid $color-border;
-    background: $color-control;
-    border-radius: $global-radius;
-    color: $color-control-text;
     width: $switch-width;
     min-height: $switch-min-height;
+    padding: $switch-padding;
     margin-right: .5rem;
     margin-bottom: .5rem;
+    background: $color-control;
+    border: 1px solid $color-border;
+    border-radius: $global-radius;
+    color: $color-control-text;
 }
