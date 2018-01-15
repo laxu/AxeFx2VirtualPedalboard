@@ -23,7 +23,7 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
         this.state = {
             inputs: WebMidiWrapper.webMidi.inputs,
             outputs: WebMidiWrapper.webMidi.outputs,
-            midiChannels: numRange(1, 12)
+            midiChannels: numRange(1, 16)
         };
 
         this.onSubmit = this.onSubmit.bind(this);
