@@ -44,6 +44,11 @@ export function clampValue(val: number, range: [number, number], step: number): 
     return value;
 }
 
+export function toFixedNumber(value: number, precision: number = 2): number {
+    const pow = Math.pow(10, precision);
+    return +( Math.round(value * pow) / pow );
+  }
+
 export function midiValueToAxeFx(value: number): number {
     return (value / MIDI_VALUE_MULTIPLIER) * PARAM_VALUE_MULTIPLIER;
 }

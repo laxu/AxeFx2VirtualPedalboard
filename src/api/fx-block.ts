@@ -1,4 +1,4 @@
-import { clampValue, getObjKeyByValue, convertToRange } from "../util/util";
+import { clampValue, getObjKeyByValue, convertToRange, toFixedNumber } from "../util/util";
 import { FX_BLOCK_IDS, FX_BLOCK_TYPES, FX_PARAMS, PARAM_TYPE, FX_BLOCK_LABELS } from "./fx-block-data";
 
 export interface IFxBlock {
@@ -70,7 +70,7 @@ export class FxParam implements IFxParam {
             return this.values[val];
         }
         let formattedValue = convertToRange(val, this.range);
-        return clampValue(formattedValue, this.range, this.step).toFixed(this.precision);
+        return toFixedNumber(clampValue(formattedValue, this.range, this.step), this.precision);
     }
 }
 
