@@ -1,5 +1,8 @@
+$font-default: 16px Helvetica, Arial, sans-serif;
 $font-size-default: 1rem;
-$font-size-small: 0.8rem;
+$font-size-large: 1.1rem;
+$font-size-small: 0.9rem;
+$font-size-xsmall: 0.8rem;
 
 $global-radius: 4px;
 
@@ -8,11 +11,11 @@ $header-height: 50px;
 $sidebar-width: 200px;
 $sidebar-height: calc(100vh - 100px);
 
-$control-font-size: $font-size-small;
+$control-font-size: $font-size-default;
 
-$control-width: 100px;
+$control-width: 110px;
 $control-min-height: 100px;
-$control-padding: 1rem;
+$control-padding: 0 .5rem .5rem;
 $switch-width: 100px;
 $switch-min-height: 30px;
 $switch-padding: 1rem;

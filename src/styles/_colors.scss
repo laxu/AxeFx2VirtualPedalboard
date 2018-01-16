@@ -11,8 +11,10 @@ $color-sidebar-item: darken($color-body, 10%);
 $color-sidebar-item-text: #eee;
 $color-sidebar-item-active: $color-body;
 
-$color-control: #555;
+$color-control: #444;
+$color-control-header: darken($color-control, 10%);
 $color-control-text: #ddd;
+$color-control-value: lighten($color-control, 10%);
 $color-switch-on: #2a6b5e;
 $color-switch-off: #ca371d;
 
