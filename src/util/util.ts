@@ -32,6 +32,10 @@ export function parameterValueIntToBytes(value: number): Uint8Array {
     return Uint8Array.from([byte1, byte2, byte3]);
 }
 
+export function convertToRange(val: number, range: [number, number]): number {
+    return (val / 10) * (range[1] - range[0]) + range[0];
+}
+
 export function clampValue(val: number, range: [number, number], step: number): number {
     let value = Math.min(Math.max(range[0], val), range[1]);
     if (step && value % step > 0) {
