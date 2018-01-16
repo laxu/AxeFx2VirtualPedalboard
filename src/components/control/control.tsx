@@ -45,7 +45,7 @@ export default class ControlComponent extends React.Component<Props, State> {
         if (controlType === ControlType.Control) {
             return (
                 <div className="control">
-                    <div className="block__label">{block && block.label}</div>
+                    {block && block.label && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
                     <div className="param__value">{paramValue}</div>
@@ -55,11 +55,11 @@ export default class ControlComponent extends React.Component<Props, State> {
         } else {
             return (
                 <div className={classNames('switch', {'switch--on': paramValue, 'switch--off': !paramValue})}>
-                    <div className="block__label">{block && block.label}</div>
+                    {block && block.label && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
-                    {isEmpty && <div className="control__empty">Switch not configured</div>}
-                    <div className="switch-status"></div>
+                    {isEmpty && <div className="switch__empty">Switch not configured</div>}
+                    <div className="switch__status"></div>
                 </div>
             );
         }

@@ -55,8 +55,15 @@
     border: 1px solid $color-border;
     border-radius: $global-radius;
     color: $color-control-text;
+    text-align: center;
+    
 
-    .switch-status {
+    &__empty {
+        margin-top: .5rem;
+        font-size: $font-size-small;
+    }
+
+    &__status {
         width: 100%;
         height: 1rem;
         margin-top: .5rem;
@@ -66,8 +73,25 @@
     }
 
     &--on {
-        .switch-status {
+        .switch__status {
             background: $color-switch-on;
+        }
+    }
+
+    .block {
+        &__label {
+            margin: 0 -0.5rem 0.5rem -0.5rem;
+            padding: .25rem;
+            border-bottom: 1px solid $color-border;
+            border-radius: $global-radius $global-radius 0 0;
+            background: $color-control-header;
+            font-size: $font-size-large;
+        }
+    }
+
+    .param {
+        &__cc {
+            font-size: $font-size-small;
         }
     }
 }
