@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setMIDIDeviceData } from '../store/actions';
+import { setMIDIDeviceDataAction } from '../store/actions';
 import { WebMidiWrapper, MIDIInput, MIDIOutput, MIDIControllerType, MIDIDeviceData, updateDevices } from '../api/midi';
 import { AxeFx } from '../api/axefx';
 import { GenericMIDIController } from '../api/generic-midi-controller';
@@ -34,7 +34,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             },
         ]
 
-        devices.map(device => dispatch(setMIDIDeviceData(device)));
+        devices.map(device => dispatch(setMIDIDeviceDataAction(device)));
         updateDevices(devices, dispatch);
     }
 });
