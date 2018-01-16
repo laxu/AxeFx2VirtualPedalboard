@@ -1,8 +1,8 @@
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
-import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, intValueToAxeFx, axeFxValueToInt } from '../util/util';
-import { IFxBlock, FxBlock, getBlockById } from './fx-block';
-import { axeFxResetAction, axeFxUpdateAction } from '../store/actions';
+import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToInt, bytesToblockID } from '../util/util';
+import { IFxBlock, FxBlock, getBlockById, getBlockAndParam } from './fx-block';
+import { axeFxResetAction, axeFxUpdateAction, updateControlValueAction } from '../store/actions';
 
 export enum PARAM_MODE {
     Set = 0x01,
@@ -38,7 +38,6 @@ export class AxeFx implements MIDIController {
 
     private dispatch: any;
     private inputListener: (event: AxeFxResponse) => void;
-    private blocks: FxBlock[] = [];
     private resolvers: any = {};
     private tunerEnabled: boolean = false;
     private metronomeEnabled: boolean = false;
@@ -70,8 +69,9 @@ export class AxeFx implements MIDIController {
         );
 
         this.input && this.input.removeListener().addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
-        
+
         this.findModel().then(() => {
+            this.dispatch(axeFxResetAction());
             this.getPresetName();
             this.dispatch(axeFxUpdateAction({
                 firmwareVersion: this.firmwareVersion,
@@ -170,7 +170,7 @@ export class AxeFx implements MIDIController {
     }
 
     setBlockParamValue(blockId: number, paramId: number, paramValue: number) {
-        const convertedParamValue = intValueToAxeFx(paramValue);
+        const convertedParamValue = midiValueToAxeFx(paramValue);
         this.sendMessage([
             AXE_FUNCTIONS.blockParamValue, 
             ...intTo2Byte(blockId),
@@ -202,7 +202,6 @@ export class AxeFx implements MIDIController {
                 this.firmwareVersion = value;
                 this.connected = true;
                 this.resolvers.getFirmwareVersion(value);
-                this.dispatch(axeFxResetAction());
                 break;
             case AXE_FUNCTIONS.getPresetName:
                 value = textDecoder.decode(data).trim();
@@ -224,14 +223,24 @@ export class AxeFx implements MIDIController {
                 this.channel = value;
                 break;
             case AXE_FUNCTIONS.getBlockParametersList:
-                const blockId = bytes2ToInt(data.slice(0, 2));
-                const paramId = bytes2ToInt(data.slice(2, 4));
-                const paramValues = axeFxValueToInt(parameterValueBytesToInt(data.slice(4, 7)));
-                value = {blockId, paramId, paramValues};
+                value = {
+                    blockId: bytes2ToInt(data.slice(0, 2)),
+                    paramId:  bytes2ToInt(data.slice(2, 4)),
+                    paramValue: axeFxValueToInt(parameterValueBytesToInt(data.slice(4, 7)))
+                }
                 break;
             case AXE_FUNCTIONS.blockParamValue:
-                value = data;
-                console.log('param value', (parameterValueBytesToInt(data.slice(4,7)) / PARAM_VALUE_MULTIPLIER).toFixed(2));
+                value = {
+                    blockId: bytes2ToInt(data.slice(0, 2)),
+                    paramId:  bytes2ToInt(data.slice(2, 4)),
+                    paramValue: axeFxValueToInt(parameterValueBytesToInt(data.slice(4, 7)))
+                }
+                const { block, param } = getBlockAndParam(value.blockId, value.paramId);
+                if (block && param) {
+                    value.paramValue = param.formatValue(value.paramValue);
+                    console.log('received param value', value);
+                    this.dispatch(updateControlValueAction(value));
+                }
                 break;
             default:
                 value = data;
