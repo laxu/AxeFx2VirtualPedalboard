@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import storage from 'redux-persist/lib/storage';
@@ -33,7 +33,7 @@ WebMidiWrapper.init(() => {
         <Provider store={store}>
             <PersistGate persistor={persistor}>
                 <Router>
-                    <AppContainer></AppContainer>
+                    <Route path="/" component={AppContainer}></Route>
                 </Router>
             </PersistGate>
         </Provider>,
