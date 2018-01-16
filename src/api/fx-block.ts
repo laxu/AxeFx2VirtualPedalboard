@@ -64,7 +64,9 @@ export class FxParam implements IFxParam {
 
     formatValue(val: number): number | string {
         if (!isFinite(val)) throw new Error('Trying to set non-numeric param value!');
-        if (this.type === PARAM_TYPE.Select && this.values.length) {
+        if (this.type === PARAM_TYPE.Switch) {
+            return val;
+        } else if (this.type === PARAM_TYPE.Select && this.values.length) {
             return this.values[val];
         }
         let formattedValue = convertToRange(val, this.range);
