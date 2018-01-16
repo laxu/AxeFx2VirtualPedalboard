@@ -11,7 +11,9 @@ import ControlEditorContainer from '../../containers/control-editor-container';
 interface Props {
     match: any,
     panel: PanelObject;
-    init: (panelId: number) => void;
+    init: () => void;
+    updateControlValues: () => void;
+    attachControllerListener: () => void;
     savePanelChanges: (form) => void;
     addPanelControl: (controlType: ControlType) => void;
     removePanelControl: (control: ControlObject) => void;
@@ -23,7 +25,7 @@ interface State {
     hasChanges: boolean;
     form: {
         label: string,
-        cc: number
+        cc: string
     }
 }
 
@@ -35,8 +37,8 @@ export default class PanelComponent extends React.Component<Props, State> {
             editedControl: null,
             hasChanges: false,
             form: {
-                label: this.props.panel && this.props.panel.label,
-                cc: this.props.panel && this.props.panel.cc
+                label: '',
+                cc: ''
             }
         };
 
@@ -44,25 +46,25 @@ export default class PanelComponent extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        const { match } = this.props;
-        this.props.init(match.params.panelId);
+        this.props.init();
     }
 
     componentWillReceiveProps(nextProps) {
-        const { match } = nextProps;
-       if (match.params.panelId !== this.props.match.params.panelId) {
-           this.props.init(match.params.panelId);
-       }
-       if (this.props.panel !== nextProps.panel) {
-           this.setState({
+        if (nextProps.match.params.panelId !== this.props.match.params.panelId) {
+            nextProps.init();
+        }
+        if (nextProps.panel.id !== this.props.panel.id) {
+            nextProps.updateControlValues();
+            nextProps.attachControllerListener();
+            this.setState({
                 editMode: false, 
                 hasChanges: false,
                 form: {
-                    label: nextProps.panel && nextProps.panel.label,
-                    cc: nextProps.panel && nextProps.panel.cc
+                    label: nextProps.panel.label,
+                    cc: nextProps.panel.cc
                 }
-           })
-       }
+            });
+        }
     }
 
     toggleEdit() {
@@ -88,13 +90,14 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.setState({ editMode: false, hasChanges: false });
     }
 
-    setFormValue(prop: string, value: string | number, toType: string = 'text') {
-        const { form } = this.state;
-        form[prop] = toType === 'number' ? Number(value) : value;
+    setFormValue(prop: string, value: string) {
         this.setState({
             hasChanges: true,
-            form
-        })
+            form: {
+                ...this.state.form, 
+                [prop]: value 
+            }
+        });
     }
 
     addControl(controlType: ControlType) {
@@ -132,16 +135,18 @@ export default class PanelComponent extends React.Component<Props, State> {
                                 <label>Panel name</label>
                                 <input type="text" 
                                     className="panel__label--input"
+                                    name="label"
                                     value={form.label} 
                                     onChange={event => this.setFormValue('label', event.target.value)} />
                             </div>
                             <div className="form-group">
                                 <label>Activate panel using CC</label>
-                                <input type="number" 
+                                <input type="number"
+                                    name="controlChange"
                                     value={form.cc} 
                                     min="0"
                                     max="127"
-                                    onChange={event => this.setFormValue('cc', event.target.value, 'number')} />
+                                    onChange={event => this.setFormValue('cc', event.target.value)} />
                             </div>
                             <div className="panel__edit-actions">
                                 <button className="btn" onClick={() => this.addControl(ControlType.Control)}>Add control</button>
