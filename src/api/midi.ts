@@ -95,17 +95,17 @@ export function updateDevices(devices: MIDIDeviceData[], dispatch: any): void {
                     input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
                     output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
                     channel: device.channel
-                });
+                }, dispatch);
             }
            
         }
     });
 }
 
-export function getAxeFxInstance() {
+export function getAxeFxInstance(): AxeFx {
     return axeFxInstance;
 }
 
-export function getControllerInstance() {
+export function getControllerInstance(): GenericMIDIController {
     return controllerInstance;
 }
