@@ -17,6 +17,7 @@ interface Props {
     presetName: string;
     panels: PanelObject[];
     currentPanel: PanelObject;
+    loading: boolean;
 }
 
 export class AppComponent extends React.Component<Props> {
@@ -24,12 +25,13 @@ export class AppComponent extends React.Component<Props> {
         super(props);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.init();
     }
 
     render() {
-        const { addNewPanel, axeFx, controller, firmwareVersion, presetName, panels, currentPanel } = this.props;
+        const { addNewPanel, axeFx, controller, firmwareVersion, presetName, panels, currentPanel, loading } = this.props;
+        if (loading) return null;
         return <div id="app">
                 <Header axeFx={axeFx} controller={controller}></Header>
                 <Sidebar addNewPanel={addNewPanel} panels={panels} currentPanelId={currentPanel && currentPanel.id}></Sidebar>

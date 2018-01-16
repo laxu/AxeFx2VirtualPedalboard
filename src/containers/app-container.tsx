@@ -10,15 +10,16 @@ import { GenericMIDIController } from "../api/generic-midi-controller";
 import { PanelObject } from "../api/panel-object";
 import { AppComponent } from "../components/app";
 import { FX_BLOCK_IDS, FX_PARAMS } from '../api/fx-block-data';
-import { parameterValueBytesToInt, generateId } from '../util/util';
+import { parameterValueBytesToInt, generateId, midiValueToAxeFx } from '../util/util';
 import { getAllBlocks } from '../api/fx-block';
 
 const mapStateToProps = state => ({
-    axeFx: getAxeFxInstance(),
-    controller: getControllerInstance(),
+    axeFx: state.app.axeFx,
+    controller: state.app.controller,
     devices: state.app.devices,
     panels: state.app.panels,
-    currentPanel: state.app.currentPanel
+    currentPanel: state.app.currentPanel,
+    loading: state.app.loading
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
@@ -26,11 +27,16 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...dispatchProps,
     ...ownProps,
     init() {
-        const { devices } = stateProps;
+        const { devices, panels, currentPanel } = stateProps;
         const { dispatch } = dispatchProps;
+        const { history } = ownProps;
         Modal.setAppElement(document.getElementById('app-container'));
 
         updateDevices(devices, dispatch);
+
+        if(panels.length) {
+            history.push(`/panels/${panels[0].id}`);
+        }
     },
     addNewPanel() {
         const { panels, controller } = stateProps;
