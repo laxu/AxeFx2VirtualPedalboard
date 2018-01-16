@@ -1,6 +1,6 @@
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
-import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToInt, bytesToblockID } from '../util/util';
+import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToInt } from '../util/util';
 import { IFxBlock, FxBlock, getBlockById, getBlockAndParam } from './fx-block';
 import { axeFxResetAction, axeFxUpdateAction, updateControlValueAction } from '../store/actions';
 
