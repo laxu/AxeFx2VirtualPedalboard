@@ -22,35 +22,30 @@ const mapStateToProps = state => ({
     loading: state.app.loading
 });
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-    ...stateProps,
-    ...dispatchProps,
-    ...ownProps,
-    init() {
-        const { devices, panels, currentPanel } = stateProps;
-        const { dispatch } = dispatchProps;
-        const { history } = ownProps;
-        Modal.setAppElement(document.getElementById('app-container'));
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+    const { controller, devices, panels, currentPanel } = stateProps;
+    const { dispatch } = dispatchProps;
+    const { match, history } = ownProps;
+    return {
+        ...stateProps,
+        ...dispatchProps,
+        ...ownProps,
+        init() {
+            Modal.setAppElement(document.getElementById('app-container'));
 
-        updateDevices(devices, dispatch);
-
-        if(panels.length) {
-            history.push(`/panels/${panels[0].id}`);
+            updateDevices(devices, dispatch);
+        },
+        addNewPanel() {
+            const panel: PanelObject = {
+                id: generateId(),
+                label: `Panel ${panels.length + 1}`,
+                controllerId: controller ? controller.id : null,
+                controls: []
+            };
+            dispatch(setPanelAction(panel));
+            history.push(`/panels/${panel.id}`);
         }
-    },
-    addNewPanel() {
-        const { panels, controller } = stateProps;
-        const { dispatch } = dispatchProps;
-        const { history } = ownProps;
-        const panel: PanelObject = {
-            id: generateId(),
-            label: `Panel ${panels.length + 1}`,
-            controllerId: controller ? controller.id : null,
-            controls: []
-        };
-        dispatch(setPanelAction(panel));
-        history.push(`/panels/${panel.id}`);
     }
-});
+};
 
 export default withRouter(connect(mapStateToProps, null, mergeProps)(AppComponent));
