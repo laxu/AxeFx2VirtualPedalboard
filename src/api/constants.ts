@@ -26,6 +26,7 @@ export const AXE_FUNCTIONS = {
     getPresetEditedStatus: 0x2A,
     getMIDIChannel: 0x17,
     getBlockParametersList: 0x01,
+    frontPanelChange: 0x21,
     blockParamValue: 0x02,
     setTargetBlock: 0x37,
     multiResponse: 0x64,

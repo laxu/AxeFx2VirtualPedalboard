@@ -1,8 +1,8 @@
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
-import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToInt } from '../util/util';
+import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToInt, bytesToPresetNumber } from '../util/util';
 import { IFxBlock, FxBlock, getBlockById, getBlockAndParam } from './fx-block';
-import { axeFxResetAction, axeFxUpdateAction, updateControlValueAction } from '../store/actions';
+import { axeFxResetAction, axeFxUpdateAction, updateControlValueAction, refreshCurrentPanelAction } from '../store/actions';
 
 export enum PARAM_MODE {
     Set = 0x01,
@@ -34,7 +34,7 @@ export class AxeFx implements MIDIController {
     public firmwareVersion: string;
     public presetEdited: boolean = false;
     public currentPresetName: string;
-    public currentPresetNumber: string;
+    public currentPresetNumber: number;
 
     private dispatch: any;
     private inputListener: (event: AxeFxResponse) => void;
@@ -72,7 +72,7 @@ export class AxeFx implements MIDIController {
 
         this.findModel().then(() => {
             this.dispatch(axeFxResetAction());
-            this.getPresetName();
+            this.getPresetNumber();
             this.dispatch(axeFxUpdateAction({
                 firmwareVersion: this.firmwareVersion,
                 connected: this.connected,
@@ -119,12 +119,10 @@ export class AxeFx implements MIDIController {
 
     getPresetName() {
         this.sendMessage([AXE_FUNCTIONS.getPresetName]);
-        this.disconnect();
     }
 
     getPresetNumber() {
         this.sendMessage([AXE_FUNCTIONS.getPresetNumber]);
-        this.disconnect();
         return new Promise(resolve => {
             this.resolvers.getPresetNumber = resolve;
         });
@@ -157,12 +155,10 @@ export class AxeFx implements MIDIController {
 
     getMIDIChannel() {
         this.sendMessage([AXE_FUNCTIONS.getMIDIChannel]);
-        this.disconnect();
     }
 
     setTargetBlock(blockId: number) {
         this.sendMessage([AXE_FUNCTIONS.setTargetBlock, ...intTo2Byte(blockId)]);
-        this.disconnect();
     }
 
     setBlockBypass(blockId: number, isBypassed: boolean) {
@@ -209,8 +205,9 @@ export class AxeFx implements MIDIController {
                 this.dispatch(axeFxUpdateAction({ currentPresetName: value }))
                 break;
             case AXE_FUNCTIONS.getPresetNumber:
-                value = bytes2ToInt(data);
+                value = bytesToPresetNumber(data, this.id);
                 this.currentPresetNumber = value;
+                this.getPresetName();
                 this.dispatch(axeFxUpdateAction({ currentPresetNumber: value }))
                 break;
             case AXE_FUNCTIONS.getPresetEditedStatus:
@@ -218,6 +215,8 @@ export class AxeFx implements MIDIController {
                 this.presetEdited = value;
                 this.dispatch(axeFxUpdateAction({ presetEdited: value }))
                 break;
+            case AXE_FUNCTIONS.frontPanelChange:
+                this.dispatch(refreshCurrentPanelAction(true));
             case AXE_FUNCTIONS.getMIDIChannel:
                 value = data[0];
                 this.channel = value;
@@ -247,7 +246,7 @@ export class AxeFx implements MIDIController {
         }
         const funcName = getObjKeyByValue(func, AXE_FUNCTIONS);
         if (funcName && data.length) {
-            console.log('event data', funcName, value);
+            console.log('Axe-Fx sent:', funcName, value);
         }
     } 
 }
