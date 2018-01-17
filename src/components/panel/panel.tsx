@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Modal from 'react-modal/lib/components/Modal';
 import { FxBlock, FxParam } from '../../api/fx-block';
 import { ControlType, ControlObject } from '../../api/control-object';
 import { PanelObject } from '../../api/panel-object';
-import ControlComponent from '../control/control'
+import ControlComponent from '../control/control';
 
 import './_panel.scss';
 import ControlEditorContainer from '../../containers/control-editor-container';
+import { reorder } from '../../util/util';
 
 interface Props {
     match: any,
@@ -43,6 +45,7 @@ export default class PanelComponent extends React.Component<Props, State> {
         };
 
         this.closeModal = this.closeModal.bind(this);
+        this.onDragEnd = this.onDragEnd.bind(this);
     }
 
     componentDidMount() {
@@ -114,6 +117,24 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.setState({ hasChanges: true });
     }
 
+    onDragEnd(result) {
+        const { panel } = this.props;
+        // dropped outside the list
+        if (!result.destination) {
+            return;
+        }
+
+        panel.controls = reorder(
+            panel.controls,
+            result.source.index,
+            result.destination.index
+        );
+
+        this.setState({
+            hasChanges: true
+        });
+    }
+
     render() {
         const { panel } = this.props;
         const { editMode, editedControl, hasChanges, form } = this.state;
@@ -155,15 +176,32 @@ export default class PanelComponent extends React.Component<Props, State> {
                         </div>)}
                     </div>
                 </div>
-                <div className="panel__controls">
-                    {panel.controls.length > 0 && panel.controls.map((control, i) => (
-                        <div className="control-container" onClick={() => this.editControl(control)} key={`control-${i}`}>
-                            {editMode && <button className="btn remove-control" onClick={event => this.removeControl(event, control)}>X</button>}
-                            <ControlComponent {...control}></ControlComponent>
-                        </div>
-                    ))}
-                    {panel.controls.length === 0 && <p>No controls, how about <a onClick={() => this.addControl(ControlType.Control)}>adding</a> some?</p>}
-                </div>
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                    <Droppable droppableId="droppable" direction="horizontal">
+                        {(provided, snapshot) => (
+                            <div className="panel__controls" ref={provided.innerRef}>
+                                {panel.controls.length > 0 && panel.controls.map((control, i) => (
+                                    <Draggable key={control.id} draggableId={control.id} isDragDisabled={editMode === false} index={i}>
+                                        {(provided, snapshot) => (
+                                            <div className="drag-wrapper"
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}>
+                                                <div className="control-container" 
+                                                    onClick={() => this.editControl(control)}>
+                                                    {editMode && <button className="btn remove-control" onClick={event => this.removeControl(event, control)}>X</button>}
+                                                    <ControlComponent {...control}></ControlComponent>
+                                                </div>
+                                                {provided.placeholder}
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {panel.controls.length === 0 && <p>No controls, how about <a onClick={() => this.addControl(ControlType.Control)}>adding</a> some?</p>}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
                 <Modal isOpen={!!editedControl} contentLabel="Control editor">
                     <ControlEditorContainer {...editedControl} closeModal={this.closeModal}></ControlEditorContainer>
                 </Modal>
