@@ -200,7 +200,7 @@ export class AxeFx implements MIDIController {
                 this.resolvers.getFirmwareVersion(value);
                 break;
             case AXE_FUNCTIONS.getPresetName:
-                value = textDecoder.decode(data).trim();
+                value = textDecoder.decode(data.slice(0, -2)).trim();
                 this.currentPresetName = value;
                 this.dispatch(axeFxUpdateAction({ currentPresetName: value }))
                 break;
