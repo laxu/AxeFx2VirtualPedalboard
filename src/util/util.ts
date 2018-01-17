@@ -1,4 +1,4 @@
-import { PARAM_VALUE_MULTIPLIER, MIDI_VALUE_MULTIPLIER } from "../api/constants";
+import { PARAM_VALUE_MULTIPLIER, MIDI_VALUE_MULTIPLIER, MODEL_IDS } from "../api/constants";
 
 export const textDecoder = new TextDecoder('utf-8');
 
@@ -65,16 +65,38 @@ export function intValueToAxeFx(value: number): number {
     return value * PARAM_VALUE_MULTIPLIER;
 }
 
+export function bytesToPresetNumber(data: Uint8Array, axeFxModelId) {
+    if (axeFxModelId === MODEL_IDS['AX8']) {
+        return (data[0] & 0x7F) | ((data[1] & 0x7F) << 7);
+    } else {
+        return   (data[0] & 0x7F) << 7 | data[1];
+    }
+}
+
 export function isElectron(): boolean {
     return navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
 }
 
-export function numRange (start: number, end: number) {
+export function numRange(start: number, end: number) {
     return Array.from(Array(end - start + 1), (_, i) => start + i);
 }
 
 export function generateId() {
     return window.crypto.getRandomValues(new Uint8Array(3)).join('');
+}
+
+export function reorder(list: Array<any>, startIndex: number, endIndex: number): Array<any> {
+    console.log('fuu', startIndex, endIndex);
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+  
+    return result;
+  };
+
+export function resolveRelativeValue(input: number, current: number) {
+    console.log('fuu', input, current, current + (input - 64));
+    return current + (input - 64);
 }
 
 export function handleSubmit(callback) {
