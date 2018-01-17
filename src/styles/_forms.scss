@@ -32,6 +32,11 @@
             margin-left: .5rem;
             padding: $button-padding;
         }
+        &[type=checkbox] {
+            display: inline-block;
+            margin-right: .5rem;
+            vertical-align: top;
+        }
     }
 
     select {
