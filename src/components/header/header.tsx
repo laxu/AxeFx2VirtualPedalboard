@@ -43,12 +43,12 @@ export default class HeaderComponent extends React.Component<Props, State> {
                                 
                             </div>
                             <div className="firmware-version">
-                                <label>Firmware version:</label>
-                                <span>{axeFx && axeFx.firmwareVersion}</span>
+                                <label>Connected:</label>
+                                <span>{axeFx && axeFx.connected ? 'Yes' : 'No'}</span>
                             </div>
                             <div className="presetName">
                                 <label>Preset:</label>
-                                <span>{axeFx && axeFx.currentPresetName}</span>
+                                <span>{axeFx && `${axeFx.currentPresetNumber}: ${axeFx.currentPresetName}`}</span>
                             </div>
                         </div>
                     </div>
