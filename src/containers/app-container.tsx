@@ -2,7 +2,7 @@ import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
-import { setPanelAction } from "../store/actions";
+import { setPanelAction, resetControlValuesAction, resetAxeFxAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
@@ -33,6 +33,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         init() {
             Modal.setAppElement(document.getElementById('app-container'));
 
+            dispatch(resetAxeFxAction());
+            dispatch(resetControlValuesAction());
             updateDevices(devices, dispatch);
         },
         addNewPanel() {
