@@ -1,17 +1,29 @@
 import * as React from 'react';
-import { GenericMIDIController } from '../../api/generic-midi-controller';
-import { AxeFx } from '../../api/axefx';
+import * as classNames from 'classnames';
+import { ControllerState } from '../../api/generic-midi-controller';
+import { AxeFxState } from '../../api/axefx';
 import Modal from 'react-modal/lib/components/Modal';
 import './_header.scss';
 import AppSettingsContainer from '../../containers/app-settings-container';
+import { MIDIDeviceData } from '../../api/midi';
 
 interface Props {
-    axeFx: AxeFx,
-    controller: GenericMIDIController
+    axeFx: AxeFxState,
+    controller: ControllerState
 }
 
 interface State {
     showSettings: boolean;
+}
+
+function getStatusClassName(device: AxeFxState | ControllerState): string {
+    return classNames(
+        'device__status', 
+        {
+            'device__status--off': !device || !device.connected, 
+            'device__status--on': device && device.connected
+        }
+    )
 }
 
 export default class HeaderComponent extends React.Component<Props, State> {
@@ -29,6 +41,9 @@ export default class HeaderComponent extends React.Component<Props, State> {
     render() {
         const { axeFx, controller } = this.props;
         const { showSettings } = this.state;
+
+        const axeFxStatusClassName = getStatusClassName(axeFx);
+        const controllerStatusClassName = getStatusClassName(controller);
         
         return (
             <div className="header">
@@ -39,16 +54,12 @@ export default class HeaderComponent extends React.Component<Props, State> {
                         <div className="info-container">
                             <div className="device-name">
                                 <label>Device name:</label>
-                                <span>{axeFx && axeFx.name}</span>
-                                
-                            </div>
-                            <div className="firmware-version">
-                                <label>Connected:</label>
-                                <span>{axeFx && axeFx.connected ? 'Yes' : 'No'}</span>
+                                <span>{axeFx.name || 'Not connected'}</span>
+                                <div className={axeFxStatusClassName}></div>
                             </div>
                             <div className="presetName">
                                 <label>Preset:</label>
-                                <span>{axeFx && `${axeFx.currentPresetNumber}: ${axeFx.currentPresetName}`}</span>
+                                <span>{axeFx.connected && `${axeFx.currentPresetNumber + 1}: ${axeFx.currentPresetName}`}</span>
                             </div>
                         </div>
                     </div>
@@ -57,7 +68,8 @@ export default class HeaderComponent extends React.Component<Props, State> {
                         <div className="info-container">
                             <div className="device-name">
                                 <label>Device name:</label>
-                                <span>{controller && controller.name}</span>
+                                <span>{controller.name || 'Not connected'}</span>
+                                <div className={controllerStatusClassName}></div>
                             </div>
                         </div>
                     </div>
