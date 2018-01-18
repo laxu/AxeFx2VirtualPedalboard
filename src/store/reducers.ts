@@ -58,6 +58,10 @@ export default function reducers(state = initialState, action: Action & { payloa
         case TypeKeys.resetControlValues:
             return {
                 ...state,
+                currentPanel: state.currentPanel ? {
+                    ...state.currentPanel, 
+                    controls: state.currentPanel.controls.map(ctrl => ({...ctrl, paramValue: null}))
+                } : null,
                 panels: state.panels.map(panel => ({
                     ...panel,
                     controls: panel.controls.map(ctrl => ({...ctrl, paramValue: null}))
