@@ -16,6 +16,8 @@ export const MODEL_IDS = {
 export const MIDI_VALUE_MULTIPLIER = 12.8;
 export const PARAM_VALUE_MULTIPLIER = 6553.4;
 
+export const DEBOUNCE_TIME = 50;
+
 export const TUNER_CC = 15;
 export const METRONOME_CC = 122;
 
