@@ -49,14 +49,16 @@ export default class PanelComponent extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        this.props.init();
+        if (!this.props.panel) {
+            this.props.init();
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.match.params.panelId !== this.props.match.params.panelId) {
             nextProps.init();
         }
-        if (nextProps.panel.id !== this.props.panel.id) {
+        if (!this.props.panel || nextProps.panel.id !== this.props.panel.id) {
             nextProps.updateControlValues();
             nextProps.attachControllerListener();
             this.setState({
