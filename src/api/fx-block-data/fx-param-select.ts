@@ -346,6 +346,52 @@ export const delayConfig = [
     'TAPE'
 ];
 
+export const reverbType = [
+    'SMALL ROOM',
+    'MEDIUM ROOM',
+    'LARGE ROOM',
+    'SMALL HALL',
+    'MEDIUM HALL',
+    'LARGE HALL',
+    'SMALL CHAMBER',
+    'MEDIUM CHAMBER',
+    'LARGE CHAMBER',
+    'SMALL PLATE',
+    'MEDIUM PLATE',
+    'LARGE PLATE',
+    'SMALL CATHEDRAL',
+    'MED. CATHEDRAL',
+    'LARGE CATHEDRAL',
+    'SMALL SPRING',
+    'MEDIUM SPRING',
+    'LARGE SPRING',
+    'CAVERN',
+    'STONE QUARRY',
+    'STUDIO',
+    'AMBIENCE',
+    'CONCERT HALL',
+    'LARGE DEEP HALL',
+    'REC STUDIO C',
+    'NORTH CHURCH',
+    'SOUTH CHURCH',
+    'LONDON PLATE',
+    'SUN PLATE',
+    'HUGE ROOM',
+    'DRUM ROOM',
+    'HALLWAY',
+    'TUNNEL',
+    'DEEP CHAMBER',
+    'LG WOODEN ROOM',
+    'GYMNASIUM',
+    'ASYLUM HALL',
+    'DEEP SPACE',
+    'REC STUDIO A',
+    'LG TILED ROOM',
+    'VOCAL PLATE',
+    'WIDE HALL',
+    'RICH HALL'
+];
+
 export const bypassModeLimited = [
     'THRU',
     'MUTE'
