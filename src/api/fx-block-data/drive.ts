@@ -1,5 +1,5 @@
 import { PARAM_TYPE } from "./fx-param-common";
-import { driveType, inputSelect, bypassModeLimited, clipType } from "./fx-param-Select";
+import { driveType, inputSelect, bypassModeLimited, clipType } from "./fx-param-select";
 
 const drive = [
     { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: driveType },
