@@ -2,7 +2,7 @@ import { PARAM_TYPE } from "./fx-param-common";
 import { reverbType, bypassMode } from "./fx-param-Select";
 
 const reverb = [
-    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: reverbType },
+    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: reverbType, labelGroup: 'Basic' },
     { id: 1, label: 'Time', type: PARAM_TYPE.Knob },
     { id: 2, label: 'High cut', type: PARAM_TYPE.Knob },
     { id: 3, label: 'HF time', type: PARAM_TYPE.Knob },
@@ -11,12 +11,12 @@ const reverb = [
     { id: 7, label: 'Early level', type: PARAM_TYPE.Knob },
     { id: 8, label: 'Late level', type: PARAM_TYPE.Knob },
     { id: 9, label: 'Predelay', type: PARAM_TYPE.Knob },
-    { id: 10, label: 'Low cut', type: PARAM_TYPE.Knob },
-    { id: 11, label: 'Mod depth', type: PARAM_TYPE.Knob },
-    { id: 12, label: 'Mod rate', type: PARAM_TYPE.Knob },
-    { id: 13, label: 'Mix', type: PARAM_TYPE.Knob },
     { id: 14, label: 'Level', type: PARAM_TYPE.Knob },
     { id: 15, label: 'Balance', type: PARAM_TYPE.Knob },
+    { id: 10, label: 'Low cut', type: PARAM_TYPE.Knob },
+    { id: 11, label: 'Mod depth', type: PARAM_TYPE.Knob, labelGroup: 'Advanced' },
+    { id: 12, label: 'Mod rate', type: PARAM_TYPE.Knob },
+    { id: 13, label: 'Mix', type: PARAM_TYPE.Knob },
     { id: 16, label: 'Bypass mode', type: PARAM_TYPE.Select, values: bypassMode },
     { id: 17, label: 'Global', type: PARAM_TYPE.Switch },
     { id: 18, label: 'Input gain', type: PARAM_TYPE.Knob },
