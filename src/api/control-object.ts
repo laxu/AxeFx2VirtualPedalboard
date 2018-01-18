@@ -11,5 +11,6 @@ export interface ControlObject {
     paramId: number;
     paramValue: number;
     controlType: ControlType;
+    isRelative?: boolean;
     cc: number;
 }
