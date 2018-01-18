@@ -17,6 +17,12 @@
     color: $color-control-text;
     text-align: center;
 
+    &__empty {
+        margin-top: .5rem;
+        margin-bottom: 1rem;
+        font-size: $font-size-small;
+    }
+
     .block {
         &__label {
             margin: 0 -0.5rem 0.5rem -0.5rem;

@@ -48,8 +48,8 @@ export default class ControlComponent extends React.Component<Props, State> {
                     {block && block.label && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
-                    <div className="param__value">{paramValue}</div>
                     {isEmpty && <div className="control__empty">Control not configured</div>}
+                    <div className="param__value">{paramValue}</div>
                 </div>
             );
         } else {
