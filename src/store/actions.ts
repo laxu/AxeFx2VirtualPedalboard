@@ -11,7 +11,9 @@ export enum TypeKeys {
     setPanel = 'Set panel data',
     setMIDIDeviceData = 'Set MIDI device data',
     setBlocks = 'Set effects blocks',
+    refreshCurrentPanel = 'Refresh current panel values',
     updateControlValue = 'Update control value',
+    resetControlValues = 'Reset control values',
     updateAxeFx = 'Update Axe-Fx',
     resetAxeFx = 'Reset Axe-Fx',
     updateController = 'Update MIDI controller'
@@ -29,22 +31,31 @@ export const setMIDIDeviceDataAction = (payload) => ({
     payload
 });
 
-export const axeFxUpdateAction = (payload): ActionWithPayload => ({
+export const updateAxeFxAction = (payload): ActionWithPayload => ({
     type: TypeKeys.updateAxeFx,
     payload: payload
 });
 
-export const axeFxResetAction = (): Action => ({
+export const resetAxeFxAction = (): Action => ({
     type: TypeKeys.resetAxeFx,
 });
 
-export const updateControlValueAction = (payload:  {
+export const refreshCurrentPanelAction = (payload): ActionWithPayload => ({
+    type: TypeKeys.refreshCurrentPanel,
+    payload
+});
+
+export const updateControlValueAction = (payload: {
     blockId: number,
     paramId: number,
     paramValue: number
 }): ActionWithPayload => ({
     type: TypeKeys.updateControlValue,
     payload
+});
+
+export const resetControlValuesAction = (): Action => ({
+    type: TypeKeys.resetControlValues
 });
 
 export const getCurrentPanelAction = (payload: number): ActionWithPayload => ({
