@@ -44,6 +44,16 @@ export interface MIDIDeviceData {
     channel?: number | 'all';
 }
 
+export enum MIDIDeviceStateChange {
+    Connected = 'connected',
+    Disconnected = 'disconnected'
+}
+
+export enum MIDIDeviceType {
+    Input = 'input',
+    Output = 'output'
+}
+
 export class WebMidiWrapper {
     static webMidi = WebMidi;
 
@@ -56,6 +66,22 @@ export class WebMidiWrapper {
                 console.log('inputs', this.webMidi.inputs);
                 console.log('outputs', this.webMidi.outputs);
             }
+            this.webMidi.addListener(MIDIDeviceStateChange.Connected, event => {
+                console.log('connected device', event);
+            });
+            this.webMidi.addListener(MIDIDeviceStateChange.Disconnected, event => {
+                console.log('disconnected device', event);
+                const device = event.port;
+                const axeFx = getAxeFxInstance();
+                const controller = getControllerInstance();
+                if (device.type === MIDIDeviceType.Input) {
+                    if (axeFx.input.name === device.name) {
+                        axeFx.disconnect();
+                    } else if (controller.input.name === device.name) {
+                        controller.disconnect();
+                    }
+                }
+            });
             callback();
         }, SYSEX_ENABLED);
     }

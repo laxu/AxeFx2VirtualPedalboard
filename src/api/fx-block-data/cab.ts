@@ -1,7 +1,7 @@
 import { PARAM_TYPE } from "./fx-param-common";
 
 const cab = [
-    { id: 0, label: 'Cab L', type: PARAM_TYPE.Select },
+    { id: 0, label: 'Cab L', type: PARAM_TYPE.Select, labelGroup: 'Basic' },
     { id: 1, label: 'Cab L mic', type: PARAM_TYPE.Select },
     { id: 2, label: 'Cab R', type: PARAM_TYPE.Select },
     { id: 3, label: 'Cab R mic', type: PARAM_TYPE.Select },

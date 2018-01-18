@@ -17,6 +17,7 @@ export interface IFxParam {
     precision?: number;
     range?: [number, number];
     label?: string;
+    labelGroup?: string;
     values?: string[];
     formatValue: (value: number) => number | string;
 }
@@ -49,6 +50,7 @@ export class FxParam implements IFxParam {
     precision?: number;
     range?: [number, number];
     label?: string;
+    labelGroup?: string;
     values?: string[];
 
     constructor(paramSettings: IFxParam) {
@@ -59,6 +61,7 @@ export class FxParam implements IFxParam {
         this.precision = paramSettings.precision !== undefined ? paramSettings.precision : 2;
         this.range = paramSettings.range || [0,10];
         this.label = paramSettings.label;
+        this.labelGroup = paramSettings.labelGroup;
         this.values = paramSettings.values || [];
     }
 
@@ -85,7 +88,11 @@ for (const blockType of FX_BLOCK_TYPES) {
         const label = FX_BLOCK_LABELS[blockName];
         let parameters = [];
         if (FX_PARAMS[blockType]) {
-            parameters = FX_PARAMS[blockType].map(param => new FxParam({ blockGroup: blockType, ...param }));
+            let labelGroup;
+            parameters = FX_PARAMS[blockType].map(param => {
+                if (param.labelGroup) labelGroup = param.labelGroup;
+                return new FxParam({ blockGroup: blockType, ...param, labelGroup });
+            });
         }
         blocks.push(new FxBlock({ id, label, parameters }));
         counter++;

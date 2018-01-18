@@ -2,7 +2,7 @@ import { PARAM_TYPE } from "./fx-param-common";
 import { delayType, delayConfig, tempo, bypassMode, lfoType, filterSlope, phaseReverse, lfoTarget, lfoDepthRange } from "./fx-param-select";
 
 const delay = [
-    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: delayType },
+    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: delayType, labelGroup: 'Basic' },
     { id: 1, label: 'Config', type: PARAM_TYPE.Select, values: delayConfig },
     { id: 2, label: 'Time', type: PARAM_TYPE.Knob },
     { id: 3, label: 'Ratio', type: PARAM_TYPE.Knob },

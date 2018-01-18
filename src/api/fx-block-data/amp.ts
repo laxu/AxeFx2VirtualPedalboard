@@ -2,7 +2,7 @@ import { PARAM_TYPE } from './fx-param-common';
 import { ampType } from './fx-param-select';
 
 const amp = [
-    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: ampType },
+    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: ampType, labelGroup: 'Basic' },
     { id: 1, label: 'Input drive', type: PARAM_TYPE.Knob },
     { id: 74, label: 'Overdrive', type: PARAM_TYPE.Knob },
     { id: 2, label: 'Bass', type: PARAM_TYPE.Knob },
@@ -13,7 +13,7 @@ const amp = [
     { id: 21, label: 'Level', type: PARAM_TYPE.Knob, range: [-80, 20], precision: 1 },
     { id: 22, label: 'Balance', type: PARAM_TYPE.Knob, range: [-100, 100], precision: 1 },
     { id: 16, label: 'Depth', type: PARAM_TYPE.Knob },
-    { id: 6, label: 'Preamp low cut', type: PARAM_TYPE.Knob },
+    { id: 6, label: 'Preamp low cut', type: PARAM_TYPE.Knob, labelGroup: 'Advanced' },
     { id: 7, label: 'High cut freq', type: PARAM_TYPE.Knob },
     { id: 8, label: 'Tone freq', type: PARAM_TYPE.Knob },
     { id: 9, label: 'X-former grind', type: PARAM_TYPE.Knob },
@@ -48,7 +48,7 @@ const amp = [
     { id: 50, label: 'Speaker drive', type: PARAM_TYPE.Knob },
     { id: 51, label: 'X-former match', type: PARAM_TYPE.Knob },
     { id: 54, label: 'Sat switch', type: PARAM_TYPE.Select },
-    { id: 55, label: 'GraphicEQ band 1', type: PARAM_TYPE.Knob },
+    { id: 55, label: 'GraphicEQ band 1', type: PARAM_TYPE.Knob, labelGroup: 'Graphic EQ' },
     { id: 56, label: 'GraphicEQ band 2', type: PARAM_TYPE.Knob },
     { id: 57, label: 'GraphicEQ band 3', type: PARAM_TYPE.Knob },
     { id: 58, label: 'GraphicEQ band 4', type: PARAM_TYPE.Knob },
@@ -56,7 +56,7 @@ const amp = [
     { id: 60, label: 'GraphicEQ band 6', type: PARAM_TYPE.Knob },
     { id: 61, label: 'GraphicEQ band 7', type: PARAM_TYPE.Knob },
     { id: 62, label: 'GraphicEQ band 8', type: PARAM_TYPE.Knob },
-    { id: 63, label: 'Bias excursion', type: PARAM_TYPE.Knob },
+    { id: 63, label: 'Bias excursion', type: PARAM_TYPE.Knob, labelGroup: 'Advanced 2' },
     { id: 66, label: 'Triode 2 plate freq', type: PARAM_TYPE.Knob },
     { id: 67, label: 'Triode 1 plate freq', type: PARAM_TYPE.Knob },
     { id: 68, label: 'Poweramp tube', type: PARAM_TYPE.Select },

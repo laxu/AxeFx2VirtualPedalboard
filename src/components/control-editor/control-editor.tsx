@@ -9,6 +9,7 @@ interface Props {
     paramId: number;
     controlType: ControlType;
     cc: number;
+    isRelative: boolean;
     saveChanges: (ControlObject) => void;
     closeModal: (hasChanges: boolean) => void;
 }
@@ -20,6 +21,8 @@ interface State {
     controlType: ControlType;
     cc: number;
     hasChanges: boolean;
+    isValid: boolean;
+    isRelative: boolean;
     [key: string]: any;
 }
 
@@ -27,14 +30,16 @@ export default class ControlEditorComponent extends React.Component<Props, State
     constructor(props) {
         super(props);
         
-        const { blockId, paramId, controlType, cc } = this.props;
+        const { blockId, paramId, controlType, cc, isRelative } = this.props;
         this.state = {
             blocks: getAllBlocks(),
             blockId: blockId,
             paramId: paramId,
             controlType: controlType || ControlType.Control,
             cc: cc,
-            hasChanges: false
+            isRelative: isRelative || false,
+            hasChanges: false,
+            isValid: false
         };
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -42,14 +47,15 @@ export default class ControlEditorComponent extends React.Component<Props, State
 
     onSubmit(event) {
         event.preventDefault();
-        const { blockId, paramId, cc, controlType } = this.state;
         const { id, closeModal, saveChanges } = this.props;
-        if (!blockId || !paramId) return false;
+        const { blockId, paramId, cc, controlType, isRelative } = this.state;
+        if (!blockId && !paramId) return false;
         saveChanges({
             id,
             blockId,
             paramId,
             controlType,
+            isRelative,
             cc
         })
         closeModal(true);
@@ -60,18 +66,41 @@ export default class ControlEditorComponent extends React.Component<Props, State
         this.props.closeModal(false);
     }
 
+    checkValidity() {
+        const { blockId, paramId } = this.state;
+        this.setState({ isValid: blockId && paramId >= 0 });
+    }
+
     setValue(prop: string, value: string) {
         this.setState({
             [prop]: prop === 'controlType' ? value : Number(value),
             hasChanges: true
         });
+        this.checkValidity();
+    }
+
+    buildParameterOptions(selectedBlock: FxBlock) {
+        const parameterOptions = [];
+        if (selectedBlock) {
+            let currentOptGroup;
+            selectedBlock.parameters.map((param, i) => {
+                if (!currentOptGroup || param.labelGroup !== currentOptGroup.label) {
+                    parameterOptions.push({ label: param.labelGroup, parameters: [] });
+                    currentOptGroup = parameterOptions[parameterOptions.length - 1];
+                }
+                currentOptGroup.parameters.push(param);
+            });
+        }
+        return parameterOptions;
     }
 
     render() {
-        const { hasChanges, blocks, blockId, paramId, cc, controlType } = this.state;
+        const { isValid, hasChanges, blocks, blockId, paramId, cc, controlType, isRelative } = this.state;
 
         const selectedBlock: FxBlock = blockId ? getBlockById(blockId) : null;
-        
+
+        const parameterOptions = this.buildParameterOptions(selectedBlock);
+
         return (
             <form className="form control-editor" autoComplete="off" onSubmit={this.onSubmit}>
                 <h2>Settings for control</h2>
@@ -87,9 +116,13 @@ export default class ControlEditorComponent extends React.Component<Props, State
                 <div className="form-group">
                     <label>Parameter to control</label>
                     <select value={paramId && paramId.toString() || ''} disabled={!selectedBlock} onChange={event => this.setValue('paramId', event.target.value)}>
-                        <option disabled value="">Select effects param</option>
-                        {selectedBlock && selectedBlock.parameters.map((param, i) => (
-                            <option key={`param-${i}`} value={param.id}>{param.label}</option>
+                        <option disabled value="">{selectedBlock && selectedBlock.parameters.length === 0 ? 'Block is not yet supported' : 'Select effects param'}</option>
+                        {parameterOptions.map((group, i) => (
+                            <optgroup label={group.label} key={`group-${i}`}>
+                                {group.parameters.map((param, j) => (
+                                    <option key={`param-${j}`} value={param.id}>{param.label}</option>
+                                ))}
+                            </optgroup>
                         ))}
                     </select>
                 </div>
@@ -120,10 +153,21 @@ export default class ControlEditorComponent extends React.Component<Props, State
                         defaultValue={cc !== null && cc.toString()}
                         onChange={event => this.setValue('cc', event.target.value)} />
                 </div>
+                <div className="form-group">
+                    <label>
+                    <input type="checkbox" 
+                        name="isRelative"
+                        value="1"
+                        checked={isRelative}
+                        onChange={event => this.setValue('isRelative', event.target.value)} />
+                        <span>CC input is relative</span>
+                    </label>
+                    
+                </div>
                 
                 <div className="control-editor__actions">
                     <button className="btn" onClick={() => this.onCancel()}>Cancel</button>
-                    <input type="submit" value="Done" disabled={!hasChanges} className="btn btn--primary" />
+                    <input type="submit" value="Done" disabled={!hasChanges || !isValid} className="btn btn--primary" />
                 </div>
             </form>
         );
