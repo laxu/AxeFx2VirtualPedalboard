@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { ControlType, ControlObject } from '../api/control-object';
 import ControlEditorComponent from '../components/control-editor/control-editor';
+import { getAxeFxInstance } from '../api/midi';
 
 const mapStateToProps = state => ({
     panel: state.app.currentPanel
@@ -12,7 +13,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...ownProps,
     saveChanges(formData) {
         const { panel } = stateProps;
-        const { id, controlType, blockId, paramId, cc } = formData;
+        const { id, controlType, blockId, paramId, cc, isRelative } = formData;
         const controlIdx = panel.controls.findIndex(ctrl => ctrl.id === id);
         if (controlIdx === -1) throw new Error(`Could not find control for ID "${id}"`);
         const updatedControl: ControlObject = {
@@ -21,9 +22,14 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             paramId,
             paramValue: null,
             controlType,
+            isRelative: !!isRelative,
             cc
         };
         panel.controls[controlIdx] = updatedControl;
+        const axeFx = getAxeFxInstance();
+        if (blockId && paramId >= 0 && axeFx) {
+            axeFx.getBlockParamValue(blockId, paramId);
+        }
     },
 });
 
