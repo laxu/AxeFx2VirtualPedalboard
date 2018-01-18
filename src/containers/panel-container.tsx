@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getCurrentPanelAction, setPanelAction, updateControlValueAction, loadingAction } from "../store/actions";
+import { getCurrentPanelAction, setPanelAction, updateControlValueAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType, getAxeFxInstance, getControllerInstance } from "../api/midi";
-import { MODEL_IDS } from "../api/constants";
+import { MODEL_IDS, DEBOUNCE_TIME } from "../api/constants";
 import { AxeFx } from "../api/axefx";
 import { GenericMIDIController } from "../api/generic-midi-controller";
 import { PanelObject } from "../api/panel-object";
 import { ControlType, ControlObject } from '../api/control-object';
 import PanelComponent from '../components/panel/panel';
-import { generateId } from '../util/util';
+import { generateId, resolveRelativeValue, debounce } from '../util/util';
 
 const mapStateToProps = state => ({
     panel: state.app.currentPanel,
@@ -34,7 +34,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             if (panel) {
                 panel.controls.forEach(control => {
                     const { blockId, paramId } = control;
-                    if (blockId && paramId) {
+                    if (blockId && paramId >= 0) {
                         dispatch(updateControlValueAction({blockId, paramId, paramValue: null}));
                         if (axeFx && axeFx.output) {
                             axeFx.getBlockParamValue(blockId, paramId);
@@ -48,22 +48,28 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             const axeFx = getAxeFxInstance();
             const controller = getControllerInstance();
             if (controller && controller.input) {
-                controller.input.removeListener().addListener(MIDIListenerType.CC, controller.channel, event => {
+                controller.input.removeListener().addListener(MIDIListenerType.CC, controller.channel, debounce(event => {
                     console.log('controller event data', event.data);
                     const cc = event.data[1];
-                    const value = event.data[2];
+                    let value = event.data[2];
                     const panelActivatedByCC = panels.find(p => p.cc === cc);
                     if (panelActivatedByCC) {
                         // Switch to panel
                         history.push(`/panels/${panelActivatedByCC.id}`);
                     } else {
                         // Change control
-                        const control = panel.controls.find(ctrl => ctrl.cc === cc);
+                        const control: ControlObject = panel.controls.find(ctrl => ctrl.cc === cc);
                         if (control) {
-                            axeFx.setBlockParamValue(control.blockId, control.paramId, value);
+                            let useRawValue = false;
+                            if (control.isRelative) {
+                                console.log('fuu', control.paramValue);
+                                value = resolveRelativeValue(value, control.paramValue);
+                                useRawValue = true;
+                            }
+                            axeFx.setBlockParamValue(control.blockId, control.paramId, value, useRawValue);
                         }
                     }
-                });
+                }, DEBOUNCE_TIME));
             }
         },
         savePanelChanges(formValues) {
