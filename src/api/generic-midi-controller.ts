@@ -2,12 +2,14 @@ import { MIDIController, MIDIControllerType, MIDIInput, MIDIOutput, MIDIListener
 import { updateControllerAction } from "../store/actions";
 
 export interface ControllerState {
-    name: string
+    name: string;
+    connected: boolean;
 };
 
 export class GenericMIDIController implements MIDIController {
     id: string;
     type?: MIDIControllerType = MIDIControllerType.Controller;
+    connected: boolean = false;
     name: string;
     input: MIDIInput;
     output: MIDIOutput;
@@ -29,17 +31,21 @@ export class GenericMIDIController implements MIDIController {
         this.channel = genericDevice.channel || 'all';
 
         if (this.input) {
-            this.inputListener = this.input.removeListener().addListener(MIDIListenerType.CC, this.channel, event => {
-                console.log('controller event', event.data);
-            });
+            this.connected = true;
         }
 
         this.dispatch(updateControllerAction({
-            name: this.name
+            name: this.name,
+            connected: this.connected
         }));
     }
 
     disconnect() {
-        this.input.removeListener(MIDIListenerType.CC, this.channel, this.inputListener);
+        this.connected = false;
+        this.name = null;
+        this.dispatch(updateControllerAction({
+            name: this.name,
+            connected: this.connected
+        }));
     }
 }
