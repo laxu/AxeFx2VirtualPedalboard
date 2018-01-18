@@ -1,8 +1,9 @@
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
-import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToInt, bytesToPresetNumber } from '../util/util';
+import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToFloat, bytesToPresetNumber } from '../util/util';
 import { IFxBlock, FxBlock, getBlockById, getBlockAndParam } from './fx-block';
-import { axeFxResetAction, axeFxUpdateAction, updateControlValueAction, refreshCurrentPanelAction } from '../store/actions';
+import { resetAxeFxAction, updateAxeFxAction, updateControlValueAction, refreshCurrentPanelAction } from '../store/actions';
+import { PARAM_TYPE } from './fx-block-data/index';
 
 export enum PARAM_MODE {
     Set = 0x01,
@@ -62,18 +63,23 @@ export class AxeFx implements MIDIController {
         this.output = axeFxDevice.output;
         this.channel = axeFxDevice.channel || 'all';
 
+        if (!this.input) {
+            this.connected = false;
+            return;
+        }
+
         this.inputListener = (event: AxeFxResponse) => this.processEvent(
             event.data[5], 
             event.data.slice(6, event.data.length - 2),
             event.data
         );
 
-        this.input && this.input.removeListener().addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
+        this.input.removeListener().addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
 
         this.findModel().then(() => {
-            this.dispatch(axeFxResetAction());
+            this.dispatch(resetAxeFxAction());
             this.getPresetNumber();
-            this.dispatch(axeFxUpdateAction({
+            this.dispatch(updateAxeFxAction({
                 firmwareVersion: this.firmwareVersion,
                 connected: this.connected,
                 name: this.name
@@ -165,8 +171,9 @@ export class AxeFx implements MIDIController {
         this.setBlockParamValue(blockId, 255, Number(isBypassed));
     }
 
-    setBlockParamValue(blockId: number, paramId: number, paramValue: number) {
-        const convertedParamValue = midiValueToAxeFx(paramValue);
+    setBlockParamValue(blockId: number, paramId: number, paramValue: number, useRawValue: boolean = false) {
+        const { block, param } = getBlockAndParam(blockId, paramId);
+        const convertedParamValue = useRawValue ? paramValue : midiValueToAxeFx(paramValue);
         this.sendMessage([
             AXE_FUNCTIONS.blockParamValue, 
             ...intTo2Byte(blockId),
@@ -188,59 +195,78 @@ export class AxeFx implements MIDIController {
 
     disconnect(): void {
         this.sendMessage([0x42]);
+        this.connected = false;
+        this.dispatch(updateAxeFxAction({ connected: this.connected }));
+    }
+
+    resolveParamValue(blockId: number, paramId: number, paramValue: Uint8Array) {
+        const { block, param } = getBlockAndParam(blockId, paramId);
+        if (block && param) {
+            let value = parameterValueBytesToInt(paramValue);
+            if (param.type === PARAM_TYPE.Knob) {
+                value = axeFxValueToFloat(parameterValueBytesToInt(paramValue));
+            }
+            return param.formatValue(value);
+        }
+        return null;
     }
 
     processEvent(func: number, data: Uint8Array, rawData: Uint8Array): void {
-        let value;
+        let value, paramValueObj;
         switch (func) {
             case AXE_FUNCTIONS.getFirmwareVersion:
                 value = data[0] + '.' + data[1];
                 this.firmwareVersion = value;
-                this.connected = true;
+                if (value) this.connected = true;
                 this.resolvers.getFirmwareVersion(value);
                 break;
+                
             case AXE_FUNCTIONS.getPresetName:
                 value = textDecoder.decode(data.slice(0, -2)).trim();
                 this.currentPresetName = value;
-                this.dispatch(axeFxUpdateAction({ currentPresetName: value }))
+                this.dispatch(updateAxeFxAction({ currentPresetName: value }))
                 break;
+
             case AXE_FUNCTIONS.getPresetNumber:
                 value = bytesToPresetNumber(data, this.id);
                 this.currentPresetNumber = value;
                 this.getPresetName();
-                this.dispatch(axeFxUpdateAction({ currentPresetNumber: value }))
+                this.dispatch(updateAxeFxAction({ currentPresetNumber: value }))
                 break;
+
             case AXE_FUNCTIONS.getPresetEditedStatus:
                 value = !!data[0];
                 this.presetEdited = value;
-                this.dispatch(axeFxUpdateAction({ presetEdited: value }))
+                this.dispatch(updateAxeFxAction({ presetEdited: value }))
                 break;
+
             case AXE_FUNCTIONS.frontPanelChange:
                 this.dispatch(refreshCurrentPanelAction(true));
+                break;
+
             case AXE_FUNCTIONS.getMIDIChannel:
                 value = data[0];
                 this.channel = value;
                 break;
+
             case AXE_FUNCTIONS.getBlockParametersList:
                 value = {
                     blockId: bytes2ToInt(data.slice(0, 2)),
                     paramId:  bytes2ToInt(data.slice(2, 4)),
-                    paramValue: axeFxValueToInt(parameterValueBytesToInt(data.slice(4, 7)))
                 }
+                value.paramValue = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
                 break;
+
             case AXE_FUNCTIONS.blockParamValue:
                 value = {
                     blockId: bytes2ToInt(data.slice(0, 2)),
                     paramId:  bytes2ToInt(data.slice(2, 4)),
-                    paramValue: axeFxValueToInt(parameterValueBytesToInt(data.slice(4, 7)))
                 }
-                const { block, param } = getBlockAndParam(value.blockId, value.paramId);
-                if (block && param) {
-                    value.paramValue = param.formatValue(value.paramValue);
-                    console.log('received param value', value);
-                    this.dispatch(updateControlValueAction(value));
-                }
+                value.paramValue = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
+                console.log('received param value', value);
+                this.dispatch(updateControlValueAction(value));
                 break;
+
             default:
                 value = data;
         }

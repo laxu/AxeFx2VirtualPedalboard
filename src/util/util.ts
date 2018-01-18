@@ -57,7 +57,7 @@ export function axeFxValueToMIDI(value: number): number {
     return (value / PARAM_VALUE_MULTIPLIER) * MIDI_VALUE_MULTIPLIER;
 }
 
-export function axeFxValueToInt(value: number): number {
+export function axeFxValueToFloat(value: number): number {
     return value / PARAM_VALUE_MULTIPLIER;
 }
 
@@ -95,7 +95,6 @@ export function reorder(list: Array<any>, startIndex: number, endIndex: number):
   };
 
 export function resolveRelativeValue(input: number, current: number) {
-    console.log('fuu', input, current, current + (input - 64));
     return current + (input - 64);
 }
 
