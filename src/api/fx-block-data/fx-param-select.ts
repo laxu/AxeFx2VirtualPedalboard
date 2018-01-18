@@ -260,6 +260,61 @@ export const ampType = [
     '5F1 TWEED EC'
 ];
 
+export const driveType = [
+    'RAT DIST',
+    'PI FUZZ',
+    'TUBE DRV 3-KNOB',
+    'SUPER OD',
+    'TREBLE BOOST',
+    'MID BOOST',
+    'T808 OD',
+    'FAT RAT',
+    'T808 MOD',
+    'OCTAVE DIST',
+    'PLUS DIST',
+    'HARD FUZZ',
+    'FET BOOST',
+    'TAPE DIST',
+    'FULL OD',
+    'BLUES OD',
+    'SHRED DIST',
+    'M-ZONE DIST',
+    'BENDER FUZZ',
+    'BB PRE',
+    'MASTER FUZZ',
+    'FACE FUZZ',
+    'BIT CRUSHER',
+    'ETERNAL LOVE',
+    'ESOTERIC ACB',
+    'ESOTERIC RCB',
+    'ZEN MASTER',
+    'TUBE DRV 4-KNOB',
+    'FAS LED-DRIVE',
+    'SDD PREAMP',
+    'FET PREAMP',
+    'RUCKUS',
+    'MICRO BOOST',
+    'FAS BOOST',
+    'TIMOTHY',
+    'SHIMMER DRIVE'
+];
+
+export const clipType = [
+    'LV TUBE',
+    'HARD',
+    'SOFT',
+    'GERMANIUM',
+    'FW RECT',
+    'HV TUBE',
+    'SILICON',
+    '4558/DIODE',
+    'LED',
+    'FET',
+    'OP-AMP',
+    'VARIABLE',
+    'NULL'
+];
+
 export const delayType = [
     'DIGITAL MONO',
     'DIGITAL STEREO',
@@ -291,12 +346,23 @@ export const delayConfig = [
     'TAPE'
 ];
 
+export const bypassModeLimited = [
+    'THRU',
+    'MUTE'
+];
+
 export const bypassMode = [
     'THRU',
     'MUTE FX OUT',
     'MUTE OUT',
     'MUTE FX IN',
     'MUTE IN"'
+];
+
+export const inputSelect = [
+    'L+R',
+    'Left',
+    'Right'
 ];
 
 export const lfoType = [
