@@ -1,5 +1,5 @@
 import { PARAM_TYPE } from "./fx-param-common";
-import { reverbType, bypassMode } from "./fx-param-Select";
+import { reverbType, bypassMode } from "./fx-param-select";
 
 const reverb = [
     { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: reverbType, labelGroup: 'Basic' },
