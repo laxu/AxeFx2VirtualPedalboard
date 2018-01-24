@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import * as Dragula from 'dragula';
+import 'dragula/dist/dragula.css';
 import Modal from 'react-modal/lib/components/Modal';
 import { FxBlock, FxParam } from '../../api/fx-block';
 import { ControlType, ControlObject } from '../../api/control-object';
@@ -8,7 +9,7 @@ import ControlComponent from '../control/control';
 
 import './_panel.scss';
 import ControlEditorContainer from '../../containers/control-editor-container';
-import { reorder } from '../../util/util';
+import { reorder, getIndexInParent } from '../../util/util';
 
 interface Props {
     match: any,
@@ -25,6 +26,7 @@ interface State {
     editMode: boolean;
     editedControl: ControlObject;
     hasChanges: boolean;
+    drake: Dragula,
     form: {
         label: string,
         cc: string
@@ -37,10 +39,11 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.state = {
             editMode: false,
             editedControl: null,
+            drake: null,
             hasChanges: false,
             form: {
-                label: '',
-                cc: ''
+                label: this.props.panel.label || '',
+                cc: this.props.panel.cc >= 0 ? this.props.panel.cc.toString() : ''
             }
         };
 
@@ -49,8 +52,9 @@ export default class PanelComponent extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        if (!this.props.panel) {
-            this.props.init();
+        if (this.props.panel) {
+            this.props.updateControlValues();
+            this.props.attachControllerListener();
         }
     }
 
@@ -119,23 +123,35 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.setState({ hasChanges: true });
     }
 
-    onDragEnd(result) {
+    onDragEnd(el, target, source, sibling) {
         const { panel } = this.props;
-        // dropped outside the list
-        if (!result.destination) {
-            return;
-        }
+
+        const startIndex = panel.controls.findIndex(ctrl => ctrl.id === el.getAttribute('data-control-id'));
+        const endIndex = getIndexInParent(document.querySelector('.gu-transit')); // Find ghost element index
+
+        this.state.drake.cancel(true); // Cancel to prevent reordering DOM
 
         panel.controls = reorder(
             panel.controls,
-            result.source.index,
-            result.destination.index
+            startIndex,
+            endIndex
         );
-
+        
         this.setState({
             hasChanges: true
         });
     }
+
+    dragulaDecorator = (componentBackingInstance) => {
+        if (componentBackingInstance) {
+            const dragulaOptions = {
+                moves: () => this.state.editMode !== false
+            }
+            const drake = Dragula([componentBackingInstance], dragulaOptions);
+            drake.on('drop', this.onDragEnd);
+            this.setState({ drake });
+        }
+    };
 
     render() {
         const { panel } = this.props;
@@ -178,32 +194,17 @@ export default class PanelComponent extends React.Component<Props, State> {
                         </div>)}
                     </div>
                 </div>
-                <DragDropContext onDragEnd={this.onDragEnd}>
-                    <Droppable droppableId="droppable" direction="horizontal">
-                        {(provided, snapshot) => (
-                            <div className="panel__controls" ref={provided.innerRef}>
-                                {panel.controls.length > 0 && panel.controls.map((control, i) => (
-                                    <Draggable key={control.id} draggableId={control.id} isDragDisabled={editMode === false} index={i}>
-                                        {(provided, snapshot) => (
-                                            <div className="drag-wrapper"
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}>
-                                                <div className="control-container" 
-                                                    onClick={() => this.editControl(control)}>
-                                                    {editMode && <button className="btn remove-control" onClick={event => this.removeControl(event, control)}>X</button>}
-                                                    <ControlComponent {...control}></ControlComponent>
-                                                </div>
-                                                {provided.placeholder}
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                {panel.controls.length === 0 && <p>No controls, how about <a onClick={() => this.addControl(ControlType.Control)}>adding</a> some?</p>}
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
+                <div className="panel__controls" ref={this.dragulaDecorator}>
+                    {panel.controls.length > 0 && panel.controls.map((control, i) => (
+                        <div className="control-container" key={`control-${i}`}
+                            data-control-id={control.id}
+                            onClick={() => this.editControl(control)}>
+                            {editMode && <button className="btn remove-control" onClick={event => this.removeControl(event, control)}>X</button>}
+                            <ControlComponent {...control}></ControlComponent>
+                        </div>
+                    ))}
+                    {panel.controls.length === 0 && <p>No controls, how about <a onClick={() => this.addControl(ControlType.Control)}>adding</a> some?</p>}
+                </div>
                 <Modal isOpen={!!editedControl} contentLabel="Control editor">
                     <ControlEditorContainer {...editedControl} closeModal={this.closeModal}></ControlEditorContainer>
                 </Modal>
