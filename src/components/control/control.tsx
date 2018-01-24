@@ -44,7 +44,7 @@ export default class ControlComponent extends React.Component<Props, State> {
         const isEmpty = !block && !param;
         if (controlType === ControlType.Control) {
             return (
-                <div className="control">
+                <div className={classNames('control', `control--${param && param.type}`)}>
                     {block && block.label && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>

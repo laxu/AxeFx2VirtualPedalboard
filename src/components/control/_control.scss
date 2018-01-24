@@ -49,6 +49,12 @@
             font-size: $font-size-small;
         }
     }
+
+    &--select {
+        .param__value {
+            font-size: $font-size-small;
+        }
+    }
 }
 
 .switch {
