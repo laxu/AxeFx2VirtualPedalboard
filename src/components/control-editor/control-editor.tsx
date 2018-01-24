@@ -43,6 +43,7 @@ export default class ControlEditorComponent extends React.Component<Props, State
         };
 
         this.onSubmit = this.onSubmit.bind(this);
+        this.onCancel = this.onCancel.bind(this);
     }
 
     onSubmit(event) {
@@ -62,7 +63,8 @@ export default class ControlEditorComponent extends React.Component<Props, State
         return true;
     }
 
-    onCancel() {
+    onCancel(event) {
+        event.preventDefault();
         this.props.closeModal(false);
     }
 
@@ -166,7 +168,7 @@ export default class ControlEditorComponent extends React.Component<Props, State
                 </div>
                 
                 <div className="control-editor__actions">
-                    <button className="btn" onClick={() => this.onCancel()}>Cancel</button>
+                    <button className="btn" onClick={this.onCancel}>Cancel</button>
                     <input type="submit" value="Done" disabled={!hasChanges || !isValid} className="btn btn--primary" />
                 </div>
             </form>
