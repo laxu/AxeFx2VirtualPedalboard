@@ -19,6 +19,14 @@ const store: Store<any> = createStore(
 );
 const persistor = persistStore(store);
 
+export function getStoreState() {
+    store.getState().app;
+}
+
+export function getStoreStateSlice(slice: string) {
+    return store.getState().app[slice];
+}
+
 export {
     store,
     persistor
