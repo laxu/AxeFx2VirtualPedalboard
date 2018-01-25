@@ -33,10 +33,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         init() {
             Modal.setAppElement(document.getElementById('app-container'));
 
-            this.webMidi.addListener(MIDIDeviceStateChange.Connected, event => {
+            WebMidiWrapper.webMidi.addListener(MIDIDeviceStateChange.Connected, event => {
                 console.log('connected device', event);
             });
-            this.webMidi.addListener(MIDIDeviceStateChange.Disconnected, event => {
+            WebMidiWrapper.webMidi.addListener(MIDIDeviceStateChange.Disconnected, event => {
                 console.log('disconnected device', event);
                 const device = event.port;
                 const axeFx = getAxeFxInstance();
