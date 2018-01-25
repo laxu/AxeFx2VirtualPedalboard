@@ -10,9 +10,13 @@ import ControlComponent from '../control/control';
 import './_panel.scss';
 import ControlEditorContainer from '../../containers/control-editor-container';
 import { reorder, getIndexInParent } from '../../util/util';
+import { AxeFxState } from '../../api/axefx';
+import { ControllerState } from '../../api/generic-midi-controller';
 
 interface Props {
     match: any,
+    axeFx: AxeFxState,
+    controller: ControllerState,
     panel: PanelObject;
     init: () => void;
     updateControlValues: () => void;
@@ -51,13 +55,6 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.onDragEnd = this.onDragEnd.bind(this);
     }
 
-    componentDidMount() {
-        if (this.props.panel) {
-            this.props.updateControlValues();
-            this.props.attachControllerListener();
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         if (nextProps.match.params.panelId !== this.props.match.params.panelId) {
             nextProps.init();
@@ -73,6 +70,11 @@ export default class PanelComponent extends React.Component<Props, State> {
                     cc: nextProps.panel.cc
                 }
             });
+        }
+
+        if (nextProps.axeFx !== this.props.axeFx) {
+            nextProps.updateControlValues();
+            nextProps.attachControllerListener();
         }
     }
 

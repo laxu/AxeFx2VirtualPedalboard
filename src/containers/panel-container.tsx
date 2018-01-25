@@ -12,6 +12,8 @@ import PanelComponent from '../components/panel/panel';
 import { generateId, resolveRelativeValue, debounce } from '../util/util';
 
 const mapStateToProps = state => ({
+    axeFx: state.app.axeFx,
+    controller: state.app.controller,
     panel: state.app.currentPanel,
     panels: state.app.panels
 });
