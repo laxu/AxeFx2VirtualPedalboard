@@ -1,6 +1,6 @@
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
-import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToFloat, bytesToPresetNumber } from '../util/util';
+import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToFloat, bytesToPresetNumber, floatValueToAxeFx } from '../util/util';
 import { IFxBlock, FxBlock, getBlockById, getBlockAndParam } from './fx-block';
 import { resetAxeFxAction, updateAxeFxAction, updateControlValueAction, refreshCurrentPanelAction } from '../store/actions';
 import { PARAM_TYPE } from './fx-block-data/index';
@@ -171,9 +171,9 @@ export class AxeFx implements MIDIController {
         this.setBlockParamValue(blockId, 255, Number(isBypassed));
     }
 
-    setBlockParamValue(blockId: number, paramId: number, paramValue: number, useRawValue: boolean = false) {
+    setBlockParamValue(blockId: number, paramId: number, paramValue: number, useFloatValue: boolean = false) {
         const { block, param } = getBlockAndParam(blockId, paramId);
-        const convertedParamValue = useRawValue ? paramValue : midiValueToAxeFx(paramValue);
+        const convertedParamValue = useFloatValue ? floatValueToAxeFx(paramValue) : midiValueToAxeFx(paramValue);
         this.sendMessage([
             AXE_FUNCTIONS.blockParamValue, 
             ...intTo2Byte(blockId),

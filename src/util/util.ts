@@ -61,7 +61,7 @@ export function axeFxValueToFloat(value: number): number {
     return value / PARAM_VALUE_MULTIPLIER;
 }
 
-export function intValueToAxeFx(value: number): number {
+export function floatValueToAxeFx(value: number): number {
     return value * PARAM_VALUE_MULTIPLIER;
 }
 
