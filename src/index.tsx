@@ -7,14 +7,16 @@ import { Provider } from 'react-redux';
 import AppContainer from './containers/app-container';
 import { WebMidiWrapper } from './api/midi';
 import { isElectron } from './util/util';
+import MIDIErrorComponent from './components/midi-error/midi-error';
 import './styles/main.scss';
 import 'font-awesome/css/font-awesome.min.css';
 
-
-
-
-
-WebMidiWrapper.init(() => {
+WebMidiWrapper.init((err: any) => {
+    const containerEl = document.getElementById('app-container');
+    if (err) {
+        ReactDOM.render(<MIDIErrorComponent error={err}></MIDIErrorComponent>, containerEl);
+        return;
+    }
     ReactDOM.render(
         <Provider store={store}>
             <PersistGate persistor={persistor}>
@@ -23,6 +25,6 @@ WebMidiWrapper.init(() => {
                 </Router>
             </PersistGate>
         </Provider>,
-        document.getElementById('app-container')
+        containerEl
     );
 });

@@ -1,0 +1,11 @@
+.midi-error {
+    width: 80%;
+    text-align: center;
+    margin: 2rem auto;
+
+    pre {
+        display: block;
+        text-align: left;
+        white-space: pre-wrap;
+    }
+}
