@@ -2,7 +2,8 @@ import { PARAM_TYPE } from './fx-param-common';
 import { ampType } from './fx-param-select';
 
 const amp = [
-    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: ampType, labelGroup: 'Basic' },
+    { id: 999, label: 'Engage/bypass block', type: PARAM_TYPE.Switch },
+    { id: 0, label: 'Type', type: PARAM_TYPE.Select, step: 1, range: [0, 258], values: ampType, labelGroup: 'Basic' },
     { id: 1, label: 'Input drive', type: PARAM_TYPE.Knob },
     { id: 74, label: 'Overdrive', type: PARAM_TYPE.Knob },
     { id: 2, label: 'Bass', type: PARAM_TYPE.Knob },
