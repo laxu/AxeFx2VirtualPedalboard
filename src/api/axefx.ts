@@ -173,7 +173,14 @@ export class AxeFx implements MIDIController {
 
     setBlockParamValue(blockId: number, paramId: number, paramValue: number, useFloatValue: boolean = false) {
         if (!isFinite(paramValue)) return;
-        const convertedParamValue = useFloatValue ? floatValueToAxeFx(paramValue) : midiValueToAxeFx(paramValue);
+        const { block, param } = getBlockAndParam(blockId, paramId);
+        let convertedParamValue;
+        if (param.type === PARAM_TYPE.Select) {
+            convertedParamValue = paramValue;
+        } else {
+            convertedParamValue = useFloatValue ? floatValueToAxeFx(paramValue) : midiValueToAxeFx(paramValue);
+        }
+        
         this.sendMessage([
             AXE_FUNCTIONS.blockParamValue, 
             ...intTo2Byte(blockId),

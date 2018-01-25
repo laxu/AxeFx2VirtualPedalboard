@@ -12,6 +12,7 @@ import PanelComponent from '../components/panel/panel';
 import { generateId, resolveRelativeValue, debounce } from '../util/util';
 import { getStoreStateSlice } from '../store/store';
 import { getBlockAndParam } from '../api/fx-block';
+import { PARAM_TYPE } from '../api/fx-block-data/index';
 
 const mapStateToProps = state => ({
     axeFx: state.app.axeFx,
@@ -68,8 +69,12 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                         if (control && param) {
                             let useFloatValue = false;
                             if (control.isRelative) {
-                                value = resolveRelativeValue(value, control.rawValue, param.step);
                                 useFloatValue = true;
+                                if (param.type === PARAM_TYPE.Select) {
+                                    value = resolveRelativeValue(value, control.rawValue, param.step, param.range);
+                                } else {
+                                    value = resolveRelativeValue(value, control.rawValue, param.step);
+                                }
                             }
                             axeFx.setBlockParamValue(control.blockId, control.paramId, value, useFloatValue);
                         }
