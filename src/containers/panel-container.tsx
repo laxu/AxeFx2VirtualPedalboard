@@ -10,6 +10,8 @@ import { PanelObject } from "../api/panel-object";
 import { ControlType, ControlObject } from '../api/control-object';
 import PanelComponent from '../components/panel/panel';
 import { generateId, resolveRelativeValue, debounce } from '../util/util';
+import { getStoreStateSlice } from '../store/store';
+import { getBlockAndParam } from '../api/fx-block';
 
 const mapStateToProps = state => ({
     axeFx: state.app.axeFx,
@@ -60,15 +62,16 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                         history.push(`/panels/${panelActivatedByCC.id}`);
                     } else {
                         // Change control
-                        const control: ControlObject = panel.controls.find(ctrl => ctrl.cc === cc);
-                        if (control) {
-                            let useRawValue = false;
+                        const currentPanel = getStoreStateSlice('currentPanel');
+                        const control: ControlObject = currentPanel.controls.find(ctrl => ctrl.cc === cc);
+                        const { param } = getBlockAndParam(control.blockId, control.paramId);
+                        if (control && param) {
+                            let useFloatValue = false;
                             if (control.isRelative) {
-                                console.log('fuu', control.paramValue);
-                                value = resolveRelativeValue(value, control.paramValue);
-                                useRawValue = true;
+                                value = resolveRelativeValue(value, control.rawValue, param.step);
+                                useFloatValue = true;
                             }
-                            axeFx.setBlockParamValue(control.blockId, control.paramId, value, useRawValue);
+                            axeFx.setBlockParamValue(control.blockId, control.paramId, value, useFloatValue);
                         }
                     }
                 }, DEBOUNCE_TIME));
