@@ -46,12 +46,12 @@ export default function reducers(state = initialState, action: Action & { payloa
             return {...state, axeFx: initialState.axeFx};
 
         case TypeKeys.updateControlValue:
-            const { blockId, paramId, paramValue } = payload;
+            const { blockId, paramId, paramValue, rawValue } = payload;
             const { currentPanel } = state;
             const controlIdx = currentPanel.controls.findIndex(ctrl => ctrl.blockId === blockId && ctrl.paramId === paramId);
-            const updatedPanel = {
+            const updatedPanel: PanelObject = {
                 ...currentPanel,
-                controls: currentPanel.controls.map((ctrl, i) => (i === controlIdx) ? {...ctrl, paramValue} : ctrl)
+                controls: currentPanel.controls.map((ctrl, i) => (i === controlIdx) ? {...ctrl, paramValue, rawValue} : ctrl)
             };
             return {...state, currentPanel: updatedPanel };
 

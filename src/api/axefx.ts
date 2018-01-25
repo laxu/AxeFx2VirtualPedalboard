@@ -199,20 +199,20 @@ export class AxeFx implements MIDIController {
         this.dispatch(updateAxeFxAction({ connected: this.connected }));
     }
 
-    resolveParamValue(blockId: number, paramId: number, paramValue: Uint8Array) {
+    resolveParamValue(blockId: number, paramId: number, paramValue: Uint8Array): { rawValue: number, formattedValue: number | string } {
         const { block, param } = getBlockAndParam(blockId, paramId);
         if (block && param) {
             let value = parameterValueBytesToInt(paramValue);
             if (param.type === PARAM_TYPE.Knob) {
                 value = axeFxValueToFloat(parameterValueBytesToInt(paramValue));
             }
-            return param.formatValue(value);
+            return { rawValue: value, formattedValue: param.formatValue(value) };
         }
         return null;
     }
 
     processEvent(func: number, data: Uint8Array, rawData: Uint8Array): void {
-        let value, paramValueObj;
+        let value, resolvedValues, paramValueObj;
         switch (func) {
             case AXE_FUNCTIONS.getFirmwareVersion:
                 value = data[0] + '.' + data[1];
@@ -254,7 +254,9 @@ export class AxeFx implements MIDIController {
                     blockId: bytes2ToInt(data.slice(0, 2)),
                     paramId:  bytes2ToInt(data.slice(2, 4)),
                 }
-                value.paramValue = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
+                resolvedValues = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
+                value.paramValue = resolvedValues.formattedValue;
+                value.rawValue = resolvedValues.rawValue;
                 break;
 
             case AXE_FUNCTIONS.blockParamValue:
@@ -262,7 +264,9 @@ export class AxeFx implements MIDIController {
                     blockId: bytes2ToInt(data.slice(0, 2)),
                     paramId:  bytes2ToInt(data.slice(2, 4)),
                 }
-                value.paramValue = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
+                resolvedValues = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
+                value.paramValue = resolvedValues.formattedValue;
+                value.rawValue = resolvedValues.rawValue;
                 console.log('received param value', value);
                 this.dispatch(updateControlValueAction(value));
                 break;

@@ -21,6 +21,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             blockId,
             paramId,
             paramValue: null,
+            rawValue: null,
             controlType,
             isRelative: !!isRelative,
             cc

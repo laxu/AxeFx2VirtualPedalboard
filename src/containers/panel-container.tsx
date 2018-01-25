@@ -89,6 +89,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 blockId: null,
                 paramId: null,
                 paramValue: null,
+                rawValue: null,
                 controlType,
                 cc: null
             };

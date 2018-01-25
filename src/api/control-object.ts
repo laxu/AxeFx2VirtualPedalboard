@@ -10,6 +10,7 @@ export interface ControlObject {
     blockId: number,
     paramId: number;
     paramValue: number;
+    rawValue: number,
     controlType: ControlType;
     isRelative?: boolean;
     cc: number;
