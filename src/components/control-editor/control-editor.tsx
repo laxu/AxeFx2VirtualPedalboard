@@ -171,7 +171,7 @@ export default class ControlEditorComponent extends React.Component<Props, State
                         value="1"
                         checked={isRelative}
                         onChange={event => this.setValue('isRelative', event.target.value)} />
-                        <span>CC input is relative</span>
+                        <span>CC output value is relative</span>
                     </label>
                     
                 </div>
