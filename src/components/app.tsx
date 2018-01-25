@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Route } from 'react-router-dom'
 
 import Header from './header/header';
-import { AxeFx } from '../api/axefx';
-import { GenericMIDIController } from '../api/generic-midi-controller';
+import { AxeFxState } from '../api/axefx';
+import { ControllerState } from '../api/generic-midi-controller';
 import { PanelObject } from '../api/panel-object';
 import Sidebar from './sidebar/sidebar';
 import PanelContainer from '../containers/panel-container';
@@ -11,8 +11,8 @@ import PanelContainer from '../containers/panel-container';
 interface Props {
     init: () => void;
     addNewPanel: () => void;
-    axeFx: AxeFx;
-    controller: GenericMIDIController;
+    axeFx: AxeFxState;
+    controller: ControllerState;
     firmwareVersion: string;
     presetName: string;
     panels: PanelObject[];
