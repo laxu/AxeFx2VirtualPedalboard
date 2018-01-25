@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
 import { setPanelAction, resetControlValuesAction, resetAxeFxAction } from "../store/actions";
-import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance } from "../api/midi";
+import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
 import { GenericMIDIController } from "../api/generic-midi-controller";
@@ -32,6 +32,23 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         ...ownProps,
         init() {
             Modal.setAppElement(document.getElementById('app-container'));
+
+            this.webMidi.addListener(MIDIDeviceStateChange.Connected, event => {
+                console.log('connected device', event);
+            });
+            this.webMidi.addListener(MIDIDeviceStateChange.Disconnected, event => {
+                console.log('disconnected device', event);
+                const device = event.port;
+                const axeFx = getAxeFxInstance();
+                const controller = getControllerInstance();
+                if (device.type === MIDIDeviceType.Input) {
+                    if (axeFx.input.name === device.name) {
+                        axeFx.disconnect();
+                    } else if (controller.input.name === device.name) {
+                        controller.disconnect();
+                    }
+                }
+            });
 
             dispatch(resetAxeFxAction());
             dispatch(resetControlValuesAction());
