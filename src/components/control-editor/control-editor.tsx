@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ControlType, ControlObject } from '../../api/control-object';
 import './_control-editor.scss';
 import { FxBlock, getAllBlocks, getBlockById, FxParam } from '../../api/fx-block';
+import { PARAM_TYPE } from '../../api/fx-block-data/index';
 
 interface Props {
     id: string;
@@ -82,10 +83,18 @@ export default class ControlEditorComponent extends React.Component<Props, State
     }
 
     buildParameterOptions(selectedBlock: FxBlock) {
+        const { controlType } = this.state;
         const parameterOptions = [];
         if (selectedBlock) {
             let currentOptGroup;
-            selectedBlock.parameters.map((param, i) => {
+            const parameters = selectedBlock.parameters.filter(param => {
+                if (controlType === ControlType.Switch) {
+                    return param.type === PARAM_TYPE.Switch;
+                } else {
+                    return param.type !== PARAM_TYPE.Switch;
+                }
+            })
+            parameters.map((param, i) => {
                 if (!currentOptGroup || param.labelGroup !== currentOptGroup.label) {
                     parameterOptions.push({ label: param.labelGroup, parameters: [] });
                     currentOptGroup = parameterOptions[parameterOptions.length - 1];
