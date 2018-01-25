@@ -96,8 +96,8 @@ export function getIndexInParent (el) {
     return Array.from(el.parentNode.children).indexOf(el);
 }
 
-export function resolveRelativeValue(input: number, current: number) {
-    return current + (input - 64);
+export function resolveRelativeValue(input: number, current: number, step: number = 1): number {
+    return clampValue(current + (input - 64) * step, [0, 10], null);
 }
 
 export function handleSubmit(callback) {
