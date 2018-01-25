@@ -215,7 +215,7 @@ export class AxeFx implements MIDIController {
             }
             return { rawValue: value, formattedValue: param.formatValue(value) };
         }
-        return null;
+        return { rawValue: null, formattedValue: null };
     }
 
     processEvent(func: number, data: Uint8Array, rawData: Uint8Array): void {
