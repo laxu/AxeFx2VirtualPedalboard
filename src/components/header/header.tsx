@@ -59,7 +59,7 @@ export default class HeaderComponent extends React.Component<Props, State> {
                             </div>
                             <div className="presetName">
                                 <label>Preset:</label>
-                                <span>{axeFx.connected && `${axeFx.currentPresetNumber + 1}: ${axeFx.currentPresetName}`}</span>
+                                <span>{axeFx.connected && `${axeFx.currentPresetNumber + 1} (scene ${axeFx.currentScene + 1}): ${axeFx.currentPresetName}`}</span>
                             </div>
                         </div>
                     </div>

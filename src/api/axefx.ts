@@ -20,6 +20,7 @@ export interface AxeFxState {
     firmwareVersion: string;
     currentPresetName: string;
     currentPresetNumber: number;
+    currentScene: number,
     presetEdited: boolean;
 }
 
@@ -79,6 +80,7 @@ export class AxeFx implements MIDIController {
         this.findModel().then(() => {
             this.dispatch(resetAxeFxAction());
             this.getPresetNumber();
+            this.getSceneNumber();
             this.dispatch(updateAxeFxAction({
                 firmwareVersion: this.firmwareVersion,
                 connected: this.connected,
@@ -149,6 +151,10 @@ export class AxeFx implements MIDIController {
             ...parameterValueIntToBytes(0),
             PARAM_MODE.Get
         ]);
+    }
+
+    getSceneNumber() {
+        this.sendMessage([AXE_FUNCTIONS.setSceneNumber, 0x7F]);
     }
 
     async getFirmwareVersion() {
@@ -278,6 +284,9 @@ export class AxeFx implements MIDIController {
                 this.dispatch(updateControlValueAction(value));
                 break;
 
+            case AXE_FUNCTIONS.setSceneNumber:
+                value = data[0];
+                this.dispatch(updateAxeFxAction({ currentScene: value }));
             default:
                 value = data;
         }

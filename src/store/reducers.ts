@@ -21,7 +21,8 @@ const initialState: State = {
         connected: false,
         presetEdited: false,
         currentPresetName: null,
-        currentPresetNumber: null
+        currentPresetNumber: null,
+        currentScene: null
     },
     controller: {
         name: null,

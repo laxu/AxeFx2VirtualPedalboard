@@ -30,6 +30,7 @@ export const AXE_FUNCTIONS = {
     getBlockParametersList: 0x01,
     frontPanelChange: 0x21,
     blockParamValue: 0x02,
+    setSceneNumber: 0x29,
     setTargetBlock: 0x37,
     multiResponse: 0x64,
     batchRequestStart: 0x32,
