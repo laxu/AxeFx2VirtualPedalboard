@@ -18,7 +18,7 @@ export function intTo2Byte(val: number): Uint8Array {
 }
 
 export function bytes2ToInt(bytes: Uint8Array): number {
-    return bytes[0] | bytes[1] << 8;
+    return (bytes[0] & 0x7F) | ((bytes[1] & 0x7F)<<7);
 }
 
 export function parameterValueBytesToInt(byteArray): number {
