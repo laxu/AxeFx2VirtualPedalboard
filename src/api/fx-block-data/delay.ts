@@ -1,10 +1,41 @@
 import { PARAM_TYPE } from "./fx-param-common";
-import { delayType, delayConfig, tempo, bypassMode, lfoType, filterSlope, phaseReverse, lfoTarget, lfoDepthRange } from "./fx-param-select";
+import { tempo, bypassMode, lfoType, filterSlope, phaseReverse, lfoTarget, lfoDepthRange } from "./fx-param-select";
+
+export const delayType = [
+    'DIGITAL MONO',
+    'DIGITAL STEREO',
+    'ANALOG MONO',
+    'ANALOG STEREO',
+    'MONO TAPE',
+    'STEREO TAPE',
+    'PING-PONG',
+    'DUAL DELAY',
+    'REVERSE DELAY',
+    'SWEEP DELAY',
+    'DUCKING DELAY',
+    'VINTAGE DIGITAL',
+    '2290 W/ MOD',
+    'AMBIENT STEREO',
+    'DELUXE MIND GUY',
+    'MONO BBD',
+    'STEREO BBD',
+    'LO-FI TAPE'
+];
+
+export const delayConfig = [
+    'MONO',
+    'STEREO',
+    'PING-PONG',
+    'DUAL',
+    'REVERSE',
+    'SWEEP',
+    'TAPE'
+];
 
 const delay = [
-    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: delayType, labelGroup: 'Basic' },
+    { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: delayType, range: [0, delayType.length - 1], step: 1, labelGroup: 'Basic' },
     { id: 1, label: 'Config', type: PARAM_TYPE.Select, values: delayConfig },
-    { id: 2, label: 'Time', type: PARAM_TYPE.Knob },
+    { id: 2, label: 'Time', type: PARAM_TYPE.Knob, step: 1, range: [1, 8000], precision: 1, unit: 'ms' },
     { id: 3, label: 'Ratio', type: PARAM_TYPE.Knob },
     { id: 4, label: 'Feedback', type: PARAM_TYPE.Knob },
     { id: 6, label: 'Feedback R', type: PARAM_TYPE.Knob },
