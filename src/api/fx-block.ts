@@ -16,6 +16,7 @@ export interface IFxParam {
     step?: number;
     precision?: number;
     range?: [number, number];
+    unit?: string;
     label?: string;
     labelGroup?: string;
     values?: string[];
@@ -49,6 +50,7 @@ export class FxParam implements IFxParam {
     step?: number;
     precision?: number;
     range?: [number, number];
+    unit?: string;
     label?: string;
     labelGroup?: string;
     values?: string[];
@@ -60,6 +62,7 @@ export class FxParam implements IFxParam {
         this.step = paramSettings.step || 0.1;
         this.precision = paramSettings.precision !== undefined ? paramSettings.precision : 2;
         this.range = paramSettings.range || [0,10];
+        this.unit = paramSettings.unit;
         this.label = paramSettings.label;
         this.labelGroup = paramSettings.labelGroup;
         this.values = paramSettings.values || [];
@@ -73,7 +76,8 @@ export class FxParam implements IFxParam {
             return this.values[val];
         }
         let formattedValue = convertToRange(val, this.range);
-        return toFixedNumber(clampValue(formattedValue, this.range, this.step), this.precision);
+        formattedValue = toFixedNumber(clampValue(formattedValue, this.range, this.step), this.precision);
+        return this.unit ? `${formattedValue} ${this.unit}` : formattedValue;
     }
 }
 
