@@ -65,6 +65,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                         // Change control
                         const currentPanel = getStoreStateSlice('currentPanel');
                         const control: ControlObject = currentPanel.controls.find(ctrl => ctrl.cc === cc);
+                        if (!control) return;
                         const { param } = getBlockAndParam(control.blockId, control.paramId);
                         if (control && param) {
                             let useFloatValue = false;
