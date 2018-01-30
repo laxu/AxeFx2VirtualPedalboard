@@ -80,7 +80,7 @@ export default function reducers(state = initialState, action: Action & { payloa
             }
 
         case TypeKeys.getCurrentPanel:
-            const panel = state.panels.find(panel => panel.id === payload);
+            const panel = state.panels.find(p => p.id === payload);
             if (!panel) return {...state, currentPanel: null};
             return {...state, currentPanel: {...panel}};
 
@@ -88,7 +88,6 @@ export default function reducers(state = initialState, action: Action & { payloa
             const existingPanelIdx = state.panels.findIndex(panel => panel.id === payload.id);
             if (existingPanelIdx !== -1) {
                 // Update existing panel
-                console.log('updating panel', state.panels.find(panel => panel.id === payload.id), payload);
                 return {...state, panels: state.panels.map((panel, i) => i === existingPanelIdx ? {...panel, ...payload} : panel)};
             } else {
                 // Add new panel
