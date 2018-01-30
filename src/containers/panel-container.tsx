@@ -2,17 +2,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { getCurrentPanelAction, setPanelAction, updateControlValueAction } from "../store/actions";
-import { WebMidiWrapper, MIDIController, MIDIListenerType, getAxeFxInstance, getControllerInstance } from "../api/midi";
+import { getAxeFxInstance } from "../api/midi";
 import { MODEL_IDS, DEBOUNCE_TIME } from "../api/constants";
-import { AxeFx } from "../api/axefx";
 import { GenericMIDIController } from "../api/generic-midi-controller";
 import { PanelObject } from "../api/panel-object";
 import { ControlType, ControlObject } from '../api/control-object';
+import { generateId } from '../util/util';
 import PanelComponent from '../components/panel/panel';
-import { generateId, resolveRelativeValue, debounce } from '../util/util';
-import { getStoreStateSlice } from '../store/store';
-import { getBlockAndParam } from '../api/fx-block';
-import { PARAM_TYPE } from '../api/fx-block-data/index';
 
 const mapStateToProps = state => ({
     axeFx: state.app.axeFx,
@@ -24,13 +20,12 @@ const mapStateToProps = state => ({
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const { panel } = stateProps;
     const { dispatch } = dispatchProps;
-    const { match, history } = ownProps;
+    const { match } = ownProps;
     return {
         ...stateProps,
         ...dispatchProps,
         ...ownProps,
         init() {
-            console.log('initializing', panel, match.params.panelId);
             dispatch(getCurrentPanelAction(match.params.panelId));
         },
         updateControlValues() {
