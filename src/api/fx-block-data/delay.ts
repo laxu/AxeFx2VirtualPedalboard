@@ -35,7 +35,7 @@ export const delayConfig = [
 const delay = [
     { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: delayType, range: [0, delayType.length - 1], step: 1, labelGroup: 'Basic' },
     { id: 1, label: 'Config', type: PARAM_TYPE.Select, values: delayConfig },
-    { id: 2, label: 'Time', type: PARAM_TYPE.Knob, step: 1, range: [1, 8000], precision: 1, unit: 'ms' },
+    { id: 2, label: 'Time', type: PARAM_TYPE.Knob, step: 0.001, range: [1, 8000], precision: 0, unit: 'ms' },
     { id: 3, label: 'Ratio', type: PARAM_TYPE.Knob },
     { id: 4, label: 'Feedback', type: PARAM_TYPE.Knob },
     { id: 6, label: 'Feedback R', type: PARAM_TYPE.Knob },
