@@ -48,41 +48,6 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 });
             }
         },
-        attachControllerListener() {
-            const { panel, panels } = stateProps;
-            const axeFx = getAxeFxInstance();
-            const controller = getControllerInstance();
-            if (controller && controller.input) {
-                controller.input.removeListener().addListener(MIDIListenerType.CC, controller.channel, debounce(event => {
-                    console.log('controller event data', event.data);
-                    const cc = event.data[1];
-                    let value = event.data[2];
-                    const panelActivatedByCC = panels.find(p => p.cc === cc);
-                    if (panelActivatedByCC) {
-                        // Switch to panel
-                        history.push(`/panels/${panelActivatedByCC.id}`);
-                    } else {
-                        // Change control
-                        const currentPanel = getStoreStateSlice('currentPanel');
-                        const control: ControlObject = currentPanel.controls.find(ctrl => ctrl.cc === cc);
-                        if (!control) return;
-                        const { param } = getBlockAndParam(control.blockId, control.paramId);
-                        if (control && param) {
-                            let useFloatValue = false;
-                            if (control.isRelative) {
-                                useFloatValue = true;
-                                if (param.type === PARAM_TYPE.Select) {
-                                    value = resolveRelativeValue(value, control.rawValue, param.step, param.range);
-                                } else {
-                                    value = resolveRelativeValue(value, control.rawValue, param.step);
-                                }
-                            }
-                            axeFx.setBlockParamValue(control.blockId, control.paramId, value, useFloatValue);
-                        }
-                    }
-                }, DEBOUNCE_TIME));
-            }
-        },
         savePanelChanges(formValues) {
             const updatedPanel = {
                 ...panel,
