@@ -44,9 +44,8 @@ export class AxeFx implements MIDIController {
     private tunerEnabled: boolean = false;
     private metronomeEnabled: boolean = false;
 
-    constructor(axeFxDevice: MIDIController, dispatch) {
+    constructor(dispatch) {
         this.dispatch = dispatch;
-        this.updateSettings(axeFxDevice);
     }
 
     private getChecksum(message: number[]): number {
@@ -59,12 +58,19 @@ export class AxeFx implements MIDIController {
         return part & 0x7F;
     }
 
-    async updateSettings(axeFxDevice: MIDIController) {
+    updateSettings(axeFxDevice: MIDIController): void {
+        const prevInput = this.input;
+        const prevOutput = this.output;
         this.input = axeFxDevice.input;
         this.output = axeFxDevice.output;
         this.channel = axeFxDevice.channel || 'all';
 
-        if (!this.input) {
+        if (this.input !== prevInput || this.output !== prevOutput)
+            this.connect();
+    }
+
+    connect(): void {
+        if (!this.input || !this.output) {
             this.connected = false;
             return;
         }
@@ -86,16 +92,25 @@ export class AxeFx implements MIDIController {
                 connected: this.connected,
                 name: this.name
             }));
+        }).catch(e => {
+            this.resolvers = {};
         });
     }
 
-    findModel() {
+    disconnect(): void {
+        this.sendMessage([0x42]);
+        this.connected = false;
+        this.dispatch(updateAxeFxAction({ connected: this.connected }));
+    }
+
+
+    findModel(): Promise<any> {
         let fwVersion;
         return new Promise(async (resolve, reject) => {
             for (const name in MODEL_IDS) {
                 if (MODEL_IDS.hasOwnProperty(name)) {
+                    if (this.connected) resolve();
                     this.id = MODEL_IDS[name];
-                    this.name = name;
                     try {
                         fwVersion = await this.getFirmwareVersion();
                         if (fwVersion) {
@@ -125,11 +140,11 @@ export class AxeFx implements MIDIController {
         return this.output.sendControlChange(cc, value);
     }
 
-    getPresetName() {
+    getPresetName(): void {
         this.sendMessage([AXE_FUNCTIONS.getPresetName]);
     }
 
-    getPresetNumber() {
+    getPresetNumber(): Promise<any> {
         this.sendMessage([AXE_FUNCTIONS.getPresetNumber]);
         return new Promise(resolve => {
             this.resolvers.getPresetNumber = resolve;
@@ -204,12 +219,6 @@ export class AxeFx implements MIDIController {
     toggleMetronome() {
         this.metronomeEnabled = !this.metronomeEnabled;
         this.sendCC(METRONOME_CC, this.metronomeEnabled ? 127 : 0);
-    }
-
-    disconnect(): void {
-        this.sendMessage([0x42]);
-        this.connected = false;
-        this.dispatch(updateAxeFxAction({ connected: this.connected }));
     }
 
     resolveParamValue(blockId: number, paramId: number, paramValue: Uint8Array): { rawValue: number, formattedValue: number | string } {
