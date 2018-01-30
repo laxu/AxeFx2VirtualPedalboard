@@ -2,8 +2,8 @@ import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
-import { setPanelAction, resetControlValuesAction, resetAxeFxAction } from "../store/actions";
-import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType } from "../api/midi";
+import { setPanelAction, resetControlValuesAction, resetAxeFxAction, getCurrentPanelAction } from "../store/actions";
+import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType, MIDIControllerType, buildInstances } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
 import { GenericMIDIController } from "../api/generic-midi-controller";
@@ -12,6 +12,7 @@ import { AppComponent } from "../components/app";
 import { FX_BLOCK_IDS, FX_PARAMS } from '../api/fx-block-data';
 import { parameterValueBytesToInt, generateId, midiValueToAxeFx } from '../util/util';
 import { getAllBlocks } from '../api/fx-block';
+import { getStoreStateSlice } from '../store/store';
 
 const mapStateToProps = state => ({
     axeFx: state.app.axeFx,
@@ -33,9 +34,18 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         init() {
             Modal.setAppElement(document.getElementById('app-container'));
 
+            buildInstances(dispatch, history);
+
+            dispatch(resetAxeFxAction());
+            dispatch(resetControlValuesAction());
+
             WebMidiWrapper.webMidi.addListener(MIDIDeviceStateChange.Connected, event => {
                 console.log('connected device', event);
+                const device = event.port;
+                const devices = getStoreStateSlice('devices');
+                updateDevices(devices);
             });
+
             WebMidiWrapper.webMidi.addListener(MIDIDeviceStateChange.Disconnected, event => {
                 console.log('disconnected device', event);
                 const device = event.port;
@@ -50,9 +60,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 }
             });
 
-            dispatch(resetAxeFxAction());
-            dispatch(resetControlValuesAction());
-            updateDevices(devices, dispatch);
+            if (currentPanel && history.location !== `/panels/${currentPanel.id}`) {
+                history.push(`/panels/${currentPanel.id}`);
+            }
         },
         addNewPanel() {
             const panel: PanelObject = {

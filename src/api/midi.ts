@@ -8,12 +8,14 @@ let axeFxInstance, controllerInstance;
 
 export interface MIDIInput {
     name: string;
+    state: string;
     addListener: (type: string, channel: number | 'all', listener: any) => MIDIInput;
     removeListener: (type?: string, channel?: number | 'all', listener?: any) => MIDIInput;
 }
 
 export interface MIDIOutput {
     name: string;
+    state: string;
     sendControlChange: (controlChange: number, value?: number, channel?: number | 'all', options?: any) => MIDIOutput;
     sendSysex: (header: number[], message: number[], options?: any) => MIDIOutput;
 }
@@ -37,7 +39,7 @@ export interface MIDIController {
 }
 
 export interface MIDIDeviceData {
-    id: string;
+    id: number | string;
     type: MIDIControllerType;
     inputName: string;
     outputName: string;
@@ -75,39 +77,25 @@ export function isAxeFx(device: MIDIInput | MIDIOutput) {
     return device.name.indexOf('AXE-FX') !== -1 || device.name.indexOf('AX8') !== -1;
 }
 
-export function updateDevices(devices: MIDIDeviceData[], dispatch: any): void {
-    return devices.forEach(device => {
+export function buildInstances(dispatch: any, history: any) {
+    axeFxInstance = new AxeFx(dispatch);
+    controllerInstance = new GenericMIDIController(dispatch, history);
+}
+
+export function updateDevices(devices: MIDIDeviceData[]): void {
+    devices.forEach(device => {
         if (device.type === MIDIControllerType.AxeFx) {
-            if (axeFxInstance) {
-                // Update existing
-                axeFxInstance.updateSettings({
-                    input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
-                    output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
-                    channel: device.channel
-                });
-            } else {
-                axeFxInstance = new AxeFx({
-                    input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
-                    output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
-                    channel: device.channel,
-                }, dispatch);
-            }
+            axeFxInstance.updateSettings({
+                input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
+                output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
+                channel: device.channel
+            });
         } else {
-            if (controllerInstance) {
-                controllerInstance.updateSettings({
-                    input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
-                    output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
-                    channel: device.channel
-                });
-            } else {
-                controllerInstance = new GenericMIDIController({
-                    id: generateId(),
-                    input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
-                    output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
-                    channel: device.channel
-                }, dispatch);
-            }
-           
+            controllerInstance.updateSettings({
+                input: WebMidiWrapper.webMidi.getInputByName(device.inputName),
+                output: WebMidiWrapper.webMidi.getOutputByName(device.outputName),
+                channel: device.channel
+            });
         }
     });
 }
