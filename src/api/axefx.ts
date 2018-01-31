@@ -37,6 +37,7 @@ export class AxeFx implements MIDIController {
     public presetEdited: boolean = false;
     public currentPresetName: string;
     public currentPresetNumber: number;
+    public cabNames: string[] = [];
 
     private dispatch: any;
     private inputListener: (event: AxeFxResponse) => void;
@@ -87,6 +88,8 @@ export class AxeFx implements MIDIController {
             this.dispatch(resetAxeFxAction());
             this.getPresetNumber();
             this.getSceneNumber();
+            this.cabNames = [];
+            this.getAllCabNames();
             this.dispatch(updateAxeFxAction({
                 firmwareVersion: this.firmwareVersion,
                 connected: this.connected,
@@ -182,6 +185,10 @@ export class AxeFx implements MIDIController {
 
     getMIDIChannel() {
         this.sendMessage([AXE_FUNCTIONS.getMIDIChannel]);
+    }
+
+    getAllCabNames() {
+        this.sendMessage([AXE_FUNCTIONS.getCabName, 0x7F, 0x7F]);
     }
 
     setTargetBlock(blockId: number) {
@@ -296,6 +303,12 @@ export class AxeFx implements MIDIController {
             case AXE_FUNCTIONS.setSceneNumber:
                 value = data[0];
                 this.dispatch(updateAxeFxAction({ currentScene: value }));
+                break;
+
+            case AXE_FUNCTIONS.getCabName:
+                value = textDecoder.decode(data.slice(1)).replace('', '').trim();
+                this.cabNames.push(value);
+                return;
             default:
                 value = data;
         }
