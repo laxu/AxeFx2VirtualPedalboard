@@ -72,8 +72,11 @@ export class FxParam implements IFxParam {
         if (!isFinite(val)) throw new Error('Trying to set non-numeric param value!');
         if (this.type === PARAM_TYPE.Switch) {
             return val;
-        } else if (this.type === PARAM_TYPE.Select && this.values.length) {
-            return this.values[val];
+        } else if (this.type === PARAM_TYPE.Select && this.values) {
+            if (Array.isArray(this.values)) {
+                return this.values[val];
+            }
+            return this.values(val);
         }
         let formattedValue = convertToRange(val, this.range);
         formattedValue = toFixedNumber(clampValue(formattedValue, this.range, this.step), this.precision);
