@@ -27,6 +27,8 @@ interface State {
     [key: string]: any;
 }
 
+const NO_VALUE = 99999;
+
 export default class ControlEditorComponent extends React.Component<Props, State> {
     constructor(props) {
         super(props);
@@ -71,7 +73,7 @@ export default class ControlEditorComponent extends React.Component<Props, State
 
     checkValidity() {
         const { blockId, paramId } = this.state;
-        this.setState({ isValid: blockId && paramId >= 0 });
+        this.setState({ isValid: blockId > 0 && blockId < NO_VALUE && paramId >= 0 && paramId < NO_VALUE });
     }
 
     setValue(prop: string, value: string) {
@@ -117,8 +119,8 @@ export default class ControlEditorComponent extends React.Component<Props, State
                 <h2>Settings for control</h2>
                 <div className="form-group">
                     <label>Effects block</label>
-                    <select value={blockId && blockId.toString() || ''} onChange={event => this.setValue('blockId', event.target.value)}>
-                        <option disabled value="">Select effects block</option>
+                    <select value={blockId && blockId.toString() || NO_VALUE} onChange={event => this.setValue('blockId', event.target.value)}>
+                        <option disabled value={NO_VALUE}>Select effects block</option>
                         {blocks.map((block, i) => (
                             <option key={`block-${i}`} value={block.id}>{block.label}</option>
                         ))}
@@ -126,8 +128,8 @@ export default class ControlEditorComponent extends React.Component<Props, State
                 </div>
                 <div className="form-group">
                     <label>Parameter to control</label>
-                    <select value={paramId && paramId.toString() || ''} disabled={!selectedBlock} onChange={event => this.setValue('paramId', event.target.value)}>
-                        <option disabled value="">{selectedBlock && selectedBlock.parameters.length === 0 ? 'Block is not yet supported' : 'Select effects param'}</option>
+                    <select value={paramId && paramId.toString() || NO_VALUE} disabled={!selectedBlock} onChange={event => this.setValue('paramId', event.target.value)}>
+                        <option disabled value={NO_VALUE}>{selectedBlock && selectedBlock.parameters.length === 0 ? 'Block is not yet supported' : 'Select effects param'}</option>
                         {parameterOptions.map((group, i) => (
                             <optgroup label={group.label} key={`group-${i}`}>
                                 {group.parameters.map((param, j) => (
@@ -142,7 +144,8 @@ export default class ControlEditorComponent extends React.Component<Props, State
                     <div className="form-group--inline">
                         <label className="label-radio">
                             <input type="radio" name="controlType" id="controltype--control"
-                                checked={controlType === ControlType.Control} value={ControlType.Control} 
+                                checked={controlType === ControlType.Control}
+                                value={ControlType.Control} 
                                 onChange={event => this.setValue('controlType', event.target.value)} />
                             <span>Control</span>
                         </label>
