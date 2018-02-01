@@ -1,14 +1,14 @@
 export const bypassModeLimited = [
-    'THRU',
-    'MUTE'
+    'Thru',
+    'Mute'
 ];
 
 export const bypassMode = [
-    'THRU',
-    'MUTE FX OUT',
-    'MUTE OUT',
-    'MUTE FX IN',
-    'MUTE IN"'
+    'Thru',
+    'Mute FX out',
+    'Mute output',
+    'Mute FX in',
+    'Mute input"'
 ];
 
 export const inputSelect = [
@@ -18,15 +18,15 @@ export const inputSelect = [
 ];
 
 export const lfoType = [
-    'SINE',
-    'TRIANGLE',
-    'SQUARE',
-    'SAW UP',
-    'SAW DOWN',
-    'RANDOM',
-    'LOG',
-    'EXP',
-    'TRAPEZOID'
+    'Sine',
+    'Triangle',
+    'Square',
+    'Saw up',
+    'Saw down',
+    'Random',
+    'Log',
+    'Exp',
+    'Trapezoid'
 ];
 
 export const lfoTarget = [
@@ -36,8 +36,8 @@ export const lfoTarget = [
 ];
 
 export const lfoDepthRange = [
-    'LOW',
-    'HIGH',
+    'Low',
+    'High',
 ];
 
 export const phaseReverse = [
@@ -48,36 +48,36 @@ export const phaseReverse = [
 ];
 
 export const filterSlope = [
-    '6 dB/OCT',
-    '12 dB/OCT',
-    '24 dB/OCT',
-    '36 dB/OCT',
-    '48 dB/OCT'
+    '6 dB/oct',
+    '12 dB/oct',
+    '24 dB/oct',
+    '36 dB/oct',
+    '48 dB/oct'
 ];
 
 export const tempo = [
-    'NONE',
-    '1/64 TRIP',
+    'None',
+    '1/64 Trip',
     '1/64',
-    '1/64 DOT',
-    '1/32 TRIP',
+    '1/64 Dot',
+    '1/32 Trip',
     '1/32',
-    '1/32 DOT',
-    '1/16 TRIP',
+    '1/32 Dot',
+    '1/16 Trip',
     '1/16',
-    '1/16 DOT',
-    '1/8 TRIP',
+    '1/16 Dot',
+    '1/8 Trip',
     '1/8',
-    '1/8 DOT',
-    '1/4 TRIP',
+    '1/8 Dot',
+    '1/4 Trip',
     '1/4',
-    '1/4 DOT',
-    '1/2 TRIP',
+    '1/4 Dot',
+    '1/2 Trip',
     '1/2',
-    '1/2 DOT',
-    '1 TRIP',
+    '1/2 Dot',
+    '1 Trip',
     '1',
-    '1 DOT',
+    '1 Dot',
     '2',
     '3',
     '4',
