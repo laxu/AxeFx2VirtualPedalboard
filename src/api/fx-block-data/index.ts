@@ -5,6 +5,7 @@ import drive from './drive';
 import reverb from './reverb';
 import graphicEq from './graphic-eq';
 import parametricEq from './parametric-eq';
+import compressor from './compressor';
 import { PARAM_TYPE } from './fx-param-common';
 import FX_PARAM_SELECT_VALUES from './fx-param-select';
 import { FX_BLOCK_IDS, FX_BLOCK_LABELS, FX_BLOCK_TYPES } from './fx-block-data';
@@ -16,7 +17,8 @@ const FX_PARAMS = {
     cab,
     reverb,
     graphicEq,
-    parametricEq
+    parametricEq,
+    compressor
 };
 
 export {
