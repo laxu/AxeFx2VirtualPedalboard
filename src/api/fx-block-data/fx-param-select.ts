@@ -137,10 +137,16 @@ export const tempo = [
     '63/64',
 ];
 
+export const inputLevel = [
+    'Instrument',
+    'Line'
+];
+
 const FX_PARAM_SELECT_VALUES = {
     bypassMode,
     bypassModeLimited,
     inputSelect,
+    inputLevel,
     filterSlope,
     phaseReverse,
     lfoDepthRange,
