@@ -134,6 +134,7 @@ export class AxeFx implements MIDIController {
 
     sendMessage(message: number[]): MIDIOutput {
         const value: number[] = [this.id, ...message, this.getChecksum(message)];
+        if (!this.output) return;
         console.log('sending SysEx message', value);
         return this.output.sendSysex(HEADER, value);
     }
