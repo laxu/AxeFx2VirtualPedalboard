@@ -82,11 +82,13 @@ export class GenericMIDIController implements MIDIController {
                     if (control.isRelative) {
                         useFloatValue = true;
                         if (param.type === PARAM_TYPE.Select) {
-                            value = resolveRelativeValue(value, control.rawValue, param.step, param.range);
+                            const range: [number, number] = Array.isArray(param.values) ? [0, param.values.length - 1] : param.range;
+                            value = resolveRelativeValue(value, control.rawValue, param.step, range);
                         } else {
                             value = resolveRelativeValue(value, control.rawValue, param.step);
                         }
                     }
+                    if (value === control.rawValue) return;
                     const axeFx = getAxeFxInstance();
                     axeFx.setBlockParamValue(control.blockId, control.paramId, value, useFloatValue);
                 }
