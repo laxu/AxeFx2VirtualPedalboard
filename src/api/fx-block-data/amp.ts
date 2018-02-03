@@ -440,7 +440,7 @@ const amp = [
     { id: 4, label: 'Treble', type: PARAM_TYPE.Knob },
     { id: 20, label: 'Presence', type: PARAM_TYPE.Knob },
     { id: 5, label: 'Master volume', type: PARAM_TYPE.Knob },
-    { id: 21, label: 'Level', type: PARAM_TYPE.Knob, range: [-80, 20], step: 1, precision: 1, unit: 'dB' },
+    { id: 21, label: 'Level', type: PARAM_TYPE.Knob, range: [-80, 20], step: 0.1, precision: 1, unit: 'dB' },
     { id: 22, label: 'Balance', type: PARAM_TYPE.Knob, range: [-100, 100], step: 1, precision: 1 },
     { id: 16, label: 'Depth', type: PARAM_TYPE.Knob },
     { id: 6, label: 'Preamp low cut', type: PARAM_TYPE.Knob, labelGroup: 'Advanced' },
