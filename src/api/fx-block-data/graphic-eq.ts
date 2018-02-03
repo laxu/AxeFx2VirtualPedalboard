@@ -1,7 +1,7 @@
 import { PARAM_TYPE } from "./fx-param-common";
 import { bypassModeLimited } from "./fx-param-select";
 
-const eqType = [
+export const eqType = [
     '10 band const Q',
     '8 band const Q',
     '7 band const Q',
