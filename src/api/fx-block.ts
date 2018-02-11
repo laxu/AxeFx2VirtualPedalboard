@@ -1,5 +1,6 @@
 import { clampValue, getObjKeyByValue, convertToRange, toFixedNumber } from "../util/util";
 import { FX_BLOCK_IDS, FX_BLOCK_TYPES, FX_PARAMS, PARAM_TYPE, FX_BLOCK_LABELS } from "./fx-block-data";
+import { FX_PARAMS_COMMON } from "./fx-block-data/fx-param-common";
 
 export interface IFxBlock {
     id: number;
@@ -55,7 +56,7 @@ export class FxParam implements IFxParam {
     labelGroup?: string;
     values?: string[];
 
-    constructor(paramSettings: IFxParam) {
+    constructor(paramSettings) {
         this.blockGroup = paramSettings.blockGroup;
         this.type = paramSettings.type;
         this.id = paramSettings.id;
@@ -95,11 +96,16 @@ for (const blockType of FX_BLOCK_TYPES) {
         const label = FX_BLOCK_LABELS[blockName];
         let parameters = [];
         if (FX_PARAMS[blockType]) {
-            let labelGroup;
-            parameters = FX_PARAMS[blockType].map(param => {
-                if (param.labelGroup) labelGroup = param.labelGroup;
-                return new FxParam({ blockGroup: blockType, ...param, labelGroup });
-            });
+            let labelGroup = 'Common';
+            parameters = [
+                ...FX_PARAMS_COMMON.map(param => {
+                    return new FxParam({ blockGroup: blockType, ...param, labelGroup })
+                }),
+                ...FX_PARAMS[blockType].map(param => {
+                    if (param.labelGroup) labelGroup = param.labelGroup;
+                    return new FxParam({ blockGroup: blockType, ...param, labelGroup });
+                })
+            ];
         }
         blocks.push(new FxBlock({ id, label, parameters }));
         counter++;

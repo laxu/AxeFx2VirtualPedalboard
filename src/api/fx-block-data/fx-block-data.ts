@@ -91,7 +91,6 @@ export const FX_BLOCK_TYPES = [
     'enhancer',
     'fxLoop',
     'mixer',
-    'feedback',
     'filter',
     'flanger',
     'formant',
