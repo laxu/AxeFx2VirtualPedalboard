@@ -1,0 +1,11 @@
+.panel-settings {
+    .actions {
+        margin-top: 1rem;
+
+        .btn {
+            &:first-child {
+                margin-right: 3rem;
+            }
+        }
+    }
+}

@@ -11,6 +11,8 @@ export enum TypeKeys {
     setPanel = 'Set panel data',
     setMIDIDeviceData = 'Set MIDI device data',
     setBlocks = 'Set effects blocks',
+    editPanel = 'Edit panel',
+    deletePanel = 'Delete panel',
     refreshCurrentPanel = 'Refresh current panel values',
     updateControlValue = 'Update control value',
     resetControlValues = 'Reset control values',
@@ -61,7 +63,17 @@ export const resetControlValuesAction = (): Action => ({
 export const getCurrentPanelAction = (payload: number): ActionWithPayload => ({
     type: TypeKeys.getCurrentPanel,
     payload
-})
+});
+
+export const editPanelAction  = (payload: PanelObject): ActionWithPayload => ({
+    type: TypeKeys.editPanel,
+    payload
+});
+
+export const deletePanelAction  = (payload: string): ActionWithPayload => ({
+    type: TypeKeys.deletePanel,
+    payload
+});
 
 export const setPanelAction = (payload: PanelObject): ActionWithPayload => ({
     type: TypeKeys.setPanel,

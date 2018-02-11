@@ -29,9 +29,50 @@
         }
     }
 
+    &--danger {
+        background: $color-button-danger;
+        
+        &:hover {
+            background: $color-button-danger-highlight;
+        }
+
+        &-flashing {
+            -webkit-animation: glowing 1500ms infinite;
+            -moz-animation: glowing 1500ms infinite;
+            -o-animation: glowing 1500ms infinite;
+            animation: glowing 1500ms infinite;
+        }
+        
+    }
+
     .fa {
         margin-right: .35rem;
         margin-left: -0.1rem;
         vertical-align: middle;
     }
+    
 }
+
+@-webkit-keyframes glowing {
+    0% { background-color: $color-button-danger; -webkit-box-shadow: 0 0 3px $color-button-danger; }
+    50% { background-color: $color-button-danger-flashing; -webkit-box-shadow: 0 0 40px $color-button-danger-flashing; }
+    100% { background-color: $color-button-danger; -webkit-box-shadow: 0 0 3px $color-button-danger; }
+  }
+  
+  @-moz-keyframes glowing {
+    0% { background-color:$color-button-danger; -moz-box-shadow: 0 0 3px $color-button-danger; }
+    50% { background-color: $color-button-danger-flashing; -moz-box-shadow: 0 0 40px $color-button-danger-flashing; }
+    100% { background-color: $color-button-danger; -moz-box-shadow: 0 0 3px $color-button-danger; }
+  }
+  
+  @-o-keyframes glowing {
+    0% { background-color: $color-button-danger; box-shadow: 0 0 3px $color-button-danger; }
+    50% { background-color: $color-button-danger-flashing; box-shadow: 0 0 40px $color-button-danger-flashing; }
+    100% { background-color: $color-button-danger; box-shadow: 0 0 3px $color-button-danger; }
+  }
+  
+  @keyframes glowing {
+    0% { background-color: $color-button-danger; box-shadow: 0 0 3px $color-button-danger; }
+    50% { background-color: $color-button-danger-flashing; box-shadow: 0 0 40px $color-button-danger-flashing; }
+    100% { background-color: $color-button-danger; box-shadow: 0 0 3px $color-button-danger; }
+  }

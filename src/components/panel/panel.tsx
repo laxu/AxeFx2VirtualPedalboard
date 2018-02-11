@@ -21,7 +21,7 @@ interface Props {
     init: () => void;
     updateControlValues: () => void;
     attachControllerListener: () => void;
-    savePanelChanges: (form) => void;
+    savePanelChanges: () => void;
     addPanelControl: (controlType: ControlType) => void;
     removePanelControl: (control: ControlObject) => void;
 }
@@ -30,11 +30,7 @@ interface State {
     editMode: boolean;
     editedControl: ControlObject;
     hasChanges: boolean;
-    drake: Dragula,
-    form: {
-        label: string,
-        cc: string
-    }
+    drake: Dragula
 }
 
 export default class PanelComponent extends React.Component<Props, State> {
@@ -43,12 +39,8 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.state = {
             editMode: false,
             editedControl: null,
-            drake: null,
             hasChanges: false,
-            form: {
-                label: this.props.panel && this.props.panel.label || '',
-                cc: this.props.panel && this.props.panel.cc >= 0 ? this.props.panel.cc.toString() : ''
-            }
+            drake: null,
         };
 
         this.closeModal = this.closeModal.bind(this);
@@ -68,11 +60,7 @@ export default class PanelComponent extends React.Component<Props, State> {
             nextProps.updateControlValues();
             this.setState({
                 editMode: false, 
-                hasChanges: false,
-                form: {
-                    label: nextProps.panel.label,
-                    cc: nextProps.panel.cc
-                }
+                hasChanges: false
             });
         }
 
@@ -98,20 +86,10 @@ export default class PanelComponent extends React.Component<Props, State> {
 
     saveChanges() {
         const { savePanelChanges } = this.props;
-        const { hasChanges, form } = this.state;
+        const { hasChanges } = this.state;
         if (!hasChanges) return;
-        savePanelChanges(form);
+        savePanelChanges();
         this.setState({ editMode: false, hasChanges: false });
-    }
-
-    setFormValue(prop: string, value: string) {
-        this.setState({
-            hasChanges: true,
-            form: {
-                ...this.state.form, 
-                [prop]: value 
-            }
-        });
     }
 
     addControl(controlType: ControlType) {
@@ -160,7 +138,7 @@ export default class PanelComponent extends React.Component<Props, State> {
 
     render() {
         const { panel } = this.props;
-        const { editMode, editedControl, hasChanges, form } = this.state;
+        const { editMode, editedControl, hasChanges } = this.state;
 
         if (!panel) return null;
 
@@ -169,34 +147,13 @@ export default class PanelComponent extends React.Component<Props, State> {
                 <div className="panel__header">
                     <button className="btn toggle-edit" onClick={() => this.toggleEdit()}>{editMode ? 'Cancel' : 'Edit'}</button>
                     {hasChanges && <button className="btn btn--primary save-changes" onClick={() => this.saveChanges()}>Save</button>}
-                    <div className="panel__label">
-                        {!editMode && <span>{panel.label}</span>}
-                    </div>
+                    <h3 className="panel__label">{panel.label}</h3>
                     <div className="panel__edit">
                         {editMode && (
-                        <div className="form">
-                            <div className="form-group">
-                                <label>Panel name</label>
-                                <input type="text" 
-                                    className="panel__label--input"
-                                    name="label"
-                                    value={form.label} 
-                                    onChange={event => this.setFormValue('label', event.target.value)} />
-                            </div>
-                            <div className="form-group">
-                                <label>Activate panel using CC</label>
-                                <input type="number"
-                                    name="controlChange"
-                                    value={form.cc} 
-                                    min="0"
-                                    max="127"
-                                    onChange={event => this.setFormValue('cc', event.target.value)} />
-                            </div>
                             <div className="panel__edit-actions">
                                 <button className="btn" onClick={() => this.addControl(ControlType.Control)}>Add control</button>
                                 <button className="btn" onClick={() => this.addControl(ControlType.Switch)}>Add switch</button>
-                            </div>
-                        </div>)}
+                            </div>)}
                     </div>
                 </div>
                 <div className="panel__controls" ref={this.dragulaDecorator}>

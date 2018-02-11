@@ -50,16 +50,20 @@
                 }
             }
             
-
             &:first-child {
                 background: none;
             }
-
-            
         }
     }
 
     .add-panel {
         width: 100%;
+    }
+
+    .panel-action {
+        float: right;
+        margin-top: .5rem;
+        margin-right: .5rem;
+        cursor: pointer;
     }
 }

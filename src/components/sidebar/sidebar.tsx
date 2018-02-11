@@ -9,10 +9,11 @@ interface Props {
     panels: PanelObject[];
     currentPanelId: string;
     addNewPanel: () => void;
+    editPanel: (panel: PanelObject) => void;
 }
 
 const Sidebar: React.SFC<Props> = (props) => {
-    const { addNewPanel, panels, currentPanelId } = props;
+    const { addNewPanel, panels, currentPanelId, editPanel } = props;
 
     return (
         <div className="sidebar">
@@ -24,6 +25,9 @@ const Sidebar: React.SFC<Props> = (props) => {
                 </li>
                 {panels && panels.length > 0 && panels.map((panel, i) => (
                     <li key={`panel-${i}`} className={classNames('panel', {'active': panel.id === currentPanelId})}>
+                        <div className="panel-action" onClick={() => editPanel(panel)}>
+                            <i className="fa fa-gear"></i>
+                        </div>
                         <Link to={`/panels/${panel.id}`}>{panel.label || `Panel ${panel.id}`}</Link>
                     </li>
                 ))}

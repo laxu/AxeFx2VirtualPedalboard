@@ -10,6 +10,7 @@ interface State {
     controller: ControllerState,
     devices: MIDIDeviceData[];
     currentPanel: PanelObject;
+    editedPanel: PanelObject;
     shouldRefreshCurrentPanel: boolean;
     panels: PanelObject[];
 }
@@ -30,6 +31,7 @@ const initialState: State = {
     },
     devices: [],
     currentPanel: null,
+    editedPanel: null,
     shouldRefreshCurrentPanel: false,
     panels: []
 };
@@ -93,6 +95,16 @@ export default function reducers(state = initialState, action: Action & { payloa
                 // Add new panel
                 return {...state, panels: [...state.panels, payload]};
             }
+        case TypeKeys.editPanel:
+            return {...state, editedPanel: action.payload};
+
+        case TypeKeys.deletePanel:
+            const panelId = action.payload;
+            let curPanel = state.currentPanel;
+            if (curPanel.id === panelId) {
+                curPanel = state.panels.length ? state.panels[0] : null
+            }
+            return {...state, currentPanel: curPanel, panels: state.panels.filter(panel => panel.id !== panelId)}
 
         case TypeKeys.refreshCurrentPanel:
             return {...state, shouldRefreshCurrentPanel: payload};

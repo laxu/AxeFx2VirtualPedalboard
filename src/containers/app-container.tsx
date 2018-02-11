@@ -2,7 +2,7 @@ import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
-import { setPanelAction, resetControlValuesAction, resetAxeFxAction, getCurrentPanelAction } from "../store/actions";
+import { setPanelAction, resetControlValuesAction, resetAxeFxAction, getCurrentPanelAction, editPanelAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType, MIDIControllerType, buildInstances } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
@@ -20,6 +20,7 @@ const mapStateToProps = state => ({
     devices: state.app.devices,
     panels: state.app.panels,
     currentPanel: state.app.currentPanel,
+    editedPanel: state.app.editedPanel,
     loading: state.app.loading
 });
 
@@ -73,6 +74,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             };
             dispatch(setPanelAction(panel));
             history.push(`/panels/${panel.id}`);
+        },
+        editPanel(panel) {
+            dispatch(editPanelAction(panel));
         }
     }
 };

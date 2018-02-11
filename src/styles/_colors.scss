@@ -26,3 +26,6 @@ $color-button-text: #eee;
 $color-button-border: darken($color-button, 15%);
 $color-button-disabled: darken($color-button, 10%);
 $color-button-disabled-text: #666;
+$color-button-danger: rgb(180, 15, 15);
+$color-button-danger-highlight: lighten($color-button-danger, 5%);
+$color-button-danger-flashing: lighten($color-button-danger, 15%);

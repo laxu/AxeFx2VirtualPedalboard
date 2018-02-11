@@ -43,14 +43,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 });
             }
         },
-        savePanelChanges(formValues) {
-            const updatedPanel = {
-                ...panel,
-                ...formValues,
-                cc: formValues.cc !== 'all' ? Number(formValues.cc) : formValues.cc
-            };
-            dispatch(setPanelAction(updatedPanel));
-            dispatch(getCurrentPanelAction(updatedPanel.id));
+        savePanelChanges() {
+            dispatch(setPanelAction({...panel}));
+            dispatch(getCurrentPanelAction(panel.id));
         },
         addPanelControl(controlType: ControlType) {
             const control: ControlObject = {
