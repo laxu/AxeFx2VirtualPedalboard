@@ -57,6 +57,7 @@ Each block param consists of an object containing following properties. Propetie
     step: number                     - How much values change per step, these are always values like 0.001 etc (default 0.1)
     precision: number                - How many decimals to show (default 1)
     unit: string                     - Unit to show for parameter, e.g. "dB" or "%"
+    labelGroup: string               - Label and start for a group. If you want to say have a group called "Advanced", add this to the first parameter in the group. Parameters after it will be in the same group
 }
 ```
 Step property is not that intuitive as it relates to the value received from Axe-Fx so you might need to mess with it to get the correct stepping for control changes.
