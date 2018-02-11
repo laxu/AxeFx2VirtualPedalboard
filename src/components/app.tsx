@@ -46,7 +46,7 @@ export class AppComponent extends React.Component<Props> {
                 <div className="main-container">
                     <Route path="/panels/:panelId" component={PanelContainer} />
                 </div>
-                <Modal isOpen={!!editedPanel}>
+                <Modal isOpen={!!editedPanel} shouldCloseOnOverlayClick={false}>
                     <PanelSettingsContainer></PanelSettingsContainer>
                 </Modal>
             </div>
