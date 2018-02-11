@@ -99,7 +99,7 @@ const delay = [
     { id: 65, label: 'Gain 1', type: PARAM_TYPE.Knob, range: [-12, 12], precision: 0, unit: 'dB' },
     { id: 66, label: 'Gain 2', type: PARAM_TYPE.Knob, range: [-12, 12], precision: 0, unit: 'dB' },
     { id: 67, label: 'LFO 1 depth range', type: PARAM_TYPE.Select, values: lfoDepthRange },
-    { id: 68, label: 'Motor speed', type: PARAM_TYPE.Knob, range: [0.5, 2], step: 0.001, precision: 0.001 },
+    { id: 68, label: 'Motor speed', type: PARAM_TYPE.Knob, range: [0.5, 2], step: 0.001, precision: 3 },
     { id: 69, label: 'Right post delay', type: PARAM_TYPE.Knob, range: [0, 100], unit: 'ms' },
 ];
 
