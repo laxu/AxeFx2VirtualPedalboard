@@ -45,6 +45,26 @@ It is recommend to use  different panels as different sets of controls. This way
 - Run `npm run start`.
 - Open `http://localhost:8080` in your web browser.
 
+## Block parameter data format
+Each block param consists of an object containing following properties. Propeties that are using default values don't need to be defined. Listed below in `property name: type - description (default value if applicable)`
+```
+{
+    id: number                       - Parameter ID for block, must match Axe-Fx parameter IDs
+    label: string                    - Parameter label
+    type: enum                       - Parameter type, get this from PARAM_TYPE enum
+    range: [number, number]          - Array of [min, max] values (default [0, 10]) for parameter. Not necessary for Select type params.
+    values: Array<string> | function - Only used with Select type params. Defines the value labels. Can also be a function if you need to get the values from Axe-Fx for example
+    step: number                     - How much values change per step, these are always values like 0.001 etc (default 0.1)
+    precision: number                - How many decimals to show (default 1)
+    unit: string                     - Unit to show for parameter, e.g. "dB" or "%"
+}
+```
+Step property is not that intuitive as it relates to the value received from Axe-Fx so you might need to mess with it to get the correct stepping for control changes.
+
+## Adding block parameter data
+Add a file that matches the block name to the `src/api/fx-block-data` folder and define the parameters there. Import and add the params in `index.ts` constant `FX_PARAMS` in the same folder. The property in FX_PARAMS must match block name.
+The mapping for block names can be found in `src/api/fx-block-data/fx-block-data.ts` under the `FX_BLOCK_TYPES` constant. 
+
 ## FAQ
 #### The relative values don't work!
 MIDI controller must be able to send relative values (< 64 for decrement, > 64 for increment) for relative mapping to work. For example value 63 would be decrement by 1 unit. This is translated to the value fraction needed for the parameter.
