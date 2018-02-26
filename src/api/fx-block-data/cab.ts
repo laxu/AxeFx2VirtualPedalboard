@@ -51,9 +51,9 @@ const preampMode = [
 ];
 
 const cab = [
-    { id: 0, label: 'Cab L', type: PARAM_TYPE.Select, step: 1, values: getCabName, labelGroup: 'Cabinet' },
+    { id: 0, label: 'Cab L', type: PARAM_TYPE.Select, step: 1, valueFunc: getCabName, labelGroup: 'Cabinet' },
     { id: 1, label: 'Cab L mic', type: PARAM_TYPE.Select, step: 1, values: micTypes },
-    { id: 2, label: 'Cab R', type: PARAM_TYPE.Select, values: getCabName, },
+    { id: 2, label: 'Cab R', type: PARAM_TYPE.Select, valueFunc: getCabName },
     { id: 3, label: 'Cab R mic', type: PARAM_TYPE.Select, step: 1, values: micTypes },
     { id: 4, label: 'Link cabs', type: PARAM_TYPE.Switch },
     { id: 5, label: 'Level L', type: PARAM_TYPE.Knob, range: [-80, 0], precision: 0, unit: 'dB' },

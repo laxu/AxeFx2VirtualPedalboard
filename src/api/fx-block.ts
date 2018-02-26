@@ -2,6 +2,8 @@ import { clampValue, getObjKeyByValue, convertToRange, toFixedNumber } from "../
 import { FX_BLOCK_IDS, FX_BLOCK_TYPES, FX_PARAMS, PARAM_TYPE, FX_BLOCK_LABELS } from "./fx-block-data";
 import { FX_PARAMS_COMMON } from "./fx-block-data/fx-param-common";
 
+type ValueFunc = (value: number) => any;
+
 export interface IFxBlock {
     id: number;
     engaged?: boolean;
@@ -21,6 +23,7 @@ export interface IFxParam {
     label?: string;
     labelGroup?: string;
     values?: string[];
+    valueFunc?: ValueFunc;
     formatValue: (value: number) => number | string;
 }
 
@@ -55,6 +58,7 @@ export class FxParam implements IFxParam {
     label?: string;
     labelGroup?: string;
     values?: string[];
+    valueFunc?: ValueFunc;
 
     constructor(paramSettings) {
         this.blockGroup = paramSettings.blockGroup;
@@ -67,17 +71,22 @@ export class FxParam implements IFxParam {
         this.label = paramSettings.label;
         this.labelGroup = paramSettings.labelGroup;
         this.values = paramSettings.values || [];
+        this.valueFunc = paramSettings.valueFunc;
     }
 
     formatValue(val: number): number | string {
         if (!isFinite(val)) throw new Error('Trying to set non-numeric param value!');
         if (this.type === PARAM_TYPE.Switch) {
+            if (this.valueFunc) return this.valueFunc(val);
             return val;
-        } else if (this.type === PARAM_TYPE.Select && this.values) {
-            if (Array.isArray(this.values)) {
+        } else if (this.type === PARAM_TYPE.Select) {
+            if (this.valueFunc) {
+                return this.valueFunc(val);
+            }
+            if (this.values.length) {
                 return this.values[val];
             }
-            return this.values(val);
+            return val;
         }
         let formattedValue = convertToRange(val, this.range);
         formattedValue = toFixedNumber(clampValue(formattedValue, this.range, this.step), this.precision);
