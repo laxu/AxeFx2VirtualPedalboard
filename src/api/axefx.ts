@@ -1,9 +1,12 @@
+import { Observable } from 'rxjs/observable';
+import { first } from 'rxjs/operators';
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
 import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToFloat, bytesToPresetNumber, floatValueToAxeFx } from '../util/util';
 import { IFxBlock, FxBlock, getBlockById, getBlockAndParam } from './fx-block';
 import { resetAxeFxAction, updateAxeFxAction, updateControlValueAction, refreshCurrentPanelAction } from '../store/actions';
 import { PARAM_TYPE } from './fx-block-data/index';
+import { Subscriber } from 'rxjs/Subscriber';
 
 export enum PARAM_MODE {
     Set = 0x01,
@@ -24,6 +27,11 @@ export interface AxeFxState {
     presetEdited: boolean;
 }
 
+interface FirmwareVersionEvent {
+    modelId: number,
+    version: string
+}
+
 export class AxeFx implements MIDIController {
     id: number;
     name: string;
@@ -41,12 +49,35 @@ export class AxeFx implements MIDIController {
 
     private dispatch: any;
     private inputListener: (event: AxeFxResponse) => void;
-    private resolvers: any = {};
     private tunerEnabled: boolean = false;
     private metronomeEnabled: boolean = false;
 
+    private firmwareVersion$: Observable<FirmwareVersionEvent>;
+    private firmwareVersionSubscriber: Subscriber<FirmwareVersionEvent>;
+
     constructor(dispatch) {
         this.dispatch = dispatch;
+
+        this.firmwareVersion$ = new Observable(subscriber => {
+            this.firmwareVersionSubscriber = subscriber;
+        });
+        
+        this.firmwareVersion$.subscribe(({ version, modelId }) => {
+            this.connected = true;
+            this.firmwareVersion = version;
+            this.id = modelId;
+            this.name = getObjKeyByValue(modelId, MODEL_IDS);
+            this.dispatch(resetAxeFxAction());
+            this.getPresetNumber();
+            this.getSceneNumber();
+            this.cabNames = [];
+            this.getAllCabNames();
+            this.dispatch(updateAxeFxAction({
+                firmwareVersion: this.firmwareVersion,
+                connected: this.connected,
+                name: this.name
+            }));
+        });
     }
 
     private getChecksum(message: number[]): number {
@@ -83,21 +114,7 @@ export class AxeFx implements MIDIController {
         );
 
         this.input.removeListener().addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
-
-        this.findModel().then(() => {
-            this.dispatch(resetAxeFxAction());
-            this.getPresetNumber();
-            this.getSceneNumber();
-            this.cabNames = [];
-            this.getAllCabNames();
-            this.dispatch(updateAxeFxAction({
-                firmwareVersion: this.firmwareVersion,
-                connected: this.connected,
-                name: this.name
-            }));
-        }).catch(e => {
-            this.resolvers = {};
-        });
+        this.findModel();
     }
 
     disconnect(): void {
@@ -107,29 +124,13 @@ export class AxeFx implements MIDIController {
     }
 
 
-    findModel(): Promise<any> {
-        let fwVersion;
-        return new Promise(async (resolve, reject) => {
-            for (const name in MODEL_IDS) {
-                if (MODEL_IDS.hasOwnProperty(name)) {
-                    if (this.connected) resolve();
-                    this.id = MODEL_IDS[name];
-                    try {
-                        fwVersion = await this.getFirmwareVersion();
-                        if (fwVersion) {
-                            this.id = MODEL_IDS[name]
-                            this.name = name;
-                            resolve();
-                            break;
-                        }
-                    } catch(e) {
-                        if (!fwVersion && name === 'AX8') {
-                            reject('Could not connect to Axe-Fx hardware');
-                        }
-                    }
-                }
+    findModel(): void {
+        for (const name in MODEL_IDS) {
+            if (MODEL_IDS.hasOwnProperty(name)) {
+                this.id = MODEL_IDS[name];
+                this.getFirmwareVersion();
             }
-        });
+        }
     }
 
     sendMessage(message: number[]): MIDIOutput {
@@ -148,21 +149,18 @@ export class AxeFx implements MIDIController {
         this.sendMessage([AXE_FUNCTIONS.getPresetName]);
     }
 
-    getPresetNumber(): Promise<any> {
+    getPresetNumber(): void {
         this.sendMessage([AXE_FUNCTIONS.getPresetNumber]);
-        return new Promise(resolve => {
-            this.resolvers.getPresetNumber = resolve;
-        });
     }
 
-    getBlockParametersList(blockId: number) {
+    getBlockParametersList(blockId: number): void {
         this.sendMessage([
             AXE_FUNCTIONS.getBlockParametersList,
             ...intTo2Byte(blockId)
         ]);
     }
 
-    getBlockParamValue(blockId: number, paramId: number) {
+    getBlockParamValue(blockId: number, paramId: number): void {
         this.sendMessage([
             AXE_FUNCTIONS.blockParamValue,
             ...intTo2Byte(blockId),
@@ -172,31 +170,27 @@ export class AxeFx implements MIDIController {
         ]);
     }
 
-    getSceneNumber() {
+    getSceneNumber(): void {
         this.sendMessage([AXE_FUNCTIONS.setSceneNumber, 0x7F]);
     }
 
-    async getFirmwareVersion() {
+    getFirmwareVersion(): void {
         this.sendMessage([AXE_FUNCTIONS.getFirmwareVersion]);
-        return new Promise((resolve, reject) => {
-            this.resolvers.getFirmwareVersion = resolve;
-            setTimeout(() => reject('Could not get firmware'), 300);
-        });
     }
 
-    getMIDIChannel() {
+    getMIDIChannel(): void {
         this.sendMessage([AXE_FUNCTIONS.getMIDIChannel]);
     }
 
-    getAllCabNames() {
+    getAllCabNames(): void {
         this.sendMessage([AXE_FUNCTIONS.getCabName, 0x7F, 0x7F]);
     }
 
-    setTargetBlock(blockId: number) {
+    setTargetBlock(blockId: number): void {
         this.sendMessage([AXE_FUNCTIONS.setTargetBlock, ...intTo2Byte(blockId)]);
     }
 
-    setBlockBypass(blockId: number, isBypassed: boolean) {
+    setBlockBypass(blockId: number, isBypassed: boolean): void {
         this.setBlockParamValue(blockId, 255, Number(isBypassed));
     }
 
@@ -246,9 +240,8 @@ export class AxeFx implements MIDIController {
         switch (func) {
             case AXE_FUNCTIONS.getFirmwareVersion:
                 value = data[0] + '.' + data[1];
-                this.firmwareVersion = value;
-                if (value) this.connected = true;
-                this.resolvers.getFirmwareVersion(value);
+                const modelId = rawData[4];
+                this.firmwareVersionSubscriber.next({ modelId, version: value });
                 break;
                 
             case AXE_FUNCTIONS.getPresetName:
