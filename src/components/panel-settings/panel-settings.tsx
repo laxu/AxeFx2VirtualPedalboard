@@ -101,8 +101,10 @@ export default class PanelSettingsComponent extends React.Component<Props, State
                         onChange={event => this.setFormValue('cc', event.target.value)} />
                 </div>
                 <div className="actions">
-                    <button className={classNames('btn btn--danger', { 'btn--danger-flashing': allowDelete })} onClick={this.deletePanel}>Delete</button>
-                    <button className="btn" onClick={close}>Cancel</button>
+                    <button type="button" 
+                        className={classNames('btn btn--danger', { 'btn--danger-flashing': allowDelete })} 
+                        onClick={this.deletePanel}>Delete</button>
+                    <button type="button" className="btn" onClick={close}>Cancel</button>
                     <input type="submit" className="btn btn-primary" value="Save" disabled={!hasChanges} />
                 </div>
             </form>
