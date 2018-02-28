@@ -50,7 +50,7 @@ export const reverbType = [
 const reverb = [
     { id: 0, label: 'Type', type: PARAM_TYPE.Select, values: reverbType, step: 1, range: [0, reverbType.length - 1], labelGroup: 'Basic' },
     { id: 1, label: 'Time', type: PARAM_TYPE.Knob, step: 0.01, range: [0, 100], unit: 's' },
-    { id: 2, label: 'High cut', type: PARAM_TYPE.Knob, range: [200, 20000], step: 1, unit: 'Hz' },
+    { id: 2, label: 'High cut', type: PARAM_TYPE.Knob, range: [200, 20000], unit: 'Hz' },
     { id: 3, label: 'HF time', type: PARAM_TYPE.Knob, range: [0.1, 1], step: 0.01, precision: 0.01 },
     { id: 4, label: 'Wall diffusion', type: PARAM_TYPE.Knob },
     { id: 5, label: 'Size', type: PARAM_TYPE.Knob, range: [1, 100], step: 1 },
@@ -62,7 +62,7 @@ const reverb = [
     { id: 10, label: 'Low cut', type: PARAM_TYPE.Knob, range: [20, 2000], step: 1, unit: 'Hz' },
     { id: 11, label: 'Mod depth', type: PARAM_TYPE.Knob, labelGroup: 'Advanced' },
     { id: 12, label: 'Mod rate', type: PARAM_TYPE.Knob },
-    { id: 13, label: 'Mix', type: PARAM_TYPE.Knob, range: [0, 100], step: 1, unit: '%' },
+    { id: 13, label: 'Mix', type: PARAM_TYPE.Knob, range: [0, 100], unit: '%' },
     { id: 16, label: 'Bypass mode', type: PARAM_TYPE.Select, values: bypassMode },
     { id: 17, label: 'Global', type: PARAM_TYPE.Switch },
     { id: 18, label: 'Input gain', type: PARAM_TYPE.Knob },
