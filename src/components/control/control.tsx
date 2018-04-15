@@ -46,6 +46,7 @@ export default class ControlComponent extends React.Component<Props, State> {
         if (controlType === ControlType.Control) {
             return (
                 <div className={classNames('control', `control--${param && param.type}`)}>
+                    <div className="edit-icon"><i className="fa fa-pencil"></i></div>
                     {block && block.label && showBlockName && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
@@ -56,6 +57,7 @@ export default class ControlComponent extends React.Component<Props, State> {
         } else {
             return (
                 <div className={classNames('switch', {'switch--on': paramValue, 'switch--off': !paramValue})}>
+                    <div className="edit-icon"><i className="fa fa-pencil"></i></div>
                     {block && block.label && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
