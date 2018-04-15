@@ -20,15 +20,7 @@ const iconMap = {
 
 const KnobComponent: React.SFC<Props> = function (props) {
     const { type, color, value } = props;
-    const knobClasses = classNames('knob', {
-        'knob--outline': type === KnobStyle.RoundOutline,
-        'knob--round': type === KnobStyle.Round,
-        'knob--chickenhead': type === KnobStyle.ChickenHead,
-        'knob--hexagon': type === KnobStyle.Hexagon,
-        'knob-color--dark': color === KnobColor.Dark,
-        'knob-color--bright': color === KnobColor.Bright,
-        'knob-color--ivory': color === KnobColor.Ivory
-    });
+    const knobClasses = classNames('knob', `knob--${type}`, `knob-color--${color}`);
     const rotation = convertToRange(value, [-145, 145]);
     const knobStyle = {
         transform: `rotate(${rotation}deg)`
