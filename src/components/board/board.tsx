@@ -140,16 +140,32 @@ export default class BoardComponent extends React.Component<Props, State> {
     onDragEnd(el, target, source, sibling) {
         const { board } = this.props;
 
-        const startIndex = board.groups.findIndex(group => group.id === el.getAttribute('data-group-id'));
+        const isGroup = el.className.includes('group');
+
+        let startIndex;
         const endIndex = getIndexInParent(document.querySelector('.gu-transit')); // Find ghost element index
+        if (isGroup) {
+            startIndex = board.groups.findIndex(group => group.id === el.getAttribute('data-group-id'));
+            
+        } else {
+            startIndex = board.controls.findIndex(group => group.id === el.getAttribute('data-control-id'));
+        }
 
         this.state.drake.cancel(true); // Cancel to prevent reordering DOM
 
-        board.groups = reorder(
-            board.groups,
-            startIndex,
-            endIndex
-        );
+        if (isGroup) {
+            board.groups = reorder(
+                board.groups,
+                startIndex,
+                endIndex
+            );
+        } else {
+            board.controls = reorder(
+                board.controls,
+                startIndex,
+                endIndex
+            );
+        }
         
         this.setState({
             hasChanges: true
@@ -159,7 +175,12 @@ export default class BoardComponent extends React.Component<Props, State> {
     dragulaDecorator = (componentBackingInstance) => {
         if (componentBackingInstance) {
             const dragulaOptions = {
-                moves: () => this.state.editMode !== false
+                moves: () => this.state.editMode !== false,
+                accepts: (el, source, target) => source === target,
+                isContainer: el => {
+                    if (typeof el.className !== 'string') return false; // SVGs have weird class names
+                    return el.className.includes('board__groups') || el.className.includes('group__controls');
+                }
             }
             const drake = Dragula([componentBackingInstance], dragulaOptions);
             drake.on('drop', this.onDragEnd);
