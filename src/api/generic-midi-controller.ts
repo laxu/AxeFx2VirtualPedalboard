@@ -25,6 +25,8 @@ export class GenericMIDIController implements MIDIController {
     private dispatch: any;
     private history: any;
 
+    private velocities = {};
+
     constructor(dispatch, history) {
         this.id = generateId();
         this.dispatch = dispatch;
@@ -62,23 +64,61 @@ export class GenericMIDIController implements MIDIController {
         }));
     }
 
-    attachParamListener() {
-        this.input.removeListener().addListener(MIDIListenerType.CC, this.channel, debounce(event => {
+    getVelocity(cc: number, value: number, isRelative: boolean): number {
+        if (!this.velocities[cc]) {
+            this.velocities[cc] = { velocity: 1, eventCount: 1, previousValue: value, previousDirection: 0 };
+            return 1;
+        }
+
+        const obj = this.velocities[cc];
+        clearTimeout(obj.timer);
+        // const currentEventTime = Date.now().valueOf();
+        obj.eventCount++;
+        obj.velocity += Math.pow(0.01, obj.eventCount);
+        
+        obj.timer = setTimeout(() => {
+            console.log('clearing', cc);
+            clearTimeout(obj.timer);
+            this.velocities[cc] = null;
+        }, 500);
+
+        let direction: number;
+        if (isRelative) {
+            direction = value > 64 ? 1 : -1;
+        } else {
+            direction = value > obj.previousValue ? 1 : -1;
+        }
+        if (direction !== obj.previousDirection) {
+            obj.velocity = 1;
+            obj.eventCount = 1;
+        }
+        obj.previousDirection = 1;
+        obj.previousValue = value;
+        return obj.velocity * direction;
+    }
+
+    attachParamListener(): void {
+        this.input.removeListener().addListener(MIDIListenerType.CC, this.channel, event => {
             console.log('controller event data', event.data);
             const cc = event.data[1];
             let value = event.data[2];
-            const panelActivatedByCC = getStoreStateSlice('panels').find(p => p.cc === cc);
-            if (panelActivatedByCC) {
-                // Switch to panel
-                this.history.push(`/panels/${panelActivatedByCC.id}`);
+            const boardActivatedByCC = getStoreStateSlice('board', 'boards').find(p => p.cc === cc);
+            if (boardActivatedByCC) {
+                // Switch to board
+                this.history.push(`/boards/${boardActivatedByCC.id}`);
             } else {
                 // Change control
-                const currentPanel = getStoreStateSlice('currentPanel');
-                const control: ControlObject = currentPanel.controls.find(ctrl => ctrl.cc === cc);
+                const currentBoard = getStoreStateSlice('board', 'currentBoard');
+                const control: ControlObject = currentBoard.controls.find(ctrl => ctrl.cc === cc);
                 if (!control) return;
                 const { param } = getBlockAndParam(control.blockId, control.paramId);
                 if (control && param) {
                     let useFloatValue = false;
+                    if (param.type === PARAM_TYPE.Knob) {
+                        const velocity = this.getVelocity(cc, value, control.isRelative);
+                        value *= velocity;
+                        console.log('fuu', value, velocity);
+                    }
                     if (control.isRelative) {
                         useFloatValue = true;
                         if (param.type === PARAM_TYPE.Select) {
@@ -93,6 +133,6 @@ export class GenericMIDIController implements MIDIController {
                     axeFx.setBlockParamValue(control.blockId, control.paramId, value, useFloatValue);
                 }
             }
-        }, DEBOUNCE_TIME));
+        });
     }
 }

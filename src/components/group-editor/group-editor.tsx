@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { PanelObject } from '../../api/panel-object';
+import { BoardObject } from '../../api/board-object';
 import { GroupObject } from '../../api/group-object';
 import { SwatchesPicker } from 'react-color';
 import './_group-editor.scss';

@@ -4,7 +4,7 @@ import ControlEditorComponent from '../components/control-editor/control-editor'
 import { getAxeFxInstance } from '../api/midi';
 
 const mapStateToProps = state => ({
-    panel: state.app.currentPanel
+    board: state.app.board.currentBoard
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
@@ -12,9 +12,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...dispatchProps,
     ...ownProps,
     saveChanges(formData) {
-        const { panel } = stateProps;
+        const { board } = stateProps;
         const { id, controlType, blockId, paramId, cc, isRelative, groupId } = formData;
-        const controlIdx = panel.controls.findIndex(ctrl => ctrl.id === id);
+        const controlIdx = board.controls.findIndex(ctrl => ctrl.id === id);
         if (controlIdx === -1) throw new Error(`Could not find control for ID "${id}"`);
         const updatedControl: ControlObject = {
             id: id,
@@ -27,7 +27,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             cc,
             groupId
         };
-        panel.controls.splice(controlIdx, 1, updatedControl);
+        board.controls.splice(controlIdx, 1, updatedControl);
         const axeFx = getAxeFxInstance();
         if (blockId && paramId >= 0 && axeFx) {
             axeFx.getBlockParamValue(blockId, paramId);

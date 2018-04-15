@@ -29,7 +29,7 @@ export const AXE_FUNCTIONS = {
     getMIDIChannel: 0x17,
     getBlockParametersList: 0x01,
     getCabName: 0x12,
-    frontPanelChange: 0x21,
+    frontBoardChange: 0x21,
     blockParamValue: 0x02,
     setSceneNumber: 0x29,
     setTargetBlock: 0x37,

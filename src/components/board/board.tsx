@@ -4,10 +4,10 @@ import 'dragula/dist/dragula.css';
 import Modal from 'react-modal/lib/components/Modal';
 import { FxBlock, FxParam } from '../../api/fx-block';
 import { ControlType, ControlObject } from '../../api/control-object';
-import { PanelObject } from '../../api/panel-object';
+import { BoardObject } from '../../api/board-object';
 import ControlComponent from '../control/control';
 
-import './_panel.scss';
+import './_board.scss';
 import ControlEditorContainer from '../../containers/control-editor-container';
 import { reorder, getIndexInParent } from '../../util/util';
 import { AxeFxState } from '../../api/axefx';
@@ -20,16 +20,16 @@ interface Props {
     match: any,
     axeFx: AxeFxState,
     controller: ControllerState,
-    panel: PanelObject;
+    board: BoardObject;
     init: () => void;
     updateControlValues: () => void;
     attachControllerListener: () => void;
-    savePanelChanges: () => void;
-    addPanelGroup: () => void;
-    removePanelGroup: (group: GroupObject) => void;
+    saveBoardChanges: () => void;
+    addBoardGroup: () => void;
+    removeBoardGroup: (group: GroupObject) => void;
     editGroup: (group: GroupObject) => void;
-    addPanelControl: (group: GroupObject, controlType: ControlType) => void;
-    removePanelControl: (control: ControlObject) => void;
+    addBoardControl: (group: GroupObject, controlType: ControlType) => void;
+    removeBoardControl: (control: ControlObject) => void;
 }
 
 interface State {
@@ -40,7 +40,7 @@ interface State {
     drake: Dragula
 }
 
-export default class PanelComponent extends React.Component<Props, State> {
+export default class BoardComponent extends React.Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
@@ -59,17 +59,17 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.addControl = this.addControl.bind(this);
         this.removeControl = this.removeControl.bind(this);
 
-        if (!this.props.panel) {
+        if (!this.props.board) {
             this.props.init();
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.match.params.panelId !== this.props.match.params.panelId) {
+        if (nextProps.match.params.boardId !== this.props.match.params.boardId) {
             nextProps.init();
             return;
         }
-        if (!this.props.panel || nextProps.panel.id !== this.props.panel.id) {
+        if (!this.props.board || nextProps.board.id !== this.props.board.id) {
             nextProps.updateControlValues();
             this.setState({
                 editMode: false, 
@@ -99,23 +99,23 @@ export default class PanelComponent extends React.Component<Props, State> {
     }
 
     saveChanges() {
-        const { savePanelChanges } = this.props;
+        const { saveBoardChanges } = this.props;
         const { hasChanges } = this.state;
         if (!hasChanges) return;
-        savePanelChanges();
+        saveBoardChanges();
         this.setState({ editMode: false, hasChanges: false });
     }
 
     addGroup() {
-        const { addPanelGroup } = this.props;
-        addPanelGroup();
+        const { addBoardGroup } = this.props;
+        addBoardGroup();
         this.setState({ hasChanges: true });
     }
 
     removeGroup() {
-        const { removePanelGroup } = this.props;
+        const { removeBoardGroup } = this.props;
         const { editedGroup } = this.state;
-        removePanelGroup(editedGroup);
+        removeBoardGroup(editedGroup);
         this.closeModal(true);
     }
 
@@ -124,29 +124,29 @@ export default class PanelComponent extends React.Component<Props, State> {
     }
 
     addControl(group: GroupObject, controlType: ControlType) {
-        const { addPanelControl } = this.props;
-        addPanelControl(group, controlType);
+        const { addBoardControl } = this.props;
+        addBoardControl(group, controlType);
         this.setState({ hasChanges: true });
     }
 
     removeControl(event, control: ControlObject) {
-        const { removePanelControl } = this.props;
+        const { removeBoardControl } = this.props;
         event.preventDefault();
         event.stopPropagation();
-        removePanelControl(control);
+        removeBoardControl(control);
         this.setState({ hasChanges: true });
     }
 
     onDragEnd(el, target, source, sibling) {
-        const { panel } = this.props;
+        const { board } = this.props;
 
-        const startIndex = panel.controls.findIndex(ctrl => ctrl.id === el.getAttribute('data-control-id'));
+        const startIndex = board.controls.findIndex(ctrl => ctrl.id === el.getAttribute('data-control-id'));
         const endIndex = getIndexInParent(document.querySelector('.gu-transit')); // Find ghost element index
 
         this.state.drake.cancel(true); // Cancel to prevent reordering DOM
 
-        panel.controls = reorder(
-            panel.controls,
+        board.controls = reorder(
+            board.controls,
             startIndex,
             endIndex
         );
@@ -168,14 +168,14 @@ export default class PanelComponent extends React.Component<Props, State> {
     };
 
     render() {
-        const { panel } = this.props;
+        const { board } = this.props;
         const { editMode, editedControl, editedGroup, hasChanges } = this.state;
 
-        if (!panel) return null;
+        if (!board) return null;
 
         return (
-            <div className="panel">
-                <div className="panel__header">
+            <div className="board">
+                <div className="board__header">
                     <button className="btn toggle-edit" onClick={() => this.toggleEdit()}>
                         <i className={editMode ? 'fa fa-undo' : 'fa fa-pencil'}></i>
                         <span>{editMode ? 'Cancel' : 'Edit'}</span>
@@ -184,10 +184,10 @@ export default class PanelComponent extends React.Component<Props, State> {
                         <i className="fa fa-check"></i>
                         <span>Save</span>
                     </button>}
-                    <h3 className="panel__label">{panel.label}</h3>
-                    <div className="panel__edit">
+                    <h3 className="board__label">{board.label}</h3>
+                    <div className="board__edit">
                         {editMode && (
-                            <div className="panel__edit-actions">
+                            <div className="board__edit-actions">
                                 <button className="btn" onClick={() => this.addGroup()}>
                                     <i className="fa fa-plus"></i>
                                     <span>Add group</span>
@@ -195,19 +195,19 @@ export default class PanelComponent extends React.Component<Props, State> {
                             </div>)}
                     </div>
                 </div>
-                <div className="panel__groups" ref={this.dragulaDecorator}>
-                    {panel.groups.length > 0 && panel.groups.map((group, i) => (
+                <div className="board__groups" ref={this.dragulaDecorator}>
+                    {board.groups.length > 0 && board.groups.map((group, i) => (
                         <GroupComponent
                             key={`group-${i}`}
                             group={group}
-                            controls={panel.controls.filter(ctrl => ctrl.groupId === group.id)}
+                            controls={board.controls.filter(ctrl => ctrl.groupId === group.id)}
                             editMode={editMode} 
                             editGroup={this.editGroup}
                             editControl={this.editControl}
                             addControl={this.addControl}
                             removeControl={this.removeControl}></GroupComponent>
                     ))}
-                    {panel.groups.length === 0 && <p>No groups, how about <a onClick={() => this.addGroup()}>adding</a> some?</p>}
+                    {board.groups.length === 0 && <p>No groups, how about <a onClick={() => this.addGroup()}>adding</a> some?</p>}
                 </div>
                 <Modal isOpen={!!editedControl} contentLabel="Control editor">
                     <ControlEditorContainer {...editedControl} closeModal={this.closeModal}></ControlEditorContainer>

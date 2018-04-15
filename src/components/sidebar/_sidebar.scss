@@ -10,7 +10,7 @@
     box-sizing: border-box;
     color: $color-sidebar-text;
 
-    .panels {
+    .boards {
         list-style-type: none;
         margin: 0 0 0 .5rem;
         padding: 0;
@@ -27,7 +27,7 @@
                 padding-left: 0;
             }
 
-            &.panel {
+            &.board {
                 position: relative;
                 border-radius: $global-radius 0 0 $global-radius;
                 border: 1px solid $color-border;
@@ -56,11 +56,11 @@
         }
     }
 
-    .add-panel {
+    .add-board {
         width: 100%;
     }
 
-    .panel-action {
+    .board-action {
         float: right;
         margin-top: .5rem;
         margin-right: .5rem;

@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import reducers from './reducers';
 
 const config = {
-    key: 'axeFxMidi',
+    key: 'axeFxVirtualPedalboard',
     storage: storage
 }
 
@@ -23,8 +23,8 @@ export function getStoreState() {
     store.getState().app;
 }
 
-export function getStoreStateSlice(slice: string) {
-    return store.getState().app[slice];
+export function getStoreStateSlice(section: string, slice: string) {
+    return store.getState().app[section][slice];
 }
 
 export {

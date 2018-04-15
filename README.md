@@ -12,18 +12,25 @@ control any Axe-Fx 2 effects block parameter and display their values in an easy
 Inspiration and concept came from PALYGAP's [MidyAX2](https://github.com/PALYGAP/MidyAX-2) project but 
 I was not happy with the UI and data model of that project so I decided to try to implement this with web technologies that are more familiar to me.
 
-## How it works
+## How to use
+- Turn on your Axe-Fx and connect your MIDI controller.
+- Configure your MIDI input/output settings from the modal accessed by clicking the Settings button. 
+- Create a pedalboard by clicking the Add board button.
+- Add groups to the new board. Think of groups as individual pedals, amps or rack units.
+- Add controls (knobs and switches) to each group. 
+- Finally map the controls to Axe-Fx block parameters and then you should see the values in your preset shown on screen and change when you turn knobs on your MIDI controller.
 
-First you create a control panel. Then you add controls to the panel. 
 Controls can be either knob or switch types where knob types allow changing values usually from 0-10 and switches turn things on and off.
-While each panel can have (at least in theory) an infinite number of controls, too many controls in one panel might cause it to take too long to find the corresponding control when changing it from the MIDI controller, causing either dropped inputs or delays in updates.
-It is recommend to use  different panels as different sets of controls. This way you could have one panel with amp and cab settings, another with your favorite effects parameters and switch between panels with a button on your MIDI controller or using the mouse.
+
+While each board can have (at least in theory) an infinite number of controls, too many controls in one board might cause it to take too long to find the corresponding control when changing it from the MIDI controller, causing either dropped inputs or delays in updates.
+
+It is recommend to use different boards as different sets of controls. This way you could have one board with amp and cab settings, another with your favorite effects parameters and switch between boards with a button on your MIDI controller or using the mouse.
 
 ## Features
 - Map any effects block parameter on the Axe-Fx 2 to a MIDI CC. This means you can use MIDI knob controllers to alter Axe-Fx 2 parameters.
-- Show desired parameter values of any effects block in a single panel.
-- Switch panels with MIDI CCs.
-- Easy to use UI with drag and drop rearrangeable controls.
+- Show desired parameter values of any effects block in virtual pedalboards.
+- Switch boards with MIDI CCs.
+- Easy to use UI with drag and drop rearrangeable controls and groups.
 - Responsive UI adapts to various window sizes and scales perfectly even on high resolution displays.
 - Automatic detection of Axe-Fx model when correct MIDI ports have been chosen.
 - Interpret MIDI CC values as either absolute (0-127) or relative (+/- current value). Relative works best for Select type params such as amp type and can be assigned per control.
@@ -80,5 +87,5 @@ Axe-Fx 2 users values that are often more precise than is necessary so some of t
 
 ## Development roadmap
 - Add support for all effects blocks.
-- Add sub groups to panels so controls can be grouped for example into "stompbox" style sets.
+- Add sub groups to boards so controls can be grouped for example into "stompbox" style sets.
 - Add Electron support.

@@ -8,7 +8,7 @@ import { MODEL_IDS } from '../api/constants';
 import { generateId } from '../util/util';
 
 const mapStateToProps = state => ({
-    devices: state.app.devices
+    devices: state.app.devices.devices
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

@@ -51,7 +51,7 @@ export class GroupComponent extends React.Component<Props> {
                         </button>
                     </div>
                 )}
-                <label className="group__label" onClick={() => editGroup(this.props.group)}>
+                <label className="group__label" onClick={() => editGroup(this.props.group)} title="Edit group">
                     <div className="edit-icon"><i className="fa fa-pencil"></i></div>
                     <span>{label}</span>
                 </label>
@@ -59,7 +59,8 @@ export class GroupComponent extends React.Component<Props> {
                     {controls.length > 0 && controls.map((control, i) => (
                         <div className="control-container" key={`control-${i}`}
                             data-control-id={control.id}
-                            onClick={() => editControl(control)}>
+                            onClick={() => editControl(control)}
+                            title="Edit control">
                             {editMode && <button className="btn remove-control" onClick={event => removeControl(event, control)}>X</button>}
                             <ControlComponent {...control} showBlockName={showBlockNames}></ControlComponent>
                         </div>

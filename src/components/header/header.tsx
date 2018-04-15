@@ -47,7 +47,7 @@ export default class HeaderComponent extends React.Component<Props, State> {
         
         return (
             <div className="header">
-                <div className="logo">Axe-Fx MIDI Middleman</div>
+                <div className="logo">Axe-Fx Virtual Pedalboard</div>
                 <div className="info">
                     <div className="axe-fx-info">
                         <h4>Axe-Fx</h4>

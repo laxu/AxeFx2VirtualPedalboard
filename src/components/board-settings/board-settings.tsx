@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { PanelObject } from '../../api/panel-object';
-import './_panel-settings.scss';
+import { BoardObject } from '../../api/board-object';
+import './_board-settings.scss';
 
 interface Props {
-    panel: PanelObject;
+    board: BoardObject;
     saveSettings: (formValues: any) => void;
-    deletePanel: () => void;
+    deleteBoard: () => void;
     close: () => void;
 }
 
@@ -22,20 +22,20 @@ interface State {
 const ALLOW_DELETE_TIME = 5000;
 let timer;
 
-export default class PanelSettingsComponent extends React.Component<Props, State> {
+export default class BoardSettingsComponent extends React.Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
             allowDelete: false,
             hasChanges: false,
             form: {
-                label: this.props.panel && this.props.panel.label || '',
-                cc: this.props.panel && this.props.panel.cc !== null && this.props.panel.cc >= 0 ? this.props.panel.cc.toString() : ''
+                label: this.props.board && this.props.board.label || '',
+                cc: this.props.board && this.props.board.cc !== null && this.props.board.cc >= 0 ? this.props.board.cc.toString() : ''
             }
         };
         
         this.saveChanges = this.saveChanges.bind(this);
-        this.deletePanel = this.deletePanel.bind(this);
+        this.deleteBoard = this.deleteBoard.bind(this);
     }
 
     componentWillMount() {
@@ -52,7 +52,7 @@ export default class PanelSettingsComponent extends React.Component<Props, State
         return false;
     }
 
-    deletePanel(event) {
+    deleteBoard(event) {
         event.preventDefault();
         if (!this.state.allowDelete) {
             this.setState({ allowDelete: true });
@@ -63,7 +63,7 @@ export default class PanelSettingsComponent extends React.Component<Props, State
             return;
         }
         clearTimeout(timer);
-        this.props.deletePanel();
+        this.props.deleteBoard();
     }
 
     setFormValue(prop: string, value: string) {
@@ -77,22 +77,22 @@ export default class PanelSettingsComponent extends React.Component<Props, State
     }
 
     render() {
-        const { panel, close } = this.props;
+        const { board, close } = this.props;
         const { form, allowDelete, hasChanges } = this.state;
         
         return (
-            <form onSubmit={this.saveChanges} className="form panel-settings">
-                <h2>Panel settings for {panel && panel.label}</h2>
+            <form onSubmit={this.saveChanges} className="form board-settings">
+                <h2>Board settings for {board && board.label}</h2>
                 <div className="form-group">
-                    <label>Panel name</label>
+                    <label>Board name</label>
                     <input type="text" 
-                        className="panel__label--input"
+                        className="board__label--input"
                         name="label"
                         value={form.label} 
                         onChange={event => this.setFormValue('label', event.target.value)} />
                 </div>
                 <div className="form-group">
-                    <label>Activate panel using CC</label>
+                    <label>Activate board using CC</label>
                     <input type="number"
                         name="controlChange"
                         value={form.cc} 
@@ -103,7 +103,7 @@ export default class PanelSettingsComponent extends React.Component<Props, State
                 <div className="actions">
                     <button type="button" 
                         className={classNames('btn btn--danger', { 'btn--danger-flashing': allowDelete })} 
-                        onClick={this.deletePanel}>Delete</button>
+                        onClick={this.deleteBoard}>Delete</button>
                     <button type="button" className="btn" onClick={close}>Cancel</button>
                     <input type="submit" className="btn btn-primary" value="Save" disabled={!hasChanges} />
                 </div>

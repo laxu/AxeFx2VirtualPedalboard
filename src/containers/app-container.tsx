@@ -2,12 +2,12 @@ import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
-import { setPanelAction, resetControlValuesAction, resetAxeFxAction, getCurrentPanelAction, editPanelAction } from "../store/actions";
+import { setBoardAction, resetControlValuesAction, resetAxeFxAction, getCurrentBoardAction, editBoardAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType, MIDIControllerType, buildInstances } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
 import { GenericMIDIController } from "../api/generic-midi-controller";
-import { PanelObject } from "../api/panel-object";
+import { BoardObject } from "../api/board-object";
 import { AppComponent } from "../components/app";
 import { FX_BLOCK_IDS, FX_PARAMS } from '../api/fx-block-data';
 import { parameterValueBytesToInt, generateId, midiValueToAxeFx } from '../util/util';
@@ -15,17 +15,17 @@ import { getAllBlocks } from '../api/fx-block';
 import { getStoreStateSlice } from '../store/store';
 
 const mapStateToProps = state => ({
-    axeFx: state.app.axeFx,
-    controller: state.app.controller,
-    devices: state.app.devices,
-    panels: state.app.panels,
-    currentPanel: state.app.currentPanel,
-    editedPanel: state.app.editedPanel,
-    loading: state.app.loading
+    axeFx: state.app.devices.axeFx,
+    controller: state.app.devices.controller,
+    devices: state.app.devices.devices,
+    boards: state.app.board.boards,
+    currentBoard: state.app.board.currentBoard,
+    editedBoard: state.app.board.editedBoard,
+    loading: state.app.common.loading
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-    const { controller, devices, panels, currentPanel } = stateProps;
+    const { controller, devices, boards, currentBoard } = stateProps;
     const { dispatch } = dispatchProps;
     const { match, history } = ownProps;
     return {
@@ -43,7 +43,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             WebMidiWrapper.webMidi.addListener(MIDIDeviceStateChange.Connected, event => {
                 console.log('connected device', event);
                 const device = event.port;
-                const devices = getStoreStateSlice('devices');
+                const devices = getStoreStateSlice('devices', 'devices');
                 updateDevices(devices);
             });
 
@@ -61,23 +61,23 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 }
             });
 
-            if (currentPanel && history.location !== `/panels/${currentPanel.id}`) {
-                history.push(`/panels/${currentPanel.id}`);
+            if (currentBoard && history.location !== `/boards/${currentBoard.id}`) {
+                history.push(`/boards/${currentBoard.id}`);
             }
         },
-        addNewPanel() {
-            const panel: PanelObject = {
+        addNewBoard() {
+            const board: BoardObject = {
                 id: generateId(),
-                label: `Panel ${panels.length + 1}`,
+                label: `Pedalboard ${boards.length + 1}`,
                 controllerId: controller ? controller.id : null,
                 controls: [],
                 groups: []
             };
-            dispatch(setPanelAction(panel));
-            history.push(`/panels/${panel.id}`);
+            dispatch(setBoardAction(board));
+            history.push(`/boards/${board.id}`);
         },
-        editPanel(panel) {
-            dispatch(editPanelAction(panel));
+        editBoard(board) {
+            dispatch(editBoardAction(board));
         }
     }
 };

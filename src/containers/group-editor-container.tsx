@@ -3,7 +3,7 @@ import GroupEditorComponent from '../components/group-editor/group-editor';
 import { GroupObject } from '../api/group-object';
 
 const mapStateToProps = state => ({
-    panel: state.app.currentPanel
+    board: state.app.board.currentBoard
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
@@ -11,9 +11,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...dispatchProps,
     ...ownProps,
     saveGroup(formData) {
-        const { panel } = stateProps;
+        const { board } = stateProps;
         const { id, label, bgColor, textColor, size, showBlockNames, showKnobs, knobStyle, knobColor } = formData;
-        const groupIdx = panel.groups.findIndex(group => group.id === id);
+        const groupIdx = board.groups.findIndex(group => group.id === id);
         if (groupIdx === -1) throw new Error(`Could not find group for ID "${id}"`);
         const updatedGroup: GroupObject = {
             id: id,
@@ -26,7 +26,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             knobStyle,
             knobColor
         };
-        panel.groups.splice(groupIdx, 1, updatedGroup);
+        board.groups.splice(groupIdx, 1, updatedGroup);
     }
 });
 
