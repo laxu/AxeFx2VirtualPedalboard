@@ -11,6 +11,7 @@ interface Props {
     controlType: ControlType;
     cc: number;
     isRelative: boolean;
+    groupId: string;
     saveChanges: (ControlObject) => void;
     closeModal: (hasChanges: boolean) => void;
 }
@@ -33,7 +34,7 @@ export default class ControlEditorComponent extends React.Component<Props, State
     constructor(props) {
         super(props);
         
-        const { blockId, paramId, controlType, cc, isRelative } = this.props;
+        const { blockId, paramId, controlType, cc, isRelative, groupId } = this.props;
         this.state = {
             blocks: getAllBlocks(),
             blockId: blockId,
@@ -42,7 +43,8 @@ export default class ControlEditorComponent extends React.Component<Props, State
             cc: cc,
             isRelative: isRelative || false,
             hasChanges: false,
-            isValid: false
+            isValid: false,
+            groupId: groupId
         };
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -52,7 +54,7 @@ export default class ControlEditorComponent extends React.Component<Props, State
     onSubmit(event) {
         event.preventDefault();
         const { id, closeModal, saveChanges } = this.props;
-        const { blockId, paramId, cc, controlType, isRelative } = this.state;
+        const { blockId, paramId, cc, controlType, isRelative, groupId } = this.state;
         if (!blockId && !paramId) return false;
         saveChanges({
             id,
@@ -60,7 +62,8 @@ export default class ControlEditorComponent extends React.Component<Props, State
             paramId,
             controlType,
             isRelative,
-            cc
+            cc,
+            groupId
         })
         closeModal(true);
         return true;
@@ -169,12 +172,12 @@ export default class ControlEditorComponent extends React.Component<Props, State
                 </div>
                 <div className="form-group">
                     <label>
-                    <input type="checkbox" 
-                        name="isRelative"
-                        value="1"
-                        checked={isRelative}
-                        onChange={event => this.setValue('isRelative', isRelative ? '' : '1')} />
-                        <span>CC output value is relative</span>
+                        <input type="checkbox" 
+                            name="isRelative"
+                            value="1"
+                            checked={isRelative}
+                            onChange={event => this.setValue('isRelative', isRelative ? '' : '1')} />
+                            <span>CC output value is relative</span>
                     </label>
                     
                 </div>

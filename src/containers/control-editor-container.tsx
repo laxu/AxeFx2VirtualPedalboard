@@ -13,7 +13,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...ownProps,
     saveChanges(formData) {
         const { panel } = stateProps;
-        const { id, controlType, blockId, paramId, cc, isRelative } = formData;
+        const { id, controlType, blockId, paramId, cc, isRelative, groupId } = formData;
         const controlIdx = panel.controls.findIndex(ctrl => ctrl.id === id);
         if (controlIdx === -1) throw new Error(`Could not find control for ID "${id}"`);
         const updatedControl: ControlObject = {
@@ -24,9 +24,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             rawValue: null,
             controlType,
             isRelative: !!isRelative,
-            cc
+            cc,
+            groupId
         };
-        panel.controls[controlIdx] = updatedControl;
+        panel.controls.splice(controlIdx, 1, updatedControl);
         const axeFx = getAxeFxInstance();
         if (blockId && paramId >= 0 && axeFx) {
             axeFx.getBlockParamValue(blockId, paramId);
