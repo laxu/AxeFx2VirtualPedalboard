@@ -8,7 +8,7 @@
     min-height: 50%;
     background: $color-body;
 
-    &__controls {
+    &__groups {
         display: flex;
         flex-wrap: wrap;
         margin-top: 1rem;
@@ -18,7 +18,7 @@
         &-actions {
             margin-top: 1rem;
 
-            button {
+            .btn {
                 margin-right: .5rem;
 
                 &:last-child {
@@ -35,16 +35,5 @@
     .save-changes {
         float: right;
         margin-right: .5rem;
-    }
-
-    .control-container {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .remove-control {
-        position: absolute;
-        top: -10px;
-        right: 0;
     }
 }

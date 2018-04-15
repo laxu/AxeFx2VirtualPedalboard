@@ -12,6 +12,9 @@ import ControlEditorContainer from '../../containers/control-editor-container';
 import { reorder, getIndexInParent } from '../../util/util';
 import { AxeFxState } from '../../api/axefx';
 import { ControllerState } from '../../api/generic-midi-controller';
+import { GroupComponent } from '../group/group';
+import { GroupObject } from '../../api/group-object';
+import GroupEditorContainer from '../../containers/group-editor-container';
 
 interface Props {
     match: any,
@@ -22,13 +25,17 @@ interface Props {
     updateControlValues: () => void;
     attachControllerListener: () => void;
     savePanelChanges: () => void;
-    addPanelControl: (controlType: ControlType) => void;
+    addPanelGroup: () => void;
+    removePanelGroup: (group: GroupObject) => void;
+    editGroup: (group: GroupObject) => void;
+    addPanelControl: (group: GroupObject, controlType: ControlType) => void;
     removePanelControl: (control: ControlObject) => void;
 }
 
 interface State {
     editMode: boolean;
     editedControl: ControlObject;
+    editedGroup: GroupObject;
     hasChanges: boolean;
     drake: Dragula
 }
@@ -39,12 +46,18 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.state = {
             editMode: false,
             editedControl: null,
+            editedGroup: null,
             hasChanges: false,
             drake: null,
         };
 
         this.closeModal = this.closeModal.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.editGroup = this.editGroup.bind(this);
+        this.editControl = this.editControl.bind(this);
+        this.removeGroup = this.removeGroup.bind(this);
+        this.addControl = this.addControl.bind(this);
+        this.removeControl = this.removeControl.bind(this);
 
         if (!this.props.panel) {
             this.props.init();
@@ -80,7 +93,8 @@ export default class PanelComponent extends React.Component<Props, State> {
     closeModal(hasChanges: boolean) {
         this.setState({ 
             hasChanges: hasChanges || this.state.hasChanges, 
-            editedControl: null 
+            editedControl: null,
+            editedGroup: null
         });
     }
 
@@ -92,9 +106,26 @@ export default class PanelComponent extends React.Component<Props, State> {
         this.setState({ editMode: false, hasChanges: false });
     }
 
-    addControl(controlType: ControlType) {
+    addGroup() {
+        const { addPanelGroup } = this.props;
+        addPanelGroup();
+        this.setState({ hasChanges: true });
+    }
+
+    removeGroup() {
+        const { removePanelGroup } = this.props;
+        const { editedGroup } = this.state;
+        removePanelGroup(editedGroup);
+        this.closeModal(true);
+    }
+
+    editGroup(group: GroupObject) {
+        this.setState({ editedGroup: group });
+    }
+
+    addControl(group: GroupObject, controlType: ControlType) {
         const { addPanelControl } = this.props;
-        addPanelControl(controlType);
+        addPanelControl(group, controlType);
         this.setState({ hasChanges: true });
     }
 
@@ -138,37 +169,51 @@ export default class PanelComponent extends React.Component<Props, State> {
 
     render() {
         const { panel } = this.props;
-        const { editMode, editedControl, hasChanges } = this.state;
+        const { editMode, editedControl, editedGroup, hasChanges } = this.state;
 
         if (!panel) return null;
 
         return (
             <div className="panel">
                 <div className="panel__header">
-                    <button className="btn toggle-edit" onClick={() => this.toggleEdit()}>{editMode ? 'Cancel' : 'Edit'}</button>
-                    {hasChanges && <button className="btn btn--primary save-changes" onClick={() => this.saveChanges()}>Save</button>}
+                    <button className="btn toggle-edit" onClick={() => this.toggleEdit()}>
+                        <i className={editMode ? 'fa fa-undo' : 'fa fa-pencil'}></i>
+                        <span>{editMode ? 'Cancel' : 'Edit'}</span>
+                    </button>
+                    {hasChanges && <button className="btn btn--primary save-changes" onClick={() => this.saveChanges()}>
+                        <i className="fa fa-check"></i>
+                        <span>Save</span>
+                    </button>}
                     <h3 className="panel__label">{panel.label}</h3>
                     <div className="panel__edit">
                         {editMode && (
                             <div className="panel__edit-actions">
-                                <button className="btn" onClick={() => this.addControl(ControlType.Control)}>Add control</button>
-                                <button className="btn" onClick={() => this.addControl(ControlType.Switch)}>Add switch</button>
+                                <button className="btn" onClick={() => this.addGroup()}>
+                                    <i className="fa fa-plus"></i>
+                                    <span>Add group</span>
+                                </button>
                             </div>)}
                     </div>
                 </div>
-                <div className="panel__controls" ref={this.dragulaDecorator}>
-                    {panel.controls.length > 0 && panel.controls.map((control, i) => (
-                        <div className="control-container" key={`control-${i}`}
-                            data-control-id={control.id}
-                            onClick={() => this.editControl(control)}>
-                            {editMode && <button className="btn remove-control" onClick={event => this.removeControl(event, control)}>X</button>}
-                            <ControlComponent {...control}></ControlComponent>
-                        </div>
+                <div className="panel__groups" ref={this.dragulaDecorator}>
+                    {panel.groups.length > 0 && panel.groups.map((group, i) => (
+                        <GroupComponent
+                            key={`group-${i}`}
+                            group={group}
+                            controls={panel.controls.filter(ctrl => ctrl.groupId === group.id)}
+                            editMode={editMode} 
+                            editGroup={this.editGroup}
+                            editControl={this.editControl}
+                            addControl={this.addControl}
+                            removeControl={this.removeControl}></GroupComponent>
                     ))}
-                    {panel.controls.length === 0 && <p>No controls, how about <a onClick={() => this.addControl(ControlType.Control)}>adding</a> some?</p>}
+                    {panel.groups.length === 0 && <p>No groups, how about <a onClick={() => this.addGroup()}>adding</a> some?</p>}
                 </div>
                 <Modal isOpen={!!editedControl} contentLabel="Control editor">
                     <ControlEditorContainer {...editedControl} closeModal={this.closeModal}></ControlEditorContainer>
+                </Modal>
+                <Modal isOpen={!!editedGroup} contentLabel="Control editor">
+                    <GroupEditorContainer group={editedGroup} closeModal={this.closeModal} deleteGroup={this.removeGroup}></GroupEditorContainer>
                 </Modal>
             </div>
         );

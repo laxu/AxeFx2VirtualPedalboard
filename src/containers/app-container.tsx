@@ -70,7 +70,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 id: generateId(),
                 label: `Panel ${panels.length + 1}`,
                 controllerId: controller ? controller.id : null,
-                controls: []
+                controls: [],
+                groups: []
             };
             dispatch(setPanelAction(panel));
             history.push(`/panels/${panel.id}`);
