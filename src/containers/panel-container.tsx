@@ -9,6 +9,7 @@ import { PanelObject } from "../api/panel-object";
 import { ControlType, ControlObject } from '../api/control-object';
 import { generateId } from '../util/util';
 import PanelComponent from '../components/panel/panel';
+import { GroupObject, KnobMode, KnobColor, KnobStyle, GroupSizeType } from '../api/group-object';
 
 const mapStateToProps = state => ({
     axeFx: state.app.axeFx,
@@ -47,7 +48,30 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             dispatch(setPanelAction({...panel}));
             dispatch(getCurrentPanelAction(panel.id));
         },
-        addPanelControl(controlType: ControlType) {
+        addPanelGroup() {
+            const group: GroupObject = {
+                id: generateId(),
+                label: '',
+                bgColor: '#ccc',
+                textColor: '#222',
+                showBlockNames: true,
+                showKnobs: KnobMode.NumericOnly,
+                knobColor: KnobColor.Black,
+                knobStyle: KnobStyle.Simple,
+                size: {
+                    type: GroupSizeType.Auto,
+                    width: 250,
+                    height: 250
+                }
+            }
+            panel.groups.push(group);
+        },
+        removePanelGroup(group: GroupObject) {
+            const idx = panel.groups.findIndex(g => g.id === group.id);
+            if (idx === -1) throw new Error('Trying to remove group that does not exist!');
+            panel.groups.splice(idx, 1);
+        },
+        addPanelControl(group: GroupObject, controlType: ControlType) {
             const control: ControlObject = {
                 id: generateId(),
                 blockId: null,
@@ -55,7 +79,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 paramValue: null,
                 rawValue: null,
                 controlType,
-                cc: null
+                isRelative: true,
+                cc: null,
+                groupId: group.id
             };
             panel.controls.push(control);
         },
