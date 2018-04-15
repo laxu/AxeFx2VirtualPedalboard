@@ -8,7 +8,8 @@ interface Props {
     blockId: number;
     paramId: number;
     paramValue: number;
-    controlType: ControlType
+    controlType: ControlType;
+    showBlockName: boolean;
     cc: number;
 }
 
@@ -40,12 +41,12 @@ export default class ControlComponent extends React.Component<Props, State> {
 
     render() {
         const { block, param } = this.state;
-        const { paramValue, cc, controlType = ControlType.Control } = this.props;
+        const { paramValue, cc, controlType = ControlType.Control, showBlockName } = this.props;
         const isEmpty = !block && !param;
         if (controlType === ControlType.Control) {
             return (
                 <div className={classNames('control', `control--${param && param.type}`)}>
-                    {block && block.label && <div className="block__label">{block.label}</div>}
+                    {block && block.label && showBlockName && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
                     {isEmpty && <div className="control__empty">Control not configured</div>}
