@@ -18,7 +18,7 @@ export class GroupComponent extends React.Component<Props> {
 
     render() {
         const { 
-            group: { label, bgColor, textColor, size, showBlockNames, showKnobs, knobStyle, knobColor },
+            group: { id, label, bgColor, textColor, size, showBlockNames, showKnobs, knobStyle, knobColor },
             controls,
             editMode,
             addControl,
@@ -34,7 +34,7 @@ export class GroupComponent extends React.Component<Props> {
             height: size.type === GroupSizeType.Auto ? 'auto' : size.height + 'px'
         };
         return (
-            <div className="group" style={groupStyle}>
+            <div className="group" style={groupStyle} data-group-id={id}>
                 {editMode && (
                     <div className="group__actions">
                         <button className="btn" onClick={() => addControl(this.props.group, ControlType.Control)}>

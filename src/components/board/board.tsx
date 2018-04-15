@@ -140,13 +140,13 @@ export default class BoardComponent extends React.Component<Props, State> {
     onDragEnd(el, target, source, sibling) {
         const { board } = this.props;
 
-        const startIndex = board.controls.findIndex(ctrl => ctrl.id === el.getAttribute('data-control-id'));
+        const startIndex = board.groups.findIndex(group => group.id === el.getAttribute('data-group-id'));
         const endIndex = getIndexInParent(document.querySelector('.gu-transit')); // Find ghost element index
 
         this.state.drake.cancel(true); // Cancel to prevent reordering DOM
 
-        board.controls = reorder(
-            board.controls,
+        board.groups = reorder(
+            board.groups,
             startIndex,
             endIndex
         );
