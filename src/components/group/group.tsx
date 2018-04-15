@@ -51,7 +51,10 @@ export class GroupComponent extends React.Component<Props> {
                         </button>
                     </div>
                 )}
-                <label className="group__label">{label}</label>
+                <label className="group__label" onClick={() => editGroup(this.props.group)}>
+                    <div className="edit-icon"><i className="fa fa-pencil"></i></div>
+                    <span>{label}</span>
+                </label>
                 <div className="group__controls">
                     {controls.length > 0 && controls.map((control, i) => (
                         <div className="control-container" key={`control-${i}`}
