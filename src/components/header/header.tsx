@@ -75,7 +75,10 @@ export default class HeaderComponent extends React.Component<Props, State> {
                     </div>
                 </div>
                 <div className="actions">
-                    <button className="btn settings" onClick={() => this.toggleSettingsModal(true)}>Settings</button>
+                    <button className="btn settings" onClick={() => this.toggleSettingsModal(true)}>
+                        <i className="fa fa-gear"></i>
+                        <span>Settings</span>
+                    </button>
                 </div>
                 <Modal isOpen={showSettings} shouldCloseOnOverlayClick={false}>
                     <AppSettingsContainer onCancel={() => this.toggleSettingsModal(false)}></AppSettingsContainer>
