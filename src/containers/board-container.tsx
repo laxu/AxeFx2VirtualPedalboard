@@ -56,8 +56,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 textColor: '#222',
                 showBlockNames: true,
                 showKnobs: KnobMode.NumericOnly,
-                knobColor: KnobColor.Black,
-                knobStyle: KnobStyle.Simple,
+                knobColor: KnobColor.Dark,
+                knobStyle: KnobStyle.RoundOutline,
                 size: {
                     type: GroupSizeType.Auto,
                     width: 250,

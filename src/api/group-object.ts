@@ -6,21 +6,22 @@ export enum GroupSizeType {
 }
 
 export enum KnobMode {
-    NumericOnly,
-    KnobOnly,
-    Both
+    NumericOnly = 'numericOnly',
+    KnobOnly = 'knobOnly',
+    Both = 'both'
 }
 
 export enum KnobStyle {
-    Simple,
-    ChickenHead,
-    Octagon
+    RoundOutline = 'roundOutline',
+    Round = 'round',
+    ChickenHead = 'chickenhead',
+    Hexagon = 'hexagon'
 }
 
 export enum KnobColor {
-    Black,
-    White,
-    Ivory
+    Dark = 'dark',
+    Bright = 'bright',
+    Ivory = 'ivory'
 }
 
 export interface GroupSize {

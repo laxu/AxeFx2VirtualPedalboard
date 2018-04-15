@@ -18,7 +18,7 @@ export class GroupComponent extends React.Component<Props> {
 
     render() {
         const { 
-            group: { label, bgColor, textColor, size, showBlockNames },
+            group: { label, bgColor, textColor, size, showBlockNames, showKnobs, knobStyle, knobColor },
             controls,
             editMode,
             addControl,
@@ -62,7 +62,12 @@ export class GroupComponent extends React.Component<Props> {
                             onClick={() => editControl(control)}
                             title="Edit control">
                             {editMode && <button className="btn remove-control" onClick={event => removeControl(event, control)}>X</button>}
-                            <ControlComponent {...control} showBlockName={showBlockNames}></ControlComponent>
+                            <ControlComponent 
+                                {...control} 
+                                showBlockName={showBlockNames}
+                                knobMode={showKnobs}
+                                knobStyle={knobStyle}
+                                knobColor={knobColor}></ControlComponent>
                         </div>
                     ))}
                     {controls.length === 0 && <p className="no-controls">No controls, how about adding some?</p>}

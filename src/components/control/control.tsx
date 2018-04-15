@@ -3,6 +3,9 @@ import * as classNames from 'classnames';
 import { FxBlock, FxParam, getBlockById, getBlockAndParam } from '../../api/fx-block';
 import { ControlType } from '../../api/control-object';
 import './_control.scss';
+import { KnobStyle, KnobMode, KnobColor } from '../../api/group-object';
+import KnobComponent from '../knob/knob';
+import { PARAM_TYPE } from '../../api/fx-block-data/fx-block-data';
 
 interface Props {
     blockId: number;
@@ -10,6 +13,9 @@ interface Props {
     paramValue: number;
     controlType: ControlType;
     showBlockName: boolean;
+    knobMode: KnobMode;
+    knobStyle: KnobStyle;
+    knobColor: KnobColor;
     cc: number;
 }
 
@@ -41,7 +47,7 @@ export default class ControlComponent extends React.Component<Props, State> {
 
     render() {
         const { block, param } = this.state;
-        const { paramValue, cc, controlType = ControlType.Control, showBlockName } = this.props;
+        const { paramValue, cc, controlType = ControlType.Control, showBlockName, knobMode, knobStyle, knobColor } = this.props;
         const isEmpty = !block && !param;
         if (controlType === ControlType.Control) {
             return (
@@ -51,7 +57,11 @@ export default class ControlComponent extends React.Component<Props, State> {
                     <div className="param__label">{param && param.label}</div>
                     <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
                     {isEmpty && <div className="control__empty">Control not configured</div>}
-                    <div className="param__value">{paramValue}</div>
+                    {knobMode !== KnobMode.NumericOnly && (
+                        <KnobComponent type={knobStyle} color={knobColor} value={paramValue}></KnobComponent>
+                    )}
+                    {(knobMode !== KnobMode.KnobOnly || (!isEmpty && param.type === PARAM_TYPE.Select)) && 
+                        <div className="param__value">{paramValue}</div>}
                 </div>
             );
         } else {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { BoardObject } from '../../api/board-object';
-import { GroupObject } from '../../api/group-object';
+import { GroupObject, KnobMode, KnobStyle, KnobColor } from '../../api/group-object';
 import { SwatchesPicker } from 'react-color';
 import './_group-editor.scss';
 
@@ -151,6 +151,33 @@ export default class GroupEditorComponent extends React.Component<Props, State> 
                             <span>Show block names</span>
                     </label>
                 </div>
+                <div className="form-group">
+                    <label>Show value as</label>
+                    <select name="showKnobs" value={form.showKnobs} onChange={event => this.setFormValue('showKnobs', event.target.value)}>
+                        <option value={KnobMode.NumericOnly}>Numeric value</option>
+                        <option value={KnobMode.KnobOnly}>Knob only</option>
+                        <option value={KnobMode.Both}>Both</option>
+                    </select>
+                </div>
+                {form.showKnobs !== KnobMode.NumericOnly && 
+                <div className="form-group">
+                    <label>Knob style</label>
+                    <select name="knobStyle" value={form.knobStyle} onChange={event => this.setFormValue('knobStyle', event.target.value)}>
+                        <option value={KnobStyle.RoundOutline}>Round outline</option>
+                        <option value={KnobStyle.Round}>Round</option>
+                        <option value={KnobStyle.ChickenHead}>Chickenhead</option>
+                        <option value={KnobStyle.Hexagon}>Hexagon</option>
+                    </select>
+                </div>}
+                {form.showKnobs !== KnobMode.NumericOnly && 
+                <div className="form-group">
+                    <label>Knob color</label>
+                    <select name="knobColor" value={form.knobColor} onChange={event => this.setFormValue('knobColor', event.target.value)}>
+                        <option value={KnobColor.Dark}>Dark</option>
+                        <option value={KnobColor.Bright}>Bright</option>
+                        <option value={KnobColor.Ivory}>Ivory</option>
+                    </select>
+                </div>}
                 <div className="actions">
                     <button type="button" 
                         className={classNames('btn btn--danger', { 'btn--danger-flashing': allowDelete })} 
