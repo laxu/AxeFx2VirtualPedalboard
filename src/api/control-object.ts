@@ -14,4 +14,5 @@ export interface ControlObject {
     controlType: ControlType;
     isRelative?: boolean;
     cc: number;
+    groupId: string;
 }
