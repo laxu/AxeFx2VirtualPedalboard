@@ -16,32 +16,16 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600});
-
-  electron.protocol.interceptFileProtocol(PROTOCOL, (request, callback) => {
-    // // Strip protocol
-    let url = request.url.substr(PROTOCOL.length + 1);
-
-    // Build complete path for node require function
-    url = path.join(__dirname, WEB_FOLDER, url);
-
-    // Replace backslashes by forward slashes (windows)
-    // url = url.replace(/\\/g, '/');
-    url = path.normalize(url);
-
-    console.log(url);
-    callback({path: url});
+  mainWindow = new BrowserWindow({
+    width: 1024, 
+    height: 768
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, WEB_FOLDER, 'index.html'),
-    protocol: PROTOCOL + ':',
-    slashes: true
-  }));
+  mainWindow.loadURL(`${PROTOCOL}://${__dirname}/${WEB_FOLDER}/index.html`);
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
