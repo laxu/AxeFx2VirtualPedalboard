@@ -18,10 +18,12 @@ const iconMap = {
     [KnobStyle.Hexagon]: KnobHexagon
 };
 
+const rotationRange: [number, number] = [-145, 145];
+
 const KnobComponent: React.SFC<Props> = function (props) {
     const { type, color, value } = props;
     const knobClasses = classNames('knob', `knob--${type}`, `knob-color--${color}`);
-    const rotation = convertToRange(value, [-145, 145]);
+    const rotation = convertToRange(value, rotationRange);
     const knobStyle = {
         transform: `rotate(${rotation}deg)`
     }

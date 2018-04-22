@@ -10,7 +10,8 @@ import { PARAM_TYPE } from '../../api/fx-block-data/fx-block-data';
 interface Props {
     blockId: number;
     paramId: number;
-    paramValue: number;
+    paramValue: string | number;
+    rawValue: number;
     controlType: ControlType;
     showBlockName: boolean;
     knobMode: KnobMode;
@@ -47,7 +48,7 @@ export default class ControlComponent extends React.Component<Props, State> {
 
     render() {
         const { block, param } = this.state;
-        const { paramValue, cc, controlType = ControlType.Control, showBlockName, knobMode, knobStyle, knobColor } = this.props;
+        const { paramValue, rawValue, cc, controlType = ControlType.Control, showBlockName, knobMode, knobStyle, knobColor } = this.props;
         const isEmpty = !block && !param;
         if (controlType === ControlType.Control) {
             return (
@@ -55,10 +56,13 @@ export default class ControlComponent extends React.Component<Props, State> {
                     <div className="edit-icon"><i className="fa fa-pencil"></i></div>
                     {block && block.label && showBlockName && <div className="block__label">{block.label}</div>}
                     <div className="param__label">{param && param.label}</div>
-                    <div className="param__cc">{cc !== null && `CC ${cc}`}</div>
+                    <div className="param__cc">{cc !== null &&cc}</div>
                     {isEmpty && <div className="control__empty">Control not configured</div>}
                     {knobMode !== KnobMode.NumericOnly && (
-                        <KnobComponent type={knobStyle} color={knobColor} value={paramValue}></KnobComponent>
+                        <KnobComponent
+                            type={knobStyle} 
+                            color={knobColor} 
+                            value={rawValue}></KnobComponent>
                     )}
                     {(knobMode !== KnobMode.KnobOnly || (!isEmpty && param.type === PARAM_TYPE.Select)) && 
                         <div className="param__value">{paramValue}</div>}
