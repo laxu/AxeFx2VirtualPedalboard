@@ -32,8 +32,9 @@ export function parameterValueIntToBytes(value: number): Uint8Array {
     return Uint8Array.from([byte1, byte2, byte3]);
 }
 
-export function convertToRange(val: number, range: [number, number]): number {
-    return (val / 10) * (range[1] - range[0]) + range[0];
+export function convertToRange(value: number, toRange: [number, number], fromRange: [number, number] = [0, 10]): number {
+    const percent = (value - fromRange[0]) / (fromRange[1] - fromRange[0]);
+    return percent * (toRange[1] - toRange[0]) + toRange[0];
 }
 
 export function clampValue(val: number, range: [number, number], step: number): number {
