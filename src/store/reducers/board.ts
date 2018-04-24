@@ -25,21 +25,37 @@ export default function boardReducers(state = initialState, action: Action & { p
             const controlIdx = currentBoard.controls.findIndex(ctrl => ctrl.blockId === blockId && ctrl.paramId === paramId);
             const updatedBoard: BoardObject = {
                 ...currentBoard,
-                controls: currentBoard.controls.map((ctrl, i) => (i === controlIdx) ? {...ctrl, paramValue, rawValue} : ctrl)
+                controls: currentBoard.controls.map((ctrl, i) => {
+                    if (i === controlIdx) {
+                        const controlObj = {...ctrl, paramValue, rawValue}
+                        currentBoard.ccMap[ctrl.cc] = controlObj;
+                        return controlObj;
+                    }
+                    return ctrl;
+                })
             };
             return {...state, currentBoard: updatedBoard };
 
         case TypeKeys.resetControlValues:
+            const currBoard = state.currentBoard || null;
+            if (currBoard) {
+                currBoard.controls = currBoard.controls.map(ctrl => {
+                    const controlObj = {...ctrl, paramValue: null, rawValue: null };
+                    currBoard.ccMap[ctrl.cc] = controlObj;
+                    return controlObj;
+                });
+            }
             return {
                 ...state,
-                currentBoard: state.currentBoard ? {
-                    ...state.currentBoard, 
-                    controls: state.currentBoard.controls.map(ctrl => ({...ctrl, paramValue: null}))
-                } : null,
-                boards: state.boards.map(board => ({
-                    ...board,
-                    controls: board.controls.map(ctrl => ({...ctrl, paramValue: null}))
-                }))
+                currentBoard: currBoard,
+                boards: state.boards.map(board => {
+                    board.controls = board.controls.map(ctrl => {
+                        const controlObj = {...ctrl, paramValue: null, rawValue: null };
+                        board.ccMap[ctrl.cc] = controlObj;
+                        return controlObj;
+                    });
+                    return board;
+                })
             };
 
         case TypeKeys.getCurrentBoard:
