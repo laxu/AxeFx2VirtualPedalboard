@@ -156,7 +156,7 @@ export default class GroupEditorComponent extends React.Component<Props, State> 
                     <select name="showKnobs" value={form.showKnobs} onChange={event => this.setFormValue('showKnobs', event.target.value)}>
                         <option value={KnobMode.NumericOnly}>Numeric value</option>
                         <option value={KnobMode.KnobOnly}>Knob only</option>
-                        <option value={KnobMode.Both}>Both</option>
+                        <option value={KnobMode.Both}>Numeric and knob</option>
                     </select>
                 </div>
                 {form.showKnobs !== KnobMode.NumericOnly && 
