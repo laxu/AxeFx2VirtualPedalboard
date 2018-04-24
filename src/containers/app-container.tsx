@@ -13,6 +13,7 @@ import { FX_BLOCK_IDS, FX_PARAMS } from '../api/fx-block-data';
 import { parameterValueBytesToInt, generateId, midiValueToAxeFx } from '../util/util';
 import { getAllBlocks } from '../api/fx-block';
 import { getStoreStateSlice } from '../store/store';
+import { createBoard } from '../util/object-helper';
 
 const mapStateToProps = state => ({
     axeFx: state.app.devices.axeFx,
@@ -66,13 +67,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             }
         },
         addNewBoard() {
-            const board: BoardObject = {
-                id: generateId(),
-                label: `Pedalboard ${boards.length + 1}`,
-                controllerId: controller ? controller.id : null,
-                controls: [],
-                groups: []
-            };
+            const board: BoardObject = createBoard({ controllerId: controller.id });
             dispatch(setBoardAction(board));
             history.push(`/boards/${board.id}`);
         },

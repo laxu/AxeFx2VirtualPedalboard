@@ -10,6 +10,7 @@ import { ControlType, ControlObject } from '../api/control-object';
 import { generateId } from '../util/util';
 import BoardComponent from '../components/board/board';
 import { GroupObject, KnobMode, KnobColor, KnobStyle, GroupSizeType } from '../api/group-object';
+import { createGroup, createControl } from '../util/object-helper';
 
 const mapStateToProps = state => ({
     axeFx: state.app.devices.axeFx,
@@ -49,22 +50,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             dispatch(getCurrentBoardAction(board.id));
         },
         addBoardGroup() {
-            const group: GroupObject = {
-                id: generateId(),
-                label: '',
-                bgColor: '#ccc',
-                textColor: '#222',
-                showBlockNames: true,
-                showKnobs: KnobMode.NumericOnly,
-                knobColor: KnobColor.Dark,
-                knobStyle: KnobStyle.RoundOutline,
-                size: {
-                    type: GroupSizeType.Auto,
-                    width: 250,
-                    height: 250
-                }
-            }
-            board.groups.push(group);
+            board.groups.push(createGroup());
         },
         removeBoardGroup(group: GroupObject) {
             const idx = board.groups.findIndex(g => g.id === group.id);
@@ -72,17 +58,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             board.groups.splice(idx, 1);
         },
         addBoardControl(group: GroupObject, controlType: ControlType) {
-            const control: ControlObject = {
-                id: generateId(),
-                blockId: null,
-                paramId: null,
-                paramValue: null,
-                rawValue: null,
-                controlType,
-                isRelative: true,
-                cc: null,
-                groupId: group.id
-            };
+            const control = createControl({ groupId: group.id, controlType });
             board.controls.push(control);
         },
         removeBoardControl(control: ControlObject) {
