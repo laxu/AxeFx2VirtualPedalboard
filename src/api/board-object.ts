@@ -9,4 +9,7 @@ export interface BoardObject {
     controls: ControlObject[];
     groups: GroupObject[];
     cc?: number;
+    ccMap: {
+        [key: number]: ControlObject;
+    }
 }
