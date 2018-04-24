@@ -83,7 +83,8 @@ export function numRange(start: number, end: number) {
 }
 
 export function generateId() {
-    return window.crypto.getRandomValues(new Uint8Array(3)).join('');
+    const randomValue = <Uint8Array>window.crypto.getRandomValues(new Uint8Array(3));
+    return Array.from(randomValue).join('');
 }
 
 export function reorder(list: Array<any>, from: number, to: number): Array<any> {
