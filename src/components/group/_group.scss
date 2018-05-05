@@ -16,9 +16,10 @@
     &__label {
         display: block;
         position: relative;
-        min-height: 1rem;
+        min-height: 1.2rem;
         text-align: center;
         border: 1px solid transparent;
+        border-radius: $global-radius;
 
         .edit-icon {
             display: none;
@@ -38,6 +39,9 @@
     }
 
     &__actions {
+        margin: 1rem 0 1.5rem;
+        text-align: center;
+
         .btn {
             margin-right: .5rem;
 
@@ -62,5 +66,14 @@
         position: absolute;
         top: -10px;
         right: 0;
+        z-index: 2;
+    }
+
+    &--editmode {
+      .control {
+          &:hover {
+              cursor: move;
+          }
+      }  
     }
 }

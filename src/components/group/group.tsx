@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 import { ControlObject, ControlType } from '../../api/control-object';
 import ControlComponent from '../control/control';
 import { GroupObject, GroupSizeType } from '../../api/group-object';
@@ -33,8 +34,13 @@ export class GroupComponent extends React.Component<Props> {
             width: size.type === GroupSizeType.Auto ? 'auto' : size.width + 'px',
             height: size.type === GroupSizeType.Auto ? 'auto' : size.height + 'px'
         };
+        const groupClass = classNames('group', { 'group--editmode': editMode });
         return (
-            <div className="group" style={groupStyle} data-group-id={id}>
+            <div className={groupClass} style={groupStyle} data-group-id={id}>
+                <label className="group__label" onClick={() => editGroup(this.props.group)} title="Edit group">
+                    <div className="edit-icon"><i className="fa fa-pencil"></i></div>
+                    <span>{label}</span>
+                </label>
                 {editMode && (
                     <div className="group__actions">
                         <button className="btn" onClick={() => addControl(this.props.group, ControlType.Control)}>
@@ -45,23 +51,17 @@ export class GroupComponent extends React.Component<Props> {
                             <i className="fa fa-plus"></i>
                             <span>Add switch</span>
                         </button>
-                        <button className="btn btn--small" onClick={() => editGroup(this.props.group)}>
-                            <i className="fa fa-pencil"></i>
-                            <span>Edit group</span>
-                        </button>
                     </div>
                 )}
-                <label className="group__label" onClick={() => editGroup(this.props.group)} title="Edit group">
-                    <div className="edit-icon"><i className="fa fa-pencil"></i></div>
-                    <span>{label}</span>
-                </label>
                 <div className="group__controls">
                     {controls.length > 0 && controls.map((control, i) => (
                         <div className="control-container" key={`control-${i}`}
                             data-control-id={control.id}
-                            onClick={() => editControl(control)}
-                            title="Edit control">
-                            {editMode && <button className="btn remove-control" onClick={event => removeControl(event, control)}>X</button>}
+                            onClick={() => !editMode && editControl(control)}
+                            title={editMode ? 'Move control' : 'Edit control'}>
+                            {editMode && <button className="btn remove-control" 
+                                onClick={event => removeControl(event, control)}
+                                title="Remove control">X</button>}
                             <ControlComponent 
                                 {...control} 
                                 showBlockName={showBlockNames}
