@@ -68,6 +68,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             dispatch(editBoardAction(board));
         },
         selectBoard(board) {
+            if (board.id === currentBoard.id) return;
             dispatch(setCurrentBoardAction(board.id));
         }
     }
