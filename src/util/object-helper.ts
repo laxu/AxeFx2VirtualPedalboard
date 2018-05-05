@@ -6,7 +6,7 @@ import { ControlObject, ControlType } from "../api/control-object";
 export function createGroup(controlProps = {}): GroupObject {
     return {
         id: generateId(),
-        label: '',
+        label: 'Group',
         bgColor: '#ccc',
         textColor: '#222',
         showBlockNames: true,
