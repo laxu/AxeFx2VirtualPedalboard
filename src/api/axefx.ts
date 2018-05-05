@@ -300,7 +300,8 @@ export class AxeFx implements MIDIController {
                 break;
 
             case AXE_FUNCTIONS.getCabName:
-                value = textDecoder.decode(data.slice(1)).replace('', '').trim();
+                const cabChars = data.slice(2).filter(d => d);
+                value = textDecoder.decode(cabChars).trim();
                 this.cabNames.push(value);
                 return;
             default:
