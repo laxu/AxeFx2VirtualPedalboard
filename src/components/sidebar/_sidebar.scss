@@ -41,12 +41,13 @@
                     width: calc(100% + 1px);
                 }
 
-                a {
+                .board-label {
                     display: block;
                     width: 100%;
                     padding: .5rem;
                     text-decoration: none;
                     color: $color-sidebar-item-text;
+                    cursor: pointer;
                 }
             }
             

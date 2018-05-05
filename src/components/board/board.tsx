@@ -58,17 +58,9 @@ export default class BoardComponent extends React.Component<Props, State> {
         this.removeGroup = this.removeGroup.bind(this);
         this.addControl = this.addControl.bind(this);
         this.removeControl = this.removeControl.bind(this);
-
-        if (!this.props.board) {
-            this.props.init();
-        }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.match.params.boardId !== this.props.match.params.boardId) {
-            nextProps.init();
-            return;
-        }
         if (!this.props.board || nextProps.board.id !== this.props.board.id) {
             nextProps.updateControlValues();
             this.setState({

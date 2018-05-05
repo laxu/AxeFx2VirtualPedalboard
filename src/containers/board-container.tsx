@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
-import { getCurrentBoardAction, setBoardAction, updateControlValueAction } from "../store/actions";
+import { setCurrentBoardAction, setBoardAction, updateControlValueAction } from "../store/actions";
 import { getAxeFxInstance } from "../api/midi";
 import { MODEL_IDS, DEBOUNCE_TIME } from "../api/constants";
 import { GenericMIDIController } from "../api/generic-midi-controller";
@@ -22,24 +21,22 @@ const mapStateToProps = state => ({
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const { board } = stateProps;
     const { dispatch } = dispatchProps;
-    const { match } = ownProps;
     return {
         ...stateProps,
         ...dispatchProps,
         ...ownProps,
         init() {
-            dispatch(getCurrentBoardAction(match.params.boardId));
         },
         updateControlValues() {
-            const { board } = stateProps;
-            const axeFx = getAxeFxInstance();
+            const { board, axeFx } = stateProps;
+            const axeFxInstance = getAxeFxInstance();
             if (board) {
                 board.controls.forEach(control => {
                     const { blockId, paramId } = control;
                     if (blockId && paramId >= 0) {
-                        dispatch(updateControlValueAction({blockId, paramId, paramValue: null}));
-                        if (axeFx && axeFx.output) {
-                            axeFx.getBlockParamValue(blockId, paramId);
+                        dispatch(updateControlValueAction({blockId, paramId, paramValue: null, rawValue: null }));
+                        if (axeFxInstance && axeFx.connected) {
+                            axeFxInstance.getBlockParamValue(blockId, paramId);
                         }
                     }
                 });
@@ -47,7 +44,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         },
         saveBoardChanges() {
             dispatch(setBoardAction({...board}));
-            dispatch(getCurrentBoardAction(board.id));
+            dispatch(setCurrentBoardAction(board.id));
         },
         addBoardGroup() {
             board.groups.push(createGroup());
@@ -69,4 +66,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps, null, mergeProps)(BoardComponent));
+export default connect(mapStateToProps, null, mergeProps)(BoardComponent);

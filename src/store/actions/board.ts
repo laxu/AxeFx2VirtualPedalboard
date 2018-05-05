@@ -2,8 +2,8 @@ import { Action } from 'redux';
 import { TypeKeys, ActionWithPayload } from './common';
 import { BoardObject } from '../../api/board-object';
 
-export const getCurrentBoardAction = (payload: number): ActionWithPayload => ({
-    type: TypeKeys.getCurrentBoard,
+export const setCurrentBoardAction = (payload: number): ActionWithPayload => ({
+    type: TypeKeys.setCurrentBoard,
     payload
 });
 
@@ -30,7 +30,8 @@ export const refreshCurrentBoardAction = (payload): ActionWithPayload => ({
 export const updateControlValueAction = (payload: {
     blockId: number,
     paramId: number,
-    paramValue: number
+    paramValue: number,
+    rawValue: number
 }): ActionWithPayload => ({
     type: TypeKeys.updateControlValue,
     payload

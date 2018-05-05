@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import { store, persistor } from './store/store';
 import { Provider } from 'react-redux';
@@ -20,9 +19,7 @@ WebMidiWrapper.init((err: any) => {
     ReactDOM.render(
         <Provider store={store}>
             <PersistGate persistor={persistor}>
-                <Router>
-                    <Route path="/" component={AppContainer}></Route>
-                </Router>
+                <AppContainer></AppContainer>
             </PersistGate>
         </Provider>,
         containerEl

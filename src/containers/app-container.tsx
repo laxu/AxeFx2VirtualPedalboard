@@ -1,8 +1,7 @@
-import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
-import { setBoardAction, resetControlValuesAction, resetAxeFxAction, getCurrentBoardAction, editBoardAction } from "../store/actions";
+import { setBoardAction, resetControlValuesAction, resetAxeFxAction, setCurrentBoardAction, editBoardAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType, MIDIControllerType, buildInstances } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
@@ -28,7 +27,6 @@ const mapStateToProps = state => ({
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const { controller, devices, boards, currentBoard } = stateProps;
     const { dispatch } = dispatchProps;
-    const { match, history } = ownProps;
     return {
         ...stateProps,
         ...dispatchProps,
@@ -36,7 +34,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         init() {
             Modal.setAppElement(document.getElementById('app-container'));
 
-            buildInstances(dispatch, history);
+            buildInstances(dispatch);
 
             dispatch(resetAxeFxAction());
             dispatch(resetControlValuesAction());
@@ -61,20 +59,18 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                     }
                 }
             });
-
-            if (currentBoard && history.location !== `/boards/${currentBoard.id}`) {
-                history.push(`/boards/${currentBoard.id}`);
-            }
         },
         addNewBoard() {
             const board: BoardObject = createBoard({ controllerId: controller.id });
             dispatch(setBoardAction(board));
-            history.push(`/boards/${board.id}`);
         },
         editBoard(board) {
             dispatch(editBoardAction(board));
+        },
+        selectBoard(board) {
+            dispatch(setCurrentBoardAction(board.id));
         }
     }
 };
 
-export default withRouter(connect(mapStateToProps, null, mergeProps)(AppComponent));
+export default connect(mapStateToProps, null, mergeProps)(AppComponent);

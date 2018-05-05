@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Route } from 'react-router-dom'
 import Modal from 'react-modal/lib/components/Modal';
 
 import Header from './header/header';
@@ -14,6 +13,7 @@ interface Props {
     init: () => void;
     addNewBoard: () => void;
     editBoard: (board: BoardObject) => void;
+    selectBoard: (board: BoardObject) => void;
     editedBoard: BoardObject;
     axeFx: AxeFxState;
     controller: ControllerState;
@@ -34,17 +34,18 @@ export class AppComponent extends React.Component<Props> {
     }
 
     render() {
-        const { addNewBoard, editBoard, editedBoard, axeFx, controller, firmwareVersion, presetName, boards, currentBoard, loading } = this.props;
+        const { addNewBoard, editBoard, selectBoard, editedBoard, axeFx, controller, firmwareVersion, presetName, boards, currentBoard, loading } = this.props;
         if (loading) return null;
         return (
             <div id="app">
                 <Header axeFx={axeFx} controller={controller}></Header>
                 <Sidebar addNewBoard={addNewBoard}
                          editBoard={editBoard}
+                         selectBoard={selectBoard}
                          boards={boards} 
                          currentBoardId={currentBoard && currentBoard.id}></Sidebar>
                 <div className="main-container">
-                    <Route path="/boards/:boardId" component={BoardContainer} />
+                    <BoardContainer></BoardContainer>
                 </div>
                 <Modal isOpen={!!editedBoard} shouldCloseOnOverlayClick={false}>
                     <BoardSettingsContainer></BoardSettingsContainer>

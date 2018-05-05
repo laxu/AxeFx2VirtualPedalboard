@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import * as classNames from 'classnames';
   
 import { BoardObject } from '../../api/board-object';
@@ -10,10 +9,11 @@ interface Props {
     currentBoardId: string;
     addNewBoard: () => void;
     editBoard: (board: BoardObject) => void;
+    selectBoard: (board: BoardObject) => void;
 }
 
 const Sidebar: React.SFC<Props> = (props) => {
-    const { addNewBoard, boards, currentBoardId, editBoard } = props;
+    const { addNewBoard, boards, currentBoardId, editBoard, selectBoard } = props;
 
     return (
         <div className="sidebar">
@@ -28,7 +28,7 @@ const Sidebar: React.SFC<Props> = (props) => {
                         <div className="board-action" onClick={() => editBoard(board)} title="Edit pedalboard">
                             <i className="fa fa-pencil" aria-hidden="true"></i>
                         </div>
-                        <Link to={`/boards/${board.id}`}>{board.label || `Board ${board.id}`}</Link>
+                        <div className="board-label" onClick={() => selectBoard(board)}>{board.label || `Board ${board.id}`}</div>
                     </li>
                 ))}
             </ul>

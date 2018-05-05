@@ -58,7 +58,7 @@ export default function boardReducers(state = initialState, action: Action & { p
                 })
             };
 
-        case TypeKeys.getCurrentBoard:
+        case TypeKeys.setCurrentBoard:
             const board = state.boards.find(p => p.id === payload);
             if (!board) return {...state, currentBoard: null};
             return {...state, currentBoard: {...board}};

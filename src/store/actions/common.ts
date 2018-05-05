@@ -2,7 +2,7 @@ import { Action } from "redux";
 
 export enum TypeKeys {
     loading = 'Loading data',
-    getCurrentBoard = 'Get current board',
+    setCurrentBoard = 'Get current board',
     setBoard = 'Set board data',
     setMIDIDeviceData = 'Set MIDI device data',
     setBlocks = 'Set effects blocks',
