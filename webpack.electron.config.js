@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './index.tsx',
-    target: 'electron-main',
+    target: 'electron-renderer',
     output: {
         filename: 'bundle.js',
         publicPath: './',
