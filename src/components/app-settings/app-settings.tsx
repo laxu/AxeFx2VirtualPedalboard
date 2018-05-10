@@ -81,6 +81,7 @@ export default class AppSettingsComponent extends React.Component<Props, State> 
                         </select>
                     </div>
                 </div>
+                <hr className="controller-divider" />
                 <div className="settings__controller">
                     <h4>MIDI controller</h4>
                     <div className="form-group">
