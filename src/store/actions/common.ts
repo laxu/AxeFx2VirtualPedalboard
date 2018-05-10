@@ -14,7 +14,8 @@ export enum TypeKeys {
     resetControlValues = 'Reset control values',
     updateAxeFx = 'Update Axe-Fx',
     resetAxeFx = 'Reset Axe-Fx',
-    updateController = 'Update MIDI controller'
+    updateController = 'Update MIDI controller',
+    resetController = 'Reset MIDI controller'
 };
 
 export interface ActionWithPayload extends Action { payload: any }

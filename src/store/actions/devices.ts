@@ -15,6 +15,11 @@ export const resetAxeFxAction = (): Action => ({
     type: TypeKeys.resetAxeFx,
 });
 
+export const resetControllerAction = (): Action => ({
+    type: TypeKeys.resetController,
+});
+
+
 export const updateControllerAction = (payload): ActionWithPayload => ({
     type: TypeKeys.updateController,
     payload

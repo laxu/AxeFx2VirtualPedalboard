@@ -36,6 +36,9 @@ export default function deviceReducers(state = initialState, action: Action & { 
         case TypeKeys.resetAxeFx:
             return {...state, axeFx: initialState.axeFx};
 
+        case TypeKeys.resetController:
+            return {...state, controller: initialState.controller };
+
         case TypeKeys.setMIDIDeviceData:
             const nextDevices = payload.map(device => {
                 const existingDevice = state.devices.find(d => d.id === device.id);

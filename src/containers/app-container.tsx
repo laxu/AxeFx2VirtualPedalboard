@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
-import { setBoardAction, resetControlValuesAction, resetAxeFxAction, setCurrentBoardAction, editBoardAction, toggleSidebarAction } from "../store/actions";
+import { setBoardAction, resetControlValuesAction, resetAxeFxAction, setCurrentBoardAction, editBoardAction, toggleSidebarAction, resetControllerAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType, MIDIControllerType, buildInstances } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
@@ -38,6 +38,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
             buildInstances(dispatch);
 
             dispatch(resetAxeFxAction());
+            dispatch(resetControllerAction());
             dispatch(resetControlValuesAction());
 
             WebMidiWrapper.webMidi.addListener(MIDIDeviceStateChange.Connected, event => {
