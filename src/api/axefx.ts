@@ -1,12 +1,9 @@
-import { Observable } from 'rxjs/observable';
-import { first } from 'rxjs/operators';
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
 import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToFloat, bytesToPresetNumber, floatValueToAxeFx } from '../util/util';
 import { FxBlock, getBlockById, getBlockAndParam } from './fx-block';
 import { resetAxeFxAction, updateAxeFxAction, updateControlValueAction, refreshCurrentBoardAction } from '../store/actions';
 import { PARAM_TYPE } from './fx-block-data/index';
-import { Subscriber } from 'rxjs/Subscriber';
 
 export enum PARAM_MODE {
     Set = 0x01,
@@ -51,18 +48,21 @@ export class AxeFx implements MIDIController {
     private inputListener: (event: AxeFxResponse) => void;
     private tunerEnabled: boolean = false;
     private metronomeEnabled: boolean = false;
-
-    private firmwareVersion$: Observable<FirmwareVersionEvent>;
-    private firmwareVersionSubscriber: Subscriber<FirmwareVersionEvent>;
+    private connectionPromise = {
+        promise: null,
+        resolve: null,
+        reject: null
+    };
 
     constructor(dispatch) {
         this.dispatch = dispatch;
+    }
 
-        this.firmwareVersion$ = new Observable(subscriber => {
-            this.firmwareVersionSubscriber = subscriber;
-        });
-        
-        this.firmwareVersion$.subscribe(({ version, modelId }) => {
+    private createConnectionPromise() {
+        this.connectionPromise.promise = new Promise((resolve, reject) => {
+            this.connectionPromise.resolve = resolve;
+            this.connectionPromise.reject = reject;
+        }).then(({ modelId, version }) => {
             this.connected = true;
             this.firmwareVersion = version;
             this.id = modelId;
@@ -77,7 +77,16 @@ export class AxeFx implements MIDIController {
                 connected: this.connected,
                 name: this.name
             }));
+            this.clearConnectionPromise();
         });
+    }
+
+    private clearConnectionPromise() {
+        this.connectionPromise = {
+            promise: null,
+            resolve: null,
+            reject: null
+        }
     }
 
     private getChecksum(message: number[]): number {
@@ -107,6 +116,8 @@ export class AxeFx implements MIDIController {
             return;
         }
 
+        this.createConnectionPromise();
+
         this.inputListener = (event: AxeFxResponse) => this.processEvent(
             event.data[5], 
             event.data.slice(6, event.data.length - 2),
@@ -114,17 +125,18 @@ export class AxeFx implements MIDIController {
         );
 
         this.input.removeListener().addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
-        this.findModel();
+        this.queryAxeFxModel();
     }
 
     disconnect(): void {
         this.sendMessage([0x42]);
         this.connected = false;
         this.dispatch(updateAxeFxAction({ connected: this.connected }));
+        this.clearConnectionPromise();
     }
 
 
-    findModel(): void {
+    queryAxeFxModel(): void {
         for (const name in MODEL_IDS) {
             if (MODEL_IDS.hasOwnProperty(name)) {
                 this.id = MODEL_IDS[name];
@@ -241,7 +253,7 @@ export class AxeFx implements MIDIController {
             case AXE_FUNCTIONS.getFirmwareVersion:
                 value = data[0] + '.' + data[1];
                 const modelId = rawData[4];
-                this.firmwareVersionSubscriber.next({ modelId, version: value });
+                this.connectionPromise.resolve({ modelId, version: value });
                 break;
                 
             case AXE_FUNCTIONS.getPresetName:

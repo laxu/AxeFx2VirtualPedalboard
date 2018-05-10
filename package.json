@@ -32,7 +32,6 @@
     "redux": "^3.7.2",
     "redux-persist": "^5.9.1",
     "redux-persist-electron-storage": "^1.1.2",
-    "rxjs": "^5.5.10",
     "webmidi": "^2.0.2"
   },
   "devDependencies": {
