@@ -2,9 +2,14 @@ import { PARAM_TYPE } from "./fx-param-common";
 import { getAxeFxInstance } from "../midi";
 import { bypassModeLimited, inputSelect, filterSlope } from "./fx-param-select";
 
-function getCabName(cab: number) {
+function getCabName(cab: number): string {
     const axeFx = getAxeFxInstance();
     return axeFx.cabNames[cab];
+}
+
+function getCabRange(): [number, number] {
+    const axeFx = getAxeFxInstance();
+    return [0, axeFx.cabNames.length - 1];
 }
 
 const micTypes = [
@@ -51,7 +56,7 @@ const preampMode = [
 ];
 
 const cab = [
-    { id: 0, label: 'Cab L', type: PARAM_TYPE.Select, step: 1, valueFunc: getCabName, labelGroup: 'Cabinet' },
+    { id: 0, label: 'Cab L', type: PARAM_TYPE.Select, step: 1, rangeFunc: getCabRange, valueFunc: getCabName, labelGroup: 'Cabinet' },
     { id: 1, label: 'Cab L mic', type: PARAM_TYPE.Select, step: 1, values: micTypes },
     { id: 2, label: 'Cab R', type: PARAM_TYPE.Select, valueFunc: getCabName },
     { id: 3, label: 'Cab R mic', type: PARAM_TYPE.Select, step: 1, values: micTypes },
@@ -70,11 +75,11 @@ const cab = [
     { id: 28, label: 'Promixity R', type: PARAM_TYPE.Knob },
     { id: 26, label: 'Delay L', type: PARAM_TYPE.Knob, range: [0, 1], step: 0.001, precision: 0.001 },
     { id: 27, label: 'Delay R', type: PARAM_TYPE.Knob, range: [0, 1], step: 0.001, precision: 0.001 },
-    { id: 16, label: 'Room level', type: PARAM_TYPE.Knob, range: [0, 100], step: 1, precision: 0, unit: '%', labelGroup: 'Room' },
+    { id: 16, label: 'Room level', type: PARAM_TYPE.Knob, range: [0, 100], precision: 0, unit: '%', labelGroup: 'Room' },
     { id: 17, label: 'Room size', type: PARAM_TYPE.Knob },
-    { id: 18, label: 'Mic spacing', type: PARAM_TYPE.Knob, range: [0, 100], step: 1, precision: 0, unit: '%' },
+    { id: 18, label: 'Mic spacing', type: PARAM_TYPE.Knob, range: [0, 100], precision: 0, unit: '%' },
     { id: 23, label: 'Air', type: PARAM_TYPE.Knob, range: [0, 100], step: 1, precision: 0, unit: '%' },
-    { id: 25, label: 'Air freq', type: PARAM_TYPE.Knob, range: [2000, 20000], step: 1, precision: 0, unit: 'Hz' },
+    { id: 25, label: 'Air freq', type: PARAM_TYPE.Knob, range: [2000, 20000], precision: 0, unit: 'Hz' },
     { id: 31, label: 'Preamp type', type: PARAM_TYPE.Select, step: 1, values: preampType, labelGroup: 'Pre + Drv' },
     { id: 35, label: 'Preamp mode', type: PARAM_TYPE.Select, step: 1, values: preampMode },
     { id: 14, label: 'Drive', type: PARAM_TYPE.Knob },
