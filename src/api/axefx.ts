@@ -3,7 +3,7 @@ import { first } from 'rxjs/operators';
 import { AXE_FUNCTIONS, SYSEX_START, HEADER, TUNER_CC, METRONOME_CC, PARAM_VALUE_MULTIPLIER, MODEL_IDS } from './constants';
 import { MIDIController, MIDIInput, MIDIOutput, MIDIControllerType, MIDIListenerType } from './midi';
 import { getObjKeyByValue, textDecoder, intTo2Byte, bytes2ToInt, parameterValueIntToBytes, parameterValueBytesToInt, midiValueToAxeFx, axeFxValueToFloat, bytesToPresetNumber, floatValueToAxeFx } from '../util/util';
-import { IFxBlock, FxBlock, getBlockById, getBlockAndParam } from './fx-block';
+import { FxBlock, getBlockById, getBlockAndParam } from './fx-block';
 import { resetAxeFxAction, updateAxeFxAction, updateControlValueAction, refreshCurrentBoardAction } from '../store/actions';
 import { PARAM_TYPE } from './fx-block-data/index';
 import { Subscriber } from 'rxjs/Subscriber';
