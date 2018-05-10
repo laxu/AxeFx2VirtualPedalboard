@@ -30,8 +30,8 @@ export const refreshCurrentBoardAction = (payload): ActionWithPayload => ({
 export const updateControlValueAction = (payload: {
     blockId: number,
     paramId: number,
-    paramValue: number,
-    rawValue: number
+    formattedValue: number,
+    paramValue: number
 }): ActionWithPayload => ({
     type: TypeKeys.updateControlValue,
     payload

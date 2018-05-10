@@ -223,16 +223,16 @@ export class AxeFx implements MIDIController {
         this.sendCC(METRONOME_CC, this.metronomeEnabled ? 127 : 0);
     }
 
-    resolveParamValue(blockId: number, paramId: number, paramValue: Uint8Array): { rawValue: number, formattedValue: number | string } {
+    resolveParamValue(blockId: number, paramId: number, paramValue: Uint8Array): { paramValue: number, formattedValue: number | string } {
         const { block, param } = getBlockAndParam(blockId, paramId);
         if (block && param) {
             let value = parameterValueBytesToInt(paramValue);
             if (param.type === PARAM_TYPE.Knob) {
-                value = axeFxValueToFloat(parameterValueBytesToInt(paramValue));
+                value = axeFxValueToFloat(value);
             }
-            return { rawValue: value, formattedValue: param.formatValue(value) };
+            return { paramValue: value, formattedValue: param.formatValue(value) };
         }
-        return { rawValue: null, formattedValue: null };
+        return { paramValue: null, formattedValue: null };
     }
 
     processEvent(func: number, data: Uint8Array, rawData: Uint8Array): void {
@@ -275,22 +275,22 @@ export class AxeFx implements MIDIController {
             case AXE_FUNCTIONS.getBlockParametersList:
                 value = {
                     blockId: bytes2ToInt(data.slice(0, 2)),
-                    paramId:  bytes2ToInt(data.slice(2, 4)),
+                    paramId: bytes2ToInt(data.slice(2, 4)),
                 }
                 resolvedValues = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
-                value.paramValue = resolvedValues.formattedValue;
-                value.rawValue = resolvedValues.rawValue;
+                value.formattedValue = resolvedValues.formattedValue;
+                value.paramValue = resolvedValues.paramValue;
                 break;
 
             case AXE_FUNCTIONS.blockParamValue:
                 value = {
                     blockId: bytes2ToInt(data.slice(0, 2)),
-                    paramId:  bytes2ToInt(data.slice(2, 4)),
+                    paramId: bytes2ToInt(data.slice(2, 4)),
                 }
                 resolvedValues = this.resolveParamValue(value.blockId, value.paramId, data.slice(4, 7));
-                value.paramValue = resolvedValues.formattedValue;
-                value.rawValue = resolvedValues.rawValue;
-                console.log('received param value', value);
+                value.formattedValue = resolvedValues.formattedValue;
+                value.paramValue = resolvedValues.paramValue;
+                // console.log('received param value', value);
                 this.dispatch(updateControlValueAction(value));
                 break;
 

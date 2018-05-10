@@ -34,7 +34,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
                 board.controls.forEach(control => {
                     const { blockId, paramId } = control;
                     if (blockId && paramId >= 0) {
-                        dispatch(updateControlValueAction({blockId, paramId, paramValue: null, rawValue: null }));
+                        dispatch(updateControlValueAction({blockId, paramId, formattedValue: null, paramValue: null }));
                         if (axeFxInstance && axeFx.connected) {
                             axeFxInstance.getBlockParamValue(blockId, paramId);
                         }

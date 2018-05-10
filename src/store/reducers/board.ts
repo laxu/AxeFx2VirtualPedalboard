@@ -20,14 +20,14 @@ export default function boardReducers(state = initialState, action: Action & { p
     const payload = action.payload;
     switch(action.type) {
         case TypeKeys.updateControlValue:
-            const { blockId, paramId, paramValue, rawValue } = payload;
+            const { blockId, paramId, paramValue, formattedValue } = payload;
             const { currentBoard } = state;
             const controlIdx = currentBoard.controls.findIndex(ctrl => ctrl.blockId === blockId && ctrl.paramId === paramId);
             const updatedBoard: BoardObject = {
                 ...currentBoard,
                 controls: currentBoard.controls.map((ctrl, i) => {
                     if (i === controlIdx) {
-                        const controlObj = {...ctrl, paramValue, rawValue}
+                        const controlObj = {...ctrl, paramValue, formattedValue}
                         currentBoard.ccMap[ctrl.cc] = controlObj;
                         return controlObj;
                     }
@@ -40,7 +40,7 @@ export default function boardReducers(state = initialState, action: Action & { p
             const currBoard = state.currentBoard || null;
             if (currBoard) {
                 currBoard.controls = currBoard.controls.map(ctrl => {
-                    const controlObj = {...ctrl, paramValue: null, rawValue: null };
+                    const controlObj = {...ctrl, paramValue: null, formattedValue: null };
                     currBoard.ccMap[ctrl.cc] = controlObj;
                     return controlObj;
                 });
@@ -50,7 +50,7 @@ export default function boardReducers(state = initialState, action: Action & { p
                 currentBoard: currBoard,
                 boards: state.boards.map(board => {
                     board.controls = board.controls.map(ctrl => {
-                        const controlObj = {...ctrl, paramValue: null, rawValue: null };
+                        const controlObj = {...ctrl, paramValue: null, formattedValue: null };
                         board.ccMap[ctrl.cc] = controlObj;
                         return controlObj;
                     });

@@ -9,8 +9,8 @@ export interface ControlObject {
     id: string;
     blockId: number,
     paramId: number;
-    paramValue: number;
-    rawValue: number,
+    formattedValue: number;
+    paramValue: number,
     controlType: ControlType;
     isRelative?: boolean;
     cc: number;
