@@ -4,6 +4,7 @@ import { ControlObject, ControlType } from '../../api/control-object';
 import ControlComponent from '../control/control';
 import { GroupObject, GroupSizeType } from '../../api/group-object';
 import './_group.scss';
+import { CONTROL_WIDTH } from '../../api/constants';
 
 interface Props {
     group: GroupObject;
@@ -28,13 +29,19 @@ export class GroupComponent extends React.Component<Props> {
             removeControl
         } = this.props;
 
+        let groupWidth = 'auto';
+        if (size.type !== GroupSizeType.Auto) {
+            groupWidth = size.controlsPerRow * CONTROL_WIDTH + 'px';
+        }
+
         const groupStyle = {
             backgroundColor: bgColor,
             color: textColor,
-            width: size.type === GroupSizeType.Auto ? 'auto' : size.width + 'px',
-            height: size.type === GroupSizeType.Auto ? 'auto' : size.height + 'px'
+            width: groupWidth
         };
+
         const groupClass = classNames('group', { 'group--editmode': editMode });
+        
         return (
             <div className={groupClass} style={groupStyle} data-group-id={id}>
                 <label className="group__label" onClick={() => editGroup(this.props.group)} title="Edit group">

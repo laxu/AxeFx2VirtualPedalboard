@@ -15,8 +15,7 @@ export function createGroup(controlProps = {}): GroupObject {
         knobStyle: KnobStyle.RoundOutline,
         size: {
             type: GroupSizeType.Auto,
-            width: 250,
-            height: 250
+            controlsPerRow: 3
         },
         ...controlProps
     };

@@ -37,3 +37,5 @@ export const AXE_FUNCTIONS = {
     batchRequestStart: 0x32,
     batchRequestComplete: 0x33
 }
+
+export const CONTROL_WIDTH = 130;

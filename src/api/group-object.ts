@@ -1,8 +1,8 @@
 import { ControlObject } from "./control-object";
 
 export enum GroupSizeType {
-    Auto,
-    Custom
+    Auto = 'auto',
+    ControlsPerRow = 'controlsPerRow'
 }
 
 export enum KnobMode {
@@ -26,8 +26,7 @@ export enum KnobColor {
 
 export interface GroupSize {
     type: GroupSizeType;
-    width: number;
-    height: number;
+    controlsPerRow: number;
 }
 
 export interface GroupObject {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { BoardObject } from '../../api/board-object';
-import { GroupObject, KnobMode, KnobStyle, KnobColor } from '../../api/group-object';
+import { GroupObject, KnobMode, KnobStyle, KnobColor, GroupSizeType } from '../../api/group-object';
 import { SwatchesPicker } from 'react-color';
 import './_group-editor.scss';
 
@@ -68,12 +68,25 @@ export default class GroupEditorComponent extends React.Component<Props, State> 
     }
 
     setFormValue(prop: string, value: string) {
+        const formObj = {...this.state.form};
+        if(prop.includes('.')) {
+            const parts = prop.split('.');
+            let obj = formObj;
+            for (let i = 0; i < parts.length; i++) {
+                const partProp = parts[i];
+                if (i < parts.length - 1) {
+                    obj = obj[partProp];
+                } else {
+                    obj[partProp] = value;
+                }
+            }
+        } else {
+            formObj[prop] = value;
+        }
+
         this.setState({
             hasChanges: true,
-            form: {
-                ...this.state.form, 
-                [prop]: value 
-            }
+            form: formObj
         });
     }
 
@@ -141,6 +154,30 @@ export default class GroupEditorComponent extends React.Component<Props, State> 
                         style={{ backgroundColor: form.textColor }}
                         onClick={() => this.showColorPicker('textColor')}></div>
                 </div>
+                <label>Group size</label>
+                <div className="form-group form-group--inline">
+                    <select
+                        name="sizeType"
+                        value={form.size.type} 
+                        onChange={event => this.setFormValue('size.type', event.target.value)}>
+                        <option value={GroupSizeType.Auto}>Automatic</option>
+                        <option value={GroupSizeType.ControlsPerRow}>Limit to controls per row</option>
+                    </select>
+                </div>
+                {form.size.type === GroupSizeType.ControlsPerRow && (
+                    <div>
+                        <label>Controls per row</label>
+                        <div className="form-group form-group--inline">
+                            <input
+                                type="text"
+                                name="sizeControlsPerRow"
+                                pattern="[0-9]*"
+                                value={form.size.controlsPerRow} 
+                                onChange={event => this.setFormValue('size.controlsPerRow', event.target.value)} />
+                        </div>
+                    </div>
+                )}
+                
                 <div className="form-group form-group--inline">
                     <label>
                         <input type="checkbox" 
@@ -183,7 +220,7 @@ export default class GroupEditorComponent extends React.Component<Props, State> 
                         className={classNames('btn btn--danger', { 'btn--danger-flashing': allowDelete })} 
                         onClick={this.deleteGroup}>Delete</button>
                     <button type="button" className="btn" onClick={() => closeModal(false)}>Cancel</button>
-                    <input type="submit" className="btn btn-primary" value="Save" disabled={!hasChanges} />
+                    <input type="submit" className="btn btn--primary" value="Save" disabled={!hasChanges} />
                 </div>
                 {showColorPicker && <div className="color-picker-container" onClick={() => this.hideColorPicker()}>
                     <SwatchesPicker color={form[colorPickerField]} onChange={this.selectColor}></SwatchesPicker>
