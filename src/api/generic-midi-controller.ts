@@ -1,7 +1,7 @@
 import { MIDIController, MIDIControllerType, MIDIInput, MIDIOutput, MIDIListenerType, getAxeFxInstance } from "./midi";
 import { updateControllerAction, setBoardAction, resetControllerAction } from "../store/actions";
 import { DEBOUNCE_TIME } from "./constants";
-import { resolveRelativeValue, debounce, generateId } from "../util/util";
+import { resolveRelativeValue, debounce, generateId, convertToRange } from "../util/util";
 import { getBlockAndParam, FxBlock, FxParam } from "./fx-block";
 import { ControlObject } from "./control-object";
 import { getStoreStateSlice } from "../store/store";
@@ -63,7 +63,7 @@ export class GenericMIDIController implements MIDIController {
                 connected: this.connected
             }));
         }
-        
+
         return this.connected;
     }
 
@@ -73,6 +73,11 @@ export class GenericMIDIController implements MIDIController {
         this.dispatch(updateControllerAction({
             connected: this.connected
         }));
+    }
+
+    sendMessage(cc: number, value: number) {
+        const valueToSend = Math.round(convertToRange(value, [0, 127]));
+        this.output && this.output.sendControlChange(cc, value, this.channel);
     }
 
     eventHandler(event) {
@@ -102,8 +107,11 @@ export class GenericMIDIController implements MIDIController {
                 }
             }
             if (value === control.paramValue) return;
+
             const axeFx = getAxeFxInstance();
             axeFx.setBlockParamValue(control.blockId, control.paramId, value, useFloatValue);
+
+            this.sendMessage(cc, value);
         }
     }
 }
