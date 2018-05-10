@@ -45,7 +45,6 @@ export class AxeFx implements MIDIController {
     public cabNames: string[] = [];
 
     private dispatch: any;
-    private inputListener: (event: AxeFxResponse) => void;
     private tunerEnabled: boolean = false;
     private metronomeEnabled: boolean = false;
     private connectionPromise = {
@@ -56,6 +55,7 @@ export class AxeFx implements MIDIController {
 
     constructor(dispatch) {
         this.dispatch = dispatch;
+        this.inputListener = this.inputListener.bind(this);
     }
 
     private createConnectionPromise() {
@@ -67,7 +67,6 @@ export class AxeFx implements MIDIController {
             this.firmwareVersion = version;
             this.id = modelId;
             this.name = getObjKeyByValue(modelId, MODEL_IDS);
-            this.dispatch(resetAxeFxAction());
             this.getPresetNumber();
             this.getSceneNumber();
             this.cabNames = [];
@@ -102,12 +101,17 @@ export class AxeFx implements MIDIController {
     updateSettings(axeFxDevice: MIDIController): void {
         const prevInput = this.input;
         const prevOutput = this.output;
+        const prevChannel = this.channel;
+
         this.input = axeFxDevice.input;
         this.output = axeFxDevice.output;
         this.channel = axeFxDevice.channel || 'all';
 
-        if (this.input !== prevInput || this.output !== prevOutput)
+        if (this.input !== prevInput || this.output !== prevOutput || this.channel !== prevChannel) {
+            prevInput && prevInput.removeListener(MIDIListenerType.SysEx, prevChannel, this.inputListener);
+            this.connected = false;
             this.connect();
+        }
     }
 
     connect(): void {
@@ -118,13 +122,10 @@ export class AxeFx implements MIDIController {
 
         this.createConnectionPromise();
 
-        this.inputListener = (event: AxeFxResponse) => this.processEvent(
-            event.data[5], 
-            event.data.slice(6, event.data.length - 2),
-            event.data
-        );
-
         this.input.removeListener().addListener(MIDIListenerType.SysEx, this.channel, this.inputListener);
+        
+        this.dispatch(resetAxeFxAction());
+        
         this.queryAxeFxModel();
     }
 
@@ -135,6 +136,13 @@ export class AxeFx implements MIDIController {
         this.clearConnectionPromise();
     }
 
+    inputListener(event: AxeFxResponse) {
+        return this.processEvent(
+            event.data[5], 
+            event.data.slice(6, event.data.length - 2),
+            event.data
+        );
+    }
 
     queryAxeFxModel(): void {
         for (const name in MODEL_IDS) {
