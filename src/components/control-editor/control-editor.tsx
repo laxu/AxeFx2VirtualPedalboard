@@ -131,7 +131,7 @@ export default class ControlEditorComponent extends React.Component<Props, State
                 </div>
                 <div className="form-group">
                     <label>Parameter to control</label>
-                    <select value={paramId && paramId.toString() || NO_VALUE} disabled={!selectedBlock} onChange={event => this.setValue('paramId', event.target.value)}>
+                    <select value={paramId >= 0 && paramId.toString() || NO_VALUE} disabled={!selectedBlock} onChange={event => this.setValue('paramId', event.target.value)}>
                         <option disabled value={NO_VALUE}>{selectedBlock && selectedBlock.parameters.length === 0 ? 'Block is not yet supported' : 'Select effects param'}</option>
                         {parameterOptions.map((group, i) => (
                             <optgroup label={group.label} key={`group-${i}`}>
