@@ -1,5 +1,5 @@
 import { MIDIController, MIDIControllerType, MIDIInput, MIDIOutput, MIDIListenerType, getAxeFxInstance } from "./midi";
-import { updateControllerAction, setBoardAction } from "../store/actions";
+import { updateControllerAction, setBoardAction, resetControllerAction } from "../store/actions";
 import { DEBOUNCE_TIME } from "./constants";
 import { resolveRelativeValue, debounce, generateId } from "../util/util";
 import { getBlockAndParam, FxBlock, FxParam } from "./fx-block";
@@ -27,28 +27,43 @@ export class GenericMIDIController implements MIDIController {
     constructor(dispatch) {
         this.id = generateId();
         this.dispatch = dispatch;
+        this.eventHandler = this.eventHandler.bind(this);
     }
 
     updateSettings(genericDevice: MIDIController) {
         this.id = <string>genericDevice.id || this.id;
         this.name = genericDevice.input && genericDevice.input.name;
+
+        const prevInput = this.input;
+        const prevOutput = this.output;
+        const prevChannel = this.channel;
+
         this.input = genericDevice.input;
         this.output = genericDevice.output;
         this.channel = genericDevice.channel || 'all';
-        this.connect();
+
+        if (this.input !== prevInput || this.output !== prevOutput || this.channel !== prevChannel) {
+            prevInput && prevInput.removeListener(MIDIListenerType.SysEx, prevChannel, this.inputListener);
+            this.connected = false;
+            this.connect();
+        }
     }
 
     connect(): boolean {
+        this.dispatch(resetControllerAction());
+        this.connected = false;
+
         if (this.input) {
             this.connected = true;
-            this.attachParamListener();
+            
+            this.input.removeListener().addListener(MIDIListenerType.CC, this.channel, this.eventHandler);
+            
             this.dispatch(updateControllerAction({
                 name: this.name,
                 connected: this.connected
             }));
-        } else {
-            this.connected = false;
         }
+        
         return this.connected;
     }
 
@@ -58,10 +73,6 @@ export class GenericMIDIController implements MIDIController {
         this.dispatch(updateControllerAction({
             connected: this.connected
         }));
-    }
-
-    attachParamListener(): void {
-        this.input.removeListener().addListener(MIDIListenerType.CC, this.channel, this.eventHandler.bind(this));
     }
 
     eventHandler(event) {
