@@ -27,6 +27,14 @@
         &:hover {
             background: $color-button-primary-highlight;
         }
+
+        &[disabled] {
+            background: $color-button-primary-disabled;
+
+            &:hover {
+                background: $color-button-primary-disabled;
+            }
+        }
     }
 
     &--danger {

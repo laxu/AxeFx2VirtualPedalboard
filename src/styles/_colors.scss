@@ -21,6 +21,7 @@ $color-switch-off: #ca371d;
 $color-button: #777;
 $color-button-highlight: lighten($color-button, 5%);
 $color-button-primary: #0a6451;
+$color-button-primary-disabled: darken($color-button-primary, 15%);
 $color-button-primary-highlight: lighten($color-button-primary, 5%);
 $color-button-text: #eee;
 $color-button-border: darken($color-button, 15%);
