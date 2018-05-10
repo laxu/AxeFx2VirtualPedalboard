@@ -36,7 +36,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
             },
         ]
 
-        devices.map(device => dispatch(setMIDIDeviceDataAction(device)));
+        dispatch(setMIDIDeviceDataAction(devices));
         updateDevices(devices);
     }
 });

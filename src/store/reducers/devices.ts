@@ -37,14 +37,17 @@ export default function deviceReducers(state = initialState, action: Action & { 
             return {...state, axeFx: initialState.axeFx};
 
         case TypeKeys.setMIDIDeviceData:
-            const existingDeviceIdx = state.devices.findIndex(device => device.id === payload.id);
-            if (existingDeviceIdx !== -1) {
-                // Update existing device
-                return {...state, devices: state.devices.map((device, i) => i === existingDeviceIdx ? {...device, ...payload} : device)};
-            } else {
-                // Add new device
-                return {...state, devices: [...state.devices, payload]};
-            }
+            const nextDevices = payload.map(device => {
+                const existingDevice = state.devices.find(d => d.id === device.id);
+                if (existingDevice) {
+                    // Update existing device
+                    return {...existingDevice, ...device};
+                } else {
+                    // Add new device
+                    return {...device};
+                }
+            });
+            return {...state, devices: nextDevices};
 
         case TypeKeys.updateController:
             return {...state, controller: {...state.controller, ...payload}};
