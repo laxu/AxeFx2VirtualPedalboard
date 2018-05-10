@@ -2,6 +2,7 @@ import { Action } from "redux";
 
 export enum TypeKeys {
     loading = 'Loading data',
+    toggleSidebar = 'Toggle sidebar',
     setCurrentBoard = 'Get current board',
     setBoard = 'Set board data',
     setMIDIDeviceData = 'Set MIDI device data',
@@ -18,9 +19,13 @@ export enum TypeKeys {
 
 export interface ActionWithPayload extends Action { payload: any }
 
-export const loadingAction = (payload: boolean) : ActionWithPayload => ({
+export const loadingAction = (payload: boolean): ActionWithPayload => ({
     type: TypeKeys.loading,
     payload
+});
+
+export const toggleSidebarAction = (): Action => ({
+    type: TypeKeys.toggleSidebar
 });
 
 export type ActionTypes = Action | ActionWithPayload;

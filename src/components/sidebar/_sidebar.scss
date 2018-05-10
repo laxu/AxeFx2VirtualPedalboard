@@ -4,28 +4,26 @@
 .sidebar {
     grid-row-start: 2;
     grid-column-start: 1;
-    width: $sidebar-width;
+    width: $sidebar-width-closed;
     height: $sidebar-height;
     background: $color-sidebar;
     box-sizing: border-box;
     color: $color-sidebar-text;
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+    padding: .5rem 0 .5rem .5rem;
 
     .boards {
         list-style-type: none;
-        margin: 0 0 0 .5rem;
+        width: 100%;
+        margin: 0;
         padding: 0;
 
         li {
             display: block;
             width: 100%;
             box-sizing: border-box;
-            padding: .5rem;
             margin-bottom: .25rem;
-            background: $color-sidebar-item;
-
-            &:first-child {
-                padding-left: 0;
-            }
 
             &.board {
                 position: relative;
@@ -40,31 +38,70 @@
                     border-right: 1px solid $color-sidebar-item-active;
                     width: calc(100% + 1px);
                 }
-
-                .board-label {
-                    display: block;
-                    width: 100%;
-                    padding: .5rem;
-                    text-decoration: none;
-                    color: $color-sidebar-item-text;
-                    cursor: pointer;
-                }
-            }
-            
-            &:first-child {
-                background: none;
             }
         }
     }
 
-    .add-board {
+    .add-board,
+    .toggle-sidebar {
+        display: block;
         width: 100%;
+        white-space: nowrap;
+        text-align: left;
+
+        &--label {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+    }
+
+    .board-select {
+        display: block;
+        width: 100%;
+        padding: .5rem;
+        white-space: nowrap;
+        color: $color-sidebar-item-text;
+        cursor: pointer;
+
+        &--number {
+            display: inline-block;
+            margin-right: .5rem;
+        }
+
+        &--label {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
     }
 
     .board-action {
+        display: none;
         float: right;
         margin-top: .5rem;
         margin-right: .5rem;
         cursor: pointer;
+    }
+
+    &--open {
+        width: $sidebar-width-open;
+
+        .add-board,
+        .toggle-sidebar {
+            width: calc(100% - 0.25rem);
+
+            &--label {
+                opacity: 1;
+            }
+        }
+
+        .board-select {
+            &--label {
+                opacity: 1;
+            }
+        }
+
+        .board-action {
+            display: block;
+        }
     }
 }

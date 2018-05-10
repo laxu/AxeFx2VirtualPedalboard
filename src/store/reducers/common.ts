@@ -3,10 +3,12 @@ import { TypeKeys } from '../actions';
 
 interface State {
     loading: boolean;
+    sidebarOpen: boolean;
 }
 
 const initialState: State = {
-    loading: false
+    loading: false,
+    sidebarOpen: true
 };
 
 export default function commonReducers(state = initialState, action: Action & { payload: any }) {
@@ -14,6 +16,9 @@ export default function commonReducers(state = initialState, action: Action & { 
     switch(action.type) {
         case TypeKeys.loading:
             return {...state, loading: payload};
+
+        case TypeKeys.toggleSidebar:
+            return {...state, sidebarOpen: !state.sidebarOpen};
 
         default:
             return state;

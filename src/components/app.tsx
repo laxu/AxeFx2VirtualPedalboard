@@ -14,6 +14,8 @@ interface Props {
     addNewBoard: () => void;
     editBoard: (board: BoardObject) => void;
     selectBoard: (board: BoardObject) => void;
+    toggleSidebar: () => void;
+    sidebarOpen: boolean;
     editedBoard: BoardObject;
     axeFx: AxeFxState;
     controller: ControllerState;
@@ -34,16 +36,32 @@ export class AppComponent extends React.Component<Props> {
     }
 
     render() {
-        const { addNewBoard, editBoard, selectBoard, editedBoard, axeFx, controller, firmwareVersion, presetName, boards, currentBoard, loading } = this.props;
+        const {
+            addNewBoard,
+            editBoard,
+            selectBoard,
+            editedBoard,
+            axeFx,
+            controller,
+            firmwareVersion,
+            presetName,
+            boards,
+            currentBoard,
+            loading,
+            sidebarOpen,
+            toggleSidebar
+        } = this.props;
         if (loading) return null;
         return (
             <div id="app">
                 <Header axeFx={axeFx} controller={controller}></Header>
-                <Sidebar addNewBoard={addNewBoard}
-                         editBoard={editBoard}
-                         selectBoard={selectBoard}
-                         boards={boards} 
-                         currentBoardId={currentBoard && currentBoard.id}></Sidebar>
+                <Sidebar isOpen={sidebarOpen}
+                        addNewBoard={addNewBoard}
+                        editBoard={editBoard}
+                        selectBoard={selectBoard}
+                        boards={boards} 
+                        currentBoardId={currentBoard && currentBoard.id}
+                        toggleSidebar={toggleSidebar}></Sidebar>
                 <div className="main-container">
                     <BoardContainer></BoardContainer>
                 </div>

@@ -8,7 +8,8 @@ $global-radius: 4px;
 
 $header-height: 50px;
 
-$sidebar-width: 200px;
+$sidebar-width-closed: 34px;
+$sidebar-width-open: 200px;
 $sidebar-height: calc(100vh - 100px);
 
 $control-font-size: $font-size-default;

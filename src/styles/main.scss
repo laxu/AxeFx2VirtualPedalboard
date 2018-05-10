@@ -27,9 +27,10 @@ h1, h2, h3, h4, h5, h6 {
 
 #app {
     display: grid;
-    grid-template-columns: $sidebar-width auto 1rem;
+    grid-template-columns: auto auto 1rem;
     grid-template-rows: auto auto 1rem;
     margin: 0;
+    transition: all 0.3s;
 }
 
 .main-container {

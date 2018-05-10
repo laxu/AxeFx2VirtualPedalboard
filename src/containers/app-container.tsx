@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import Modal from 'react-modal/lib/components/Modal';
 
-import { setBoardAction, resetControlValuesAction, resetAxeFxAction, setCurrentBoardAction, editBoardAction } from "../store/actions";
+import { setBoardAction, resetControlValuesAction, resetAxeFxAction, setCurrentBoardAction, editBoardAction, toggleSidebarAction } from "../store/actions";
 import { WebMidiWrapper, MIDIController, MIDIListenerType, updateDevices, getAxeFxInstance, getControllerInstance, MIDIDeviceStateChange, MIDIDeviceType, MIDIControllerType, buildInstances } from "../api/midi";
 import { MODEL_IDS, PARAM_VALUE_MULTIPLIER } from "../api/constants";
 import { AxeFx } from "../api/axefx";
@@ -21,7 +21,8 @@ const mapStateToProps = state => ({
     boards: state.app.board.boards,
     currentBoard: state.app.board.currentBoard,
     editedBoard: state.app.board.editedBoard,
-    loading: state.app.common.loading
+    loading: state.app.common.loading,
+    sidebarOpen: state.app.common.sidebarOpen
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
@@ -70,6 +71,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         selectBoard(board) {
             if (board.id === currentBoard.id) return;
             dispatch(setCurrentBoardAction(board.id));
+        },
+        toggleSidebar() {
+            dispatch(toggleSidebarAction());
         }
     }
 };
