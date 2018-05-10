@@ -1,40 +1,19 @@
 import { clampValue, getObjKeyByValue, convertToRange, toFixedNumber } from "../util/util";
 import { FX_BLOCK_IDS, FX_BLOCK_TYPES, FX_PARAMS, PARAM_TYPE, FX_BLOCK_LABELS } from "./fx-block-data";
 import { FX_PARAMS_COMMON } from "./fx-block-data/fx-param-common";
+import { isFunction } from "util";
 
 type ValueFunc = (value: number) => any;
+type RangeFunc = () => [number, number];
 
-export interface IFxBlock {
-    id: number;
-    engaged?: boolean;
-    isX?: boolean;
-    parameters: IFxParam[];
-    label: string;
-}
-
-export interface IFxParam {
-    blockGroup: string;
-    id: number;
-    type: PARAM_TYPE;
-    step?: number;
-    precision?: number;
-    range?: [number, number];
-    unit?: string;
-    label?: string;
-    labelGroup?: string;
-    values?: string[];
-    valueFunc?: ValueFunc;
-    formatValue: (value: number) => number | string;
-}
-
-export class FxBlock implements IFxBlock {
+export class FxBlock {
     id: number;
     engaged: boolean;
     isX: boolean;
     parameters: FxParam[];
     label: string;
 
-    constructor(fxBlockSettings: IFxBlock) {
+    constructor(fxBlockSettings) {
         this.id = fxBlockSettings.id;
         this.engaged = fxBlockSettings.engaged || true;
         this.isX = fxBlockSettings.engaged || true;
@@ -47,13 +26,14 @@ export class FxBlock implements IFxBlock {
     }
 }
 
-export class FxParam implements IFxParam {
+export class FxParam {
     blockGroup: string;
     id: number;
     type: PARAM_TYPE;
     step?: number;
     precision?: number;
     range?: [number, number];
+    rangeFunc?: RangeFunc;
     unit?: string;
     label?: string;
     labelGroup?: string;
@@ -67,11 +47,16 @@ export class FxParam implements IFxParam {
         this.step = paramSettings.step || 0.1;
         this.precision = paramSettings.precision !== undefined ? paramSettings.precision : 2;
         this.range = paramSettings.range || [0,10];
+        this.rangeFunc = paramSettings.rangeFunc;
         this.unit = paramSettings.unit;
         this.label = paramSettings.label;
         this.labelGroup = paramSettings.labelGroup;
         this.values = paramSettings.values || [];
         this.valueFunc = paramSettings.valueFunc;
+    }
+
+    getRange() {
+        return this.rangeFunc ? this.rangeFunc() : this.range;
     }
 
     formatValue(val: number): number | string {
@@ -88,8 +73,9 @@ export class FxParam implements IFxParam {
             }
             return val;
         }
-        let formattedValue = convertToRange(val, this.range);
-        formattedValue = toFixedNumber(clampValue(formattedValue, this.range, this.step), this.precision);
+        const range = this.getRange();
+        let formattedValue = convertToRange(val, range);
+        formattedValue = toFixedNumber(clampValue(formattedValue, range, this.step), this.precision);
         return this.unit ? `${formattedValue} ${this.unit}` : formattedValue;
     }
 }
