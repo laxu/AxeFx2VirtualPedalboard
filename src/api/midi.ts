@@ -77,9 +77,9 @@ export function isAxeFx(device: MIDIInput | MIDIOutput) {
     return device.name.indexOf('AXE-FX') !== -1 || device.name.indexOf('AX8') !== -1;
 }
 
-export function buildInstances(dispatch: any, history: any) {
+export function buildInstances(dispatch: any) {
     axeFxInstance = new AxeFx(dispatch);
-    controllerInstance = new GenericMIDIController(dispatch, history);
+    controllerInstance = new GenericMIDIController(dispatch);
 }
 
 export function updateDevices(devices: MIDIDeviceData[]): void {
