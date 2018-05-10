@@ -46,6 +46,10 @@
     }
 
     .param {
+        &__label {
+            height: 2.3rem;
+        }
+
         &__value {
             overflow: hidden;
             font-size: $font-size-large;
