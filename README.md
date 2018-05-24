@@ -1,4 +1,4 @@
-# AxeFx2 MIDI Middleman
+# AxeFx2 Virtual Pedalboard
 Middleman app that converts MIDI controller CCs to AxeFx 2 compatible SysEx messages for controlling parameters.
 
 ## Motivation
