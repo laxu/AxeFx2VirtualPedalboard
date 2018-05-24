@@ -1,5 +1,5 @@
-# AxeFx2 Virtual Pedalboard
-Middleman app that converts MIDI controller CCs to AxeFx 2 compatible SysEx messages for controlling parameters.
+# Axe-Fx 2 Virtual Pedalboard
+Middleman app that converts MIDI controller CCs to Axe-Fx 2 compatible SysEx messages for controlling parameters.
 
 ## Motivation
 Axe-Fx 2 has a pretty archaic front panel user interface that is awkward to operate. 
