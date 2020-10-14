@@ -1,107 +1,107 @@
-@import '../../styles/colors';
-@import '../../styles/variables';
+@import "../../styles/colors";
+@import "../../styles/variables";
 
 .sidebar {
-    grid-row-start: 2;
-    grid-column-start: 1;
-    width: $sidebar-width-closed;
-    height: $sidebar-height;
-    background: $color-sidebar;
-    box-sizing: border-box;
-    color: $color-sidebar-text;
-    transition: width 0.3s ease-in-out;
-    overflow: hidden;
-    padding: .5rem 0 .5rem .5rem;
+  width: $sidebar-width-closed;
+  height: $sidebar-height;
+  margin-right: -1px;
+  background: $color-sidebar;
+  box-sizing: border-box;
+  color: $color-sidebar-text;
+  transition: width 0.3s ease-in-out;
+  overflow: hidden;
+  padding: 0.5rem 0 0.5rem 0.5rem;
 
-    .boards {
-        list-style-type: none;
-        width: 100%;
-        margin: 0;
+  .boards {
+    list-style-type: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 0.25rem;
+
+      &.board {
+        position: relative;
+        border-radius: $global-radius 0 0 $global-radius;
+        border: 1px solid $color-border;
+        border-right: 0;
         padding: 0;
+        background: $color-sidebar-item;
 
-        li {
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: .25rem;
-
-            &.board {
-                position: relative;
-                border-radius: $global-radius 0 0 $global-radius;
-                border: 1px solid $color-border;
-                border-right: 0;
-                padding: 0;
-                background: $color-sidebar-item;
-               
-                &.active {
-                    background: $color-sidebar-item-active;
-                    border-right: 1px solid $color-sidebar-item-active;
-                    width: calc(100% + 1px);
-                }
-            }
+        &.active {
+          background: $color-sidebar-item-active;
+          border-right: 1px solid $color-sidebar-item-active;
+          width: calc(100% + 1px);
         }
+      }
+    }
+  }
+
+  .add-board,
+  .toggle-sidebar {
+    display: block;
+    width: calc(100% - 0.25rem);
+    white-space: nowrap;
+    text-align: left;
+
+    &--label {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+  }
+
+  .board-select {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    white-space: nowrap;
+    color: $color-sidebar-item-text;
+    cursor: pointer;
+
+    &--number {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    &--label {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+  }
+
+  .board-action {
+    display: none;
+    float: right;
+    margin-top: 0.5rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
+
+  &--open {
+    width: $sidebar-width-open - 1;
+
+    li {
     }
 
     .add-board,
     .toggle-sidebar {
-        display: block;
-        width: 100%;
-        white-space: nowrap;
-        text-align: left;
-
-        &--label {
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
+      &--label {
+        opacity: 1;
+      }
     }
 
     .board-select {
-        display: block;
-        width: 100%;
-        padding: .5rem;
-        white-space: nowrap;
-        color: $color-sidebar-item-text;
-        cursor: pointer;
-
-        &--number {
-            display: inline-block;
-            margin-right: .5rem;
-        }
-
-        &--label {
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
+      &--label {
+        opacity: 1;
+      }
     }
 
     .board-action {
-        display: none;
-        float: right;
-        margin-top: .5rem;
-        margin-right: .5rem;
-        cursor: pointer;
+      display: block;
     }
-
-    &--open {
-        width: $sidebar-width-open;
-
-        .add-board,
-        .toggle-sidebar {
-            width: calc(100% - 0.25rem);
-
-            &--label {
-                opacity: 1;
-            }
-        }
-
-        .board-select {
-            &--label {
-                opacity: 1;
-            }
-        }
-
-        .board-action {
-            display: block;
-        }
-    }
+  }
 }

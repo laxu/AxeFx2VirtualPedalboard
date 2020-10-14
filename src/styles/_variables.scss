@@ -8,7 +8,7 @@ $global-radius: 4px;
 
 $header-height: 50px;
 
-$sidebar-width-closed: 34px;
+$sidebar-width-closed: 38px;
 $sidebar-width-open: 200px;
 $sidebar-height: calc(100vh - 100px);
 
@@ -16,15 +16,15 @@ $control-font-size: $font-size-default;
 
 $control-width: 110px;
 $control-min-height: 100px;
-$control-padding: 0 .5rem .5rem;
+$control-padding: 0 0.5rem 0.5rem;
 $switch-width: 100px;
 $switch-min-height: 30px;
-$switch-padding: 0 .5rem .5rem;
+$switch-padding: 0 0.5rem 0.5rem;
 
 $button-border: 1px solid $color-button-border;
 $button-radius: $global-radius;
-$button-padding: .35rem .5rem;
+$button-padding: 0.35rem 0.5rem;
 
-$form-input-padding: .5rem;
+$form-input-padding: 0.5rem;
 
 $group-border-radius: $global-radius;

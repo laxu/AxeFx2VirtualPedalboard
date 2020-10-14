@@ -1,71 +1,68 @@
-@import '../../styles/colors';
-@import '../../styles/variables';
+@import "../../styles/colors";
+@import "../../styles/variables";
 
 .header {
-    grid-row-start: 1;
-    grid-column-start: 1;
-    grid-column-end: 3;
-    display: flex;
-    background: $color-sidebar;
-    color: $color-sidebar-text;
-    padding: .5rem;
-    box-sizing: border-box;
-    overflow: hidden;
+  display: flex;
+  background: $color-sidebar;
+  color: $color-sidebar-text;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  overflow: hidden;
 
-    .logo {
-        margin-bottom: 1rem;
-        margin-right: 2rem;
+  .logo {
+    margin-bottom: 1rem;
+    margin-right: 2rem;
+  }
+
+  .info {
+    flex-grow: 2;
+    font-size: $font-size-xsmall;
+
+    h4 {
+      width: 100px;
+      margin-bottom: 0;
     }
 
-    .info {
-        flex-grow: 2;
-        font-size: $font-size-xsmall;
-       
-        h4 {
-            width: 100px;
-            margin-bottom: 0;
-        }
-
-        label {
-            width: 130px;
-            font-weight: bold;
-        }
-
-        .info-container {
-            > div {
-                display: flex;
-            }
-        }
-
-        .axe-fx-info {
-            display: flex;
-            margin-bottom: .5rem;
-        }
-
-        .device__status {
-            float: right;
-            width: 10px;
-            height: 10px;
-            border-radius: 100%;
-            border: 1px solid $color-border;
-            margin-top: .1rem;
-            margin-left: .5rem;
-
-            &--off {
-                background: red;
-            }
-
-            &--on {
-                background: green;
-            }
-        }
-
-        .controller-info {
-            display: flex;
-        }
+    label {
+      width: 130px;
+      font-weight: bold;
     }
 
-    .actions {
-        text-align: right;
+    .info-container {
+      > div {
+        display: flex;
+      }
     }
+
+    .axe-fx-info {
+      display: flex;
+      margin-bottom: 0.5rem;
+    }
+
+    .device__status {
+      float: right;
+      width: 10px;
+      height: 10px;
+      border-radius: 100%;
+      border: 1px solid $color-border;
+      margin-top: 0.1rem;
+      margin-left: 0.5rem;
+
+      &--off {
+        background: red;
+      }
+
+      &--on {
+        background: green;
+      }
+    }
+
+    .controller-info {
+      display: flex;
+    }
+  }
+
+  .actions {
+    text-align: right;
+  }
 }

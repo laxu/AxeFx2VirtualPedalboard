@@ -1,46 +1,54 @@
-@import 'colors';
-@import 'variables';
-@import 'buttons';
-@import 'modal';
-@import 'forms';
+@import "colors";
+@import "variables";
+@import "buttons";
+@import "modal";
+@import "forms";
 
-html, body {
-    font: $font-default;
-    box-sizing: border-box;
+html,
+body {
+  font: $font-default;
+  box-sizing: border-box;
 }
 
-*, *:before, *:after {
-    box-sizing: inherit;
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
 body {
-    background: $color-sidebar;
-    color: $color-body-text;
-    margin: 0;
-    padding: 0;
+  background: $color-sidebar;
+  color: $color-body-text;
+  margin: 0;
+  padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
-    margin-bottom: 1rem;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 hr {
-    height: 0;
-    margin: .5rem 0;
-    border-bottom: 1px solid $color-horizontal-line;
+  height: 0;
+  margin: 0.5rem 0;
+  border-bottom: 1px solid $color-horizontal-line;
 }
 
 #app {
-    display: grid;
-    grid-template-columns: auto auto 1rem;
-    grid-template-rows: auto auto 1rem;
-    margin: 0;
-    transition: all 0.3s;
+  margin: 0 1rem 1rem 0;
+  transition: all 0.3s;
+}
+
+#body {
+  display: flex;
 }
 
 .main-container {
-    grid-row-start: 2;
-    grid-column-start: 2;
-    padding: 0;
+  width: 100%;
+  padding: 0;
 }

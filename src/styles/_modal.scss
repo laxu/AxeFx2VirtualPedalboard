@@ -1,16 +1,17 @@
 .ReactModal {
-    &__Overlay {
-        background: $color-modal !important;
-    }
+  &__Overlay {
+    background: $color-modal !important;
+    z-index: 1000;
+  }
 
-    &__Content {
-        background: $color-body !important;
-        border: 1px solid $color-border !important;
-        border-radius: $global-radius !important;
-    }
+  &__Content {
+    background: $color-body !important;
+    border: 1px solid $color-border !important;
+    border-radius: $global-radius !important;
+  }
 
-    /* Remove scroll on the body when react-modal is open */
-    &__Body--open {
-        overflow: hidden;
-    }
+  /* Remove scroll on the body when react-modal is open */
+  &__Body--open {
+    overflow: hidden;
+  }
 }
