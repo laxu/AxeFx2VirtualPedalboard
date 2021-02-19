@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { BoardObject } from '../../api/board-object';
 import './_board-settings.scss';
 
-interface Props {
+export interface Props {
     board: BoardObject;
     saveSettings: (formValues: any) => void;
     deleteBoard: () => void;
