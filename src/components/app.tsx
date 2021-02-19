@@ -31,7 +31,7 @@ export class AppComponent extends React.Component<Props> {
     super(props);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.init();
   }
 

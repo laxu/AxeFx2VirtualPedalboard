@@ -38,7 +38,7 @@ export default class BoardSettingsComponent extends React.Component<Props, State
         this.deleteBoard = this.deleteBoard.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         clearTimeout(timer);
     }
 

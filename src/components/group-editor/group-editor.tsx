@@ -40,7 +40,7 @@ export default class GroupEditorComponent extends React.Component<Props, State> 
         this.selectColor = this.selectColor.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         clearTimeout(timer);
     }
 

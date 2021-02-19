@@ -36,7 +36,7 @@ export default class ControlComponent extends React.Component<Props, State> {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.blockId !== this.props.blockId || nextProps.paramId !== this.props.paramId) {
             const { block, param } = getBlockAndParam(nextProps.blockId, nextProps.paramId);
             this.setState({

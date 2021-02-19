@@ -60,18 +60,12 @@ export default class BoardComponent extends React.Component<Props, State> {
         this.removeControl = this.removeControl.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.board || nextProps.board.id !== this.props.board.id) {
-            nextProps.updateControlValues();
-            this.setState({
-                editMode: false, 
-                hasChanges: false
-            });
-        }
-
-        if (nextProps.axeFx !== this.props.axeFx) {
-            nextProps.updateControlValues();
-        }
+    componentDidMount() {
+        this.props.updateControlValues();
+        this.setState({
+            editMode: false, 
+            hasChanges: false
+        });
     }
 
     toggleEdit() {

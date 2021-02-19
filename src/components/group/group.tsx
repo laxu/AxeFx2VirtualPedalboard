@@ -61,8 +61,8 @@ export class GroupComponent extends React.Component<Props> {
                     </div>
                 )}
                 <div className="group__controls">
-                    {controls.length > 0 && controls.map((control, i) => (
-                        <div className="control-container" key={`control-${i}`}
+                    {controls.length > 0 && controls.map((control) => (
+                        <div className="control-container" key={`control-${id}-${control.id}`}
                             data-control-id={control.id}
                             onClick={() => !editMode && editControl(control)}
                             title={editMode ? 'Move control' : 'Edit control'}>
