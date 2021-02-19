@@ -12,18 +12,15 @@
         transform-origin: center center;
     }
 
-    &--outline {
-        // background-image: url('../../assets/images/knob-round-outline.svg');
-    }
-    
     &--hexagon {
-       &.knob-color {
-           &--dark {
-                .knob-hexagon {
-                    fill: #444;
+        &.knob-color {
+            &--dark {
+                svg {
+                    .knob-hexagon {
+                        fill: #444;
+                    }
                 }
-               
-           }
-       }
+            }
+        }
     }
 }
