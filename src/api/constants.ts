@@ -29,13 +29,15 @@ export const AXE_FUNCTIONS = {
     getMIDIChannel: 0x17,
     getBlockParametersList: 0x01,
     getCabName: 0x12,
-    frontBoardChange: 0x21,
+    frontPanelChange: 0x21,
     blockParamValue: 0x02,
     setSceneNumber: 0x29,
     setTargetBlock: 0x37,
     multiResponse: 0x64,
     batchRequestStart: 0x32,
-    batchRequestComplete: 0x33
+    batchRequestComplete: 0x33,
+    tapTempo: 0x10,
+    disconnect: 0x42
 }
 
 export const CONTROL_WIDTH = 130;
