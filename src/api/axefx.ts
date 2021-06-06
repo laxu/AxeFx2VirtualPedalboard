@@ -94,7 +94,7 @@ export class AxeFx implements MIDIController {
             ...HEADER,
             this.id,
             ...message
-        ].reduce((checksum: number, val: number) => checksum ^ val);
+        ].reduce((checksum: number, val: number) => checksum ^ val, 0);
         return part & 0x7F;
     }
 
@@ -130,7 +130,7 @@ export class AxeFx implements MIDIController {
     }
 
     disconnect(): void {
-        this.sendMessage([0x42]);
+        this.sendMessage([AXE_FUNCTIONS.disconnect]);
         this.connected = false;
         this.dispatch(updateAxeFxAction({ connected: this.connected }));
         this.clearConnectionPromise();
@@ -154,9 +154,10 @@ export class AxeFx implements MIDIController {
     }
 
     sendMessage(message: number[]): MIDIOutput {
-        const value: number[] = [this.id, ...message, this.getChecksum(message)];
         if (!this.output) return;
-        console.log('sending SysEx message', value);
+        const value: number[] = [this.id, ...message, this.getChecksum(message)];
+        const command = getObjKeyByValue(message[0], AXE_FUNCTIONS)
+        console.log(`sending SysEx command: ${command}`, value);
         return this.output.sendSysex(HEADER, value);
     }
 
@@ -283,7 +284,7 @@ export class AxeFx implements MIDIController {
                 this.dispatch(updateAxeFxAction({ presetEdited: value }))
                 break;
 
-            case AXE_FUNCTIONS.frontBoardChange:
+            case AXE_FUNCTIONS.frontPanelChange:
                 this.dispatch(refreshCurrentBoardAction(true));
                 break;
 
@@ -291,7 +292,7 @@ export class AxeFx implements MIDIController {
                 value = data[0];
                 this.channel = value;
                 break;
-
+            
             case AXE_FUNCTIONS.getBlockParametersList:
                 value = {
                     blockId: bytes2ToInt(data.slice(0, 2)),
@@ -324,12 +325,19 @@ export class AxeFx implements MIDIController {
                 value = textDecoder.decode(cabChars).trim();
                 this.cabNames.push(value);
                 return;
+            case AXE_FUNCTIONS.multiResponse:
+                const command = getObjKeyByValue(data[0], AXE_FUNCTIONS);
+                console.log(`FAS responded: Multipurpose for ${command}, code:`, data[1])
+                return;
+            case AXE_FUNCTIONS.disconnect:
+                console.log('Closing connection to Fractal Audio device');
+                break;
             default:
                 value = data;
         }
         const funcName = getObjKeyByValue(func, AXE_FUNCTIONS);
         if (funcName && data.length) {
-            console.log('Axe-Fx sent:', funcName, value);
+            console.log('FAS responded:', funcName, value);
         }
     } 
 }
