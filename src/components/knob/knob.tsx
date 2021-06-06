@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { Samy, SvgProxy } from 'react-samy-svg';
+import { SvgLoader, SvgProxy } from 'react-svgmt';
 import { KnobStyle, KnobColor } from '../../api/group-object';
 import { convertToRange } from '../../util/util';
 import './_knob.scss';
-const KnobRoundOutline = require('../../assets/images/knob-round-outline.svg');
-const KnobHexagon = require('../../assets/images/knob-hexagon.svg');
+import KnobRoundOutline from '../../assets/images/knob-round-outline.svg';
+import KnobHexagon from '../../assets/images/knob-hexagon.svg';
 
 interface Props {
     type: KnobStyle;
@@ -20,7 +20,7 @@ const iconMap = {
 
 const rotationRange: [number, number] = [-145, 145];
 
-const KnobComponent: React.SFC<Props> = function (props) {
+const KnobComponent: React.FunctionComponent<Props> = function (props) {
     const { type, color, value } = props;
     const knobClasses = classNames('knob', `knob--${type}`, `knob-color--${color}`);
     const rotation = convertToRange(value, rotationRange);
@@ -30,7 +30,9 @@ const KnobComponent: React.SFC<Props> = function (props) {
     const icon = iconMap[type];
     return (
         <div className={knobClasses} style={knobStyle}>
-            <Samy path={icon} key={icon}></Samy>
+            <SvgLoader path={icon}>
+                <SvgProxy selector="rect" key={icon} />
+            </SvgLoader>
         </div>
     );
 }
