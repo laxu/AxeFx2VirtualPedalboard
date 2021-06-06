@@ -53,7 +53,7 @@ export class AppComponent extends React.Component<Props> {
         } = this.props;
         if (loading) return null;
         return (
-            <div id="app">
+            <div id="app" className={sidebarOpen ? 'app-sidebar--open' : ''}>
                 <Header axeFx={axeFx} controller={controller}></Header>
                 <Sidebar isOpen={sidebarOpen}
                         addNewBoard={addNewBoard}
